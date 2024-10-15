@@ -6,12 +6,18 @@
       <a href="/#/orders/list/all">Back to the list</a><br />
     </p>
 
-    <div v-if="action === 'details'">
+    <div v-if="action === 'details' && order">
       <h2>Details Order: {{ order.order_id }}</h2>
+      <p>Date: {{ order.order_date }}</p>
+      <h3>Cars Purchased</h3>
+      <ul>
+        <li v-for="car in order.cars" :key="car.car_id">
+          {{ car.car_name }} - {{ car.car_base_price }}€
+        </li>
+      </ul>
+      <p>Total Price: {{ order.total_price }}€</p>
     </div>
-
-
-    <div v-if="action ==='list'">
+    <div v-if="action === 'list'">
       <table class="table table-striped" v-if="orders.length > 0">
         <thead>
         <tr>
@@ -34,7 +40,9 @@
             </ul>
           </td>
           <td>{{ order.total_price }}€</td>
-          <td><a :href="'/#/orders/details/' + order.order_id">[DETAILS]</a></td>
+          <td>
+            <a :href="'/#/orders/details/' + order.order_id">[DETAILS]</a>
+          </td>
         </tr>
         </tbody>
       </table>
@@ -43,7 +51,6 @@
         No previous orders found.
       </p>
     </div>
-
   </div>
 </template>
 
@@ -53,7 +60,8 @@ export default {
   props: ['action', 'id'],
   data() {
     return {
-      orders: []
+      orders: [],
+      order:null,
     };
   },
   methods: {
@@ -75,11 +83,24 @@ export default {
           total_price: 25000
         }
       ];
+      if (this.action === 'details' && this.id) {
+        this.order = this.orders.find(order => order.order_id == this.id);
+      }
     }
   },
   watch: {
     id(newVal, oldVal) {
-      this.refreshOneCar();
+      if (this.action === 'details') {
+        this.getAllOrders();
+      }
+    },
+    action(newVal, oldVal) {
+
+      if (newVal === 'list') {
+        this.order = null;
+      } else if (newVal === 'details' && this.id) {
+        this.getAllOrders();
+      }
     }
   },
   created() {
@@ -89,7 +110,6 @@ export default {
 </script>
 
 <style scoped>
-
 .order-history {
   padding-top: 50px;
 }
