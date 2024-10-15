@@ -48,7 +48,7 @@
         </tr>
 
         <tr><td colspan="2">
-          <input type="button" value="ADD FEATURES" @click="addFeatures()" />
+          <input type="button" value="PURCHASE" @click="purchaseCar()" />
         </td></tr>
       </table>
 
@@ -129,7 +129,7 @@ export default {
       catch (ex) { console.log(ex); }
     },
 
-    addFeatures() {
+    purchaseCar() {
       if (this.selectedFeatures.color) {
         this.oneCar.features.push({
           feature_id: this.selectedFeatures.color.feature_id,
@@ -156,6 +156,11 @@ export default {
           feature_price: this.selectedFeatures.brakes.feature_price
         });
       }
+      let purchasedCars = JSON.parse(localStorage.getItem('purchasedCars')) || [];
+      purchasedCars.push(this.oneCar);
+      localStorage.setItem('purchasedCars', JSON.stringify(purchasedCars));
+
+      window.location.href = '/#/checkout';
     }
   },
 
@@ -183,3 +188,4 @@ export default {
   text-align: left;
 }
 </style>
+
