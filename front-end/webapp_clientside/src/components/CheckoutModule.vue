@@ -1,6 +1,5 @@
 <template>
   <div class="checkout">
-
     <table class="table table-striped">
       <thead>
       <tr>
@@ -8,6 +7,7 @@
         <th>Name</th>
         <th>Base Price</th>
         <th>Select</th>
+        <th>Delete</th>
       </tr>
       </thead>
       <tbody>
@@ -18,13 +18,13 @@
         <td>
           <input type="checkbox" v-model="selectedCars" :value="car" @change="updateTotalPrice()">
         </td>
+        <td><button @click="deleteOrder(car.car_id)">Delete</button></td>
       </tr>
       </tbody>
     </table>
 
     <h2>Total Price: {{ totalPrice }}€</h2>
     <button @click="confirmPurchase">Confirm Purchase</button>
-
   </div>
 </template>
 
@@ -40,7 +40,8 @@ export default {
   },
   methods: {
     async getAllData() {
-      this.cars = [
+      const savedCars = localStorage.getItem('cars');
+      this.cars = savedCars ? JSON.parse(savedCars) : [
         {
           car_id: 1,
           car_name: "Audi S4",
@@ -81,6 +82,13 @@ export default {
         return;
       }
       alert(`You have purchased ${this.selectedCars.length} car(s) for a total of ${this.totalPrice}€.`);
+    },
+    deleteOrder(carId) {
+      this.cars = this.cars.filter(car => car.car_id !== carId);
+      this.selectedCars = this.selectedCars.filter(car => car.car_id !== carId);
+      localStorage.setItem('cars', JSON.stringify(this.cars));
+
+      this.updateTotalPrice();
     }
   },
 
@@ -90,17 +98,15 @@ export default {
 }
 </script>
 
-
 <style scoped>
-.checkout{
+.checkout {
   padding-top: 50px;
 }
 #app table {
   width: 95%;
   margin: 20px auto;
 }
-
 #app td {
-  text-align: left;
+  text-align: center;
 }
 </style>
