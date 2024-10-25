@@ -100,12 +100,14 @@ export default {
         color: null,
         motor: null,
         brakes: null
-      }
+      },
+      lastCustomId: 0,
     };
   },
   methods: {
     async getAllData() {
       try {
+        // Mock data for cars and features
         this.cars = [
           { car_id: 1, car_name: "Audi S4", car_base_price: 45000 },
           { car_id: 2, car_name: "BMW i8", car_base_price: 90000 }
@@ -127,6 +129,7 @@ export default {
         ];
 
         this.refreshOneCar();
+        this.loadLastCustomId();  // Load the last custom_id from local storage
       } catch (ex) {
         console.log(ex);
       }
@@ -139,6 +142,10 @@ export default {
       } catch (ex) {
         console.log(ex);
       }
+    },
+
+    loadLastCustomId() {
+      this.lastCustomId = JSON.parse(localStorage.getItem('lastCustomId')) || 0;
     },
 
     calculateTotalPrice() {
@@ -167,7 +174,8 @@ export default {
         purchasedCar.features.push(this.selectedFeatures.brakes);
       }
 
-      purchasedCar.unique_id = Date.now() + Math.random().toString(36).substring(7);
+      // Generate a unique custom ID
+      purchasedCar.custom_id = this.getNextCustomId();
 
       let purchasedCars = JSON.parse(localStorage.getItem('purchasedCars')) || [];
       purchasedCars.push(purchasedCar);
@@ -191,13 +199,21 @@ export default {
         purchasedCar.features.push(this.selectedFeatures.brakes);
       }
 
-      purchasedCar.unique_id = Date.now() + Math.random().toString(36).substring(7);
+      // Generate a unique custom ID
+      purchasedCar.custom_id = this.getNextCustomId();
 
       let purchasedCars = JSON.parse(localStorage.getItem('purchasedCars')) || [];
       purchasedCars.push(purchasedCar);
       localStorage.setItem('purchasedCars', JSON.stringify(purchasedCars));
 
       alert(`${this.oneCar.car_name} has been added to your cart!`);
+    },
+
+    getNextCustomId() {
+      // Increment the custom ID and store it
+      this.lastCustomId += 1;
+      localStorage.setItem('lastCustomId', JSON.stringify(this.lastCustomId));
+      return this.lastCustomId;
     }
   },
 
@@ -206,6 +222,7 @@ export default {
       this.refreshOneCar();
     }
   },
+
   created() {
     this.getAllData();
   }
@@ -216,25 +233,11 @@ export default {
 .purchase {
   padding-top: 50px;
 }
-
-table {
+.table {
   width: 100%;
+  margin: 20px 0;
 }
-
 .text-center {
   color: #333;
-}
-
-h1 {
-  color: #007bff;
-}
-
-h2 {
-  color: #dc3545;
-}
-
-.list-group-item {
-  background-color: #f8f9fa;
-  border: 1px solid #e9ecef;
 }
 </style>
