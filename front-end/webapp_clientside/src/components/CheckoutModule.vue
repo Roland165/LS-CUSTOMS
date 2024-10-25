@@ -51,15 +51,41 @@ export default {
     return {
       purchasedCars: [],
       selectedCars: [],
+      lastOrderId: 0,
     };
   },
   methods: {
     loadPurchasedCars() {
       this.purchasedCars = JSON.parse(localStorage.getItem('purchasedCars')) || [];
     },
+    loadLastOrderId() {
+      this.lastOrderId = JSON.parse(localStorage.getItem('lastOrderId')) || 0;
+    },
     confirmSelectedCars() {
+      const newOrder = {
+        order_id: this.lastOrderId + 1,
+        order_date: new Date().toISOString().split('T')[0],
+        cars: [],
+        total_price: 0
+      };
+
+      this.selectedCars.forEach(carId => {
+        const car = this.purchasedCars.find(c => c.unique_id === carId);
+        if (car) {
+          newOrder.cars.push(car);
+          newOrder.total_price += car.total_price;
+        }
+      });
+
+      let orders = JSON.parse(localStorage.getItem('orders')) || [];
+      orders.push(newOrder);
+      localStorage.setItem('orders', JSON.stringify(orders));
+
+      localStorage.setItem('lastOrderId', JSON.stringify(newOrder.order_id));
+
       this.purchasedCars = this.purchasedCars.filter(car => !this.selectedCars.includes(car.unique_id));
       localStorage.setItem('purchasedCars', JSON.stringify(this.purchasedCars));
+
       this.selectedCars = [];
     },
     deleteCar(uniqueId) {
@@ -69,6 +95,7 @@ export default {
   },
   created() {
     this.loadPurchasedCars();
+    this.loadLastOrderId();
   }
 };
 </script>
