@@ -143,7 +143,6 @@ export default {
         purchasedCar.features.push(this.selectedFeatures.brakes);
       }
 
-      // Assign a unique ID to each purchased car
       purchasedCar.unique_id = Date.now() + Math.random().toString(36).substring(7);
 
       let purchasedCars = JSON.parse(localStorage.getItem('purchasedCars')) || [];
@@ -166,6 +165,23 @@ export default {
 </script>
 
 <style scoped>
-/* Add styling here as needed */
+.purchase {
+  padding-top: 50px;
+}
+
+#app table {
+  width: 95%;
+  margin: 20px auto;
+}
+
+#app td {
+  text-align: left;
+}
+
+p {
+  text-align: center;
+  color: #666;
+  font-size: 1.1em;
+}
 </style>
 

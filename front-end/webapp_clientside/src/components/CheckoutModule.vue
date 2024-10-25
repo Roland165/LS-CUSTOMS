@@ -10,7 +10,7 @@
         <th>Car Name</th>
         <th>Features</th>
         <th>Total Price (€)</th>
-        <th>Action</th> <!-- Add an Action column -->
+        <th>Delete</th>
       </tr>
       </thead>
       <tbody>
@@ -33,7 +33,7 @@
         </td>
         <td>{{ car.total_price }} €</td>
         <td>
-          <button @click="deleteCar(car.unique_id)">Delete</button> <!-- Delete button -->
+          <button @click="deleteCar(car.unique_id)">Delete</button>
         </td>
       </tr>
       </tbody>
@@ -50,26 +50,20 @@ export default {
   data() {
     return {
       purchasedCars: [],
-      selectedCars: [], // Track selected car IDs
+      selectedCars: [],
     };
   },
   methods: {
     loadPurchasedCars() {
-      // Retrieve purchased cars from localStorage
       this.purchasedCars = JSON.parse(localStorage.getItem('purchasedCars')) || [];
     },
     confirmSelectedCars() {
-      // Filter out selected cars for confirmation
       this.purchasedCars = this.purchasedCars.filter(car => !this.selectedCars.includes(car.unique_id));
-      // Update localStorage
       localStorage.setItem('purchasedCars', JSON.stringify(this.purchasedCars));
-      // Reset selected cars
       this.selectedCars = [];
     },
     deleteCar(uniqueId) {
-      // Remove the specific car by unique_id
       this.purchasedCars = this.purchasedCars.filter(car => car.unique_id !== uniqueId);
-      // Update localStorage
       localStorage.setItem('purchasedCars', JSON.stringify(this.purchasedCars));
     }
   },
