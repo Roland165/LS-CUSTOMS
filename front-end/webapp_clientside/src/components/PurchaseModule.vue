@@ -1,6 +1,5 @@
 <template>
   <div class="purchase">
-
     <p>
       ACTION = {{ action }}<br />
       ID = {{ id }}<br />
@@ -13,7 +12,7 @@
         <td>NAME</td>
         <td>CUSTOMIZE</td>
       </tr>
-      <tr v-for="c of cars" v-bind:key="c.car_id">
+      <tr v-for="c of cars" :key="c.car_id">
         <td>{{ c.car_id }}</td>
         <td>{{ c.car_name }}</td>
         <td><a :href="'/#/purchase/customize/' + c.car_id">[CUSTOMIZE]</a></td>
@@ -22,6 +21,8 @@
 
     <div v-if="action === 'customize'">
       <h2>Customize Car: {{ oneCar.car_name }}</h2>
+      <p><strong>Base Price:</strong> {{ oneCar.car_base_price }} €</p>
+      <p><strong>Total Price:</strong> {{ calculateTotalPrice() }} €</p>
       <table class="table table-striped table-bordered table-hover">
         <tr><td>SELECT COLOR</td>
           <td>
@@ -51,17 +52,6 @@
           <input type="button" value="PURCHASE" @click="purchaseCar()" />
         </td></tr>
       </table>
-
-      <h3>Features added to {{ oneCar.car_name }}:</h3>
-      <ul>
-        <li v-for="(f, key) in oneCar.features" :key="key">
-          {{ f.feature_name }}
-          <span v-if="f.feature_added_power">- Power: {{ f.feature_added_power }}hp</span>
-          <span v-if="f.feature_added_weight">- Weight: {{ f.feature_added_weight }}kg</span>
-          <span v-if="f.feature_color">- Color: {{ f.feature_color }}</span>
-          - Price: {{ f.feature_price }}€
-        </li>
-      </ul>
     </div>
   </div>
 </template>
@@ -70,21 +60,15 @@
 export default {
   name: 'Cars',
   props: ['action', 'id'],
-  data () {
+  data() {
     return {
       cars: [],
       oneCar: {
         car_id: 0,
         car_name: 'xxx',
-        car_seat_num: 0,
-        car_creation_date: 0,
-        car_base_power: 0,
-        car_base_weight: 0,
         car_base_price: 0,
-        brand_id: 0,
         features: []
       },
-
       colorFeatures: [],
       motorFeatures: [],
       brakeFeatures: [],
@@ -93,15 +77,14 @@ export default {
         motor: null,
         brakes: null
       }
-    }
+    };
   },
   methods: {
     async getAllData() {
       try {
-
         this.cars = [
-          { car_id: 1, car_name: "Audi S4", car_seat_num: 5, car_base_power: 300, car_base_weight: 1600, car_base_price: 45000, brand_id: 2, features: [] },
-          { car_id: 2, car_name: "BMW i8", car_seat_num: 4, car_base_power: 370, car_base_weight: 1400, car_base_price: 90000, brand_id: 1, features: [] }
+          { car_id: 1, car_name: "Audi S4", car_base_price: 45000 },
+          { car_id: 2, car_name: "BMW i8", car_base_price: 90000 }
         ];
         this.colorFeatures = [
           { feature_id: 1, feature_name: 'Red Paint', feature_color: 'Red', feature_price: 500 },
@@ -120,44 +103,51 @@ export default {
         ];
 
         this.refreshOneCar();
-      } catch (ex) {console.log(ex)}
+      } catch (ex) {
+        console.log(ex);
+      }
     },
 
     refreshOneCar() {
       if (this.$props.id === "all" || this.$props.id === "0") return;
-      try {this.oneCar = this.cars.find(car => car.car_id == this.$props.id);}
-      catch (ex) { console.log(ex); }
+      try {
+        this.oneCar = this.cars.find(car => car.car_id == this.$props.id);
+      } catch (ex) {
+        console.log(ex);
+      }
+    },
+
+    calculateTotalPrice() {
+      let basePrice = this.oneCar.car_base_price;
+      let featurePrice = 0;
+
+      if (this.selectedFeatures.color) featurePrice += this.selectedFeatures.color.feature_price;
+      if (this.selectedFeatures.motor) featurePrice += this.selectedFeatures.motor.feature_price;
+      if (this.selectedFeatures.brakes) featurePrice += this.selectedFeatures.brakes.feature_price;
+
+      return basePrice + featurePrice;
     },
 
     purchaseCar() {
+      const purchasedCar = JSON.parse(JSON.stringify(this.oneCar));
+      purchasedCar.total_price = this.calculateTotalPrice();
+      purchasedCar.features = [];
+
       if (this.selectedFeatures.color) {
-        this.oneCar.features.push({
-          feature_id: this.selectedFeatures.color.feature_id,
-          feature_name: this.selectedFeatures.color.feature_name,
-          feature_color: this.selectedFeatures.color.feature_color,
-          feature_price: this.selectedFeatures.color.feature_price
-        });
+        purchasedCar.features.push(this.selectedFeatures.color);
       }
-
       if (this.selectedFeatures.motor) {
-        this.oneCar.features.push({
-          feature_id: this.selectedFeatures.motor.feature_id,
-          feature_name: this.selectedFeatures.motor.feature_name,
-          feature_added_power: this.selectedFeatures.motor.feature_added_power,
-          feature_price: this.selectedFeatures.motor.feature_price
-        });
+        purchasedCar.features.push(this.selectedFeatures.motor);
+      }
+      if (this.selectedFeatures.brakes) {
+        purchasedCar.features.push(this.selectedFeatures.brakes);
       }
 
-      if (this.selectedFeatures.brakes) {
-        this.oneCar.features.push({
-          feature_id: this.selectedFeatures.brakes.feature_id,
-          feature_name: this.selectedFeatures.brakes.feature_name,
-          feature_added_weight: this.selectedFeatures.brakes.feature_added_weight,
-          feature_price: this.selectedFeatures.brakes.feature_price
-        });
-      }
+      // Assign a unique ID to each purchased car
+      purchasedCar.unique_id = Date.now() + Math.random().toString(36).substring(7);
+
       let purchasedCars = JSON.parse(localStorage.getItem('purchasedCars')) || [];
-      purchasedCars.push(this.oneCar);
+      purchasedCars.push(purchasedCar);
       localStorage.setItem('purchasedCars', JSON.stringify(purchasedCars));
 
       window.location.href = '/#/checkout';
@@ -172,20 +162,10 @@ export default {
   created() {
     this.getAllData();
   }
-}
+};
 </script>
 
 <style scoped>
-#app table {
-  width: 95%;
-  margin: 20px auto;
-}
-.purchase{
-  padding-top: 50px;
-}
-
-#app td {
-  text-align: left;
-}
+/* Add styling here as needed */
 </style>
 
