@@ -1,57 +1,81 @@
 <template>
   <div class="purchase">
-    <p>
-      ACTION = {{ action }}<br />
-      ID = {{ id }}<br />
-      <a href="/#/purchase/list/all">Back to the list</a><br />
-    </p>
+    <div class="container mt-5">
+      <h1 class="text-center">Customize</h1>
+      <p class="text-center">
+        ACTION = {{ action }}<br />
+        ID = {{ id }}<br />
+        <a class="btn btn-link" href="/#/purchase/list/all">Back to the list</a><br />
+      </p>
 
-    <table v-if="action === 'list'" class="table table-striped table-bordered table-hover">
-      <tr>
-        <td>ID</td>
-        <td>NAME</td>
-        <td>CUSTOMIZE</td>
-      </tr>
-      <tr v-for="c of cars" :key="c.car_id">
-        <td>{{ c.car_id }}</td>
-        <td>{{ c.car_name }}</td>
-        <td><a :href="'/#/purchase/customize/' + c.car_id">[CUSTOMIZE]</a></td>
-      </tr>
-    </table>
-
-    <div v-if="action === 'customize'">
-      <h2>Customize Car: {{ oneCar.car_name }}</h2>
-      <p><strong>Base Price:</strong> {{ oneCar.car_base_price }} €</p>
-      <p><strong>Total Price:</strong> {{ calculateTotalPrice() }} €</p>
-      <table class="table table-striped table-bordered table-hover">
-        <tr><td>SELECT COLOR</td>
+      <table v-if="action === 'list'" class="table table-striped table-bordered table-hover mt-4">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Customize</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="c of cars" :key="c.car_id">
+          <td>{{ c.car_id }}</td>
+          <td>{{ c.car_name }}</td>
           <td>
-            <select v-model="selectedFeatures.color">
-              <option v-for="f in colorFeatures" :value="f">{{ f.feature_name }} (Color: {{ f.feature_color }})</option>
-            </select>
+            <a class="btn btn-primary" :href="'/#/purchase/customize/' + c.car_id">[CUSTOMIZE]</a>
           </td>
         </tr>
-
-        <tr><td>SELECT MOTOR</td>
-          <td>
-            <select v-model="selectedFeatures.motor">
-              <option v-for="f in motorFeatures" :value="f">{{ f.feature_name }} (Power: {{ f.feature_added_power }}hp, Price: {{ f.feature_price }}€)</option>
-            </select>
-          </td>
-        </tr>
-
-        <tr><td>SELECT BRAKES</td>
-          <td>
-            <select v-model="selectedFeatures.brakes">
-              <option v-for="f in brakeFeatures" :value="f">{{ f.feature_name }} (Weight Added: {{ f.feature_added_weight }}kg, Price: {{ f.feature_price }}€)</option>
-            </select>
-          </td>
-        </tr>
-
-        <tr><td colspan="2">
-          <input type="button" value="PURCHASE" @click="purchaseCar()" />
-        </td></tr>
+        </tbody>
       </table>
+
+      <div v-if="action === 'customize'" class="customization-section">
+        <h2 class="text-center">Customize Your Car: {{ oneCar.car_name }}</h2>
+        <p class="text-center"><strong>Base Price:</strong> {{ oneCar.car_base_price }} €</p>
+        <p class="text-center"><strong>Total Price:</strong> {{ calculateTotalPrice() }} €</p>
+
+        <table class="table table-striped table-bordered table-hover mt-4">
+          <tbody>
+          <tr>
+            <td>SELECT COLOR</td>
+            <td>
+              <select v-model="selectedFeatures.color" class="form-control">
+                <option v-for="f in colorFeatures" :value="f" :key="f.feature_id">
+                  {{ f.feature_name }} (Color: {{ f.feature_color }})
+                </option>
+              </select>
+            </td>
+          </tr>
+
+          <tr>
+            <td>SELECT MOTOR</td>
+            <td>
+              <select v-model="selectedFeatures.motor" class="form-control">
+                <option v-for="f in motorFeatures" :value="f" :key="f.feature_id">
+                  {{ f.feature_name }} (Power: {{ f.feature_added_power }}hp, Price: {{ f.feature_price }}€)
+                </option>
+              </select>
+            </td>
+          </tr>
+
+          <tr>
+            <td>SELECT BRAKES</td>
+            <td>
+              <select v-model="selectedFeatures.brakes" class="form-control">
+                <option v-for="f in brakeFeatures" :value="f" :key="f.feature_id">
+                  {{ f.feature_name }} (Weight Added: {{ f.feature_added_weight }}kg, Price: {{ f.feature_price }}€)
+                </option>
+              </select>
+            </td>
+          </tr>
+
+          <tr>
+            <td colspan="2" class="text-center">
+              <button class="btn btn-success" @click="purchaseCar()">GO TO PURCHASE</button>
+              <button class="btn btn-warning" @click="addToCart()">ADD TO CART</button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </template>
@@ -150,6 +174,30 @@ export default {
       localStorage.setItem('purchasedCars', JSON.stringify(purchasedCars));
 
       window.location.href = '/#/checkout';
+    },
+
+    addToCart() {
+      const purchasedCar = JSON.parse(JSON.stringify(this.oneCar));
+      purchasedCar.total_price = this.calculateTotalPrice();
+      purchasedCar.features = [];
+
+      if (this.selectedFeatures.color) {
+        purchasedCar.features.push(this.selectedFeatures.color);
+      }
+      if (this.selectedFeatures.motor) {
+        purchasedCar.features.push(this.selectedFeatures.motor);
+      }
+      if (this.selectedFeatures.brakes) {
+        purchasedCar.features.push(this.selectedFeatures.brakes);
+      }
+
+      purchasedCar.unique_id = Date.now() + Math.random().toString(36).substring(7);
+
+      let purchasedCars = JSON.parse(localStorage.getItem('purchasedCars')) || [];
+      purchasedCars.push(purchasedCar);
+      localStorage.setItem('purchasedCars', JSON.stringify(purchasedCars));
+
+      alert(`${this.oneCar.car_name} has been added to your cart!`);
     }
   },
 
@@ -169,19 +217,24 @@ export default {
   padding-top: 50px;
 }
 
-#app table {
-  width: 95%;
-  margin: 20px auto;
+table {
+  width: 100%;
 }
 
-#app td {
-  text-align: left;
+.text-center {
+  color: #333;
 }
 
-p {
-  text-align: center;
-  color: #666;
-  font-size: 1.1em;
+h1 {
+  color: #007bff;
+}
+
+h2 {
+  color: #dc3545;
+}
+
+.list-group-item {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
 }
 </style>
-
