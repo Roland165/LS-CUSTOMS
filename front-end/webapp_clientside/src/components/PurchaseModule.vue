@@ -1,67 +1,81 @@
 <template>
   <div class="purchase">
+    <div class="container mt-5">
+      <h1 class="text-center">Customize</h1>
+      <p class="text-center">
+        ACTION = {{ action }}<br />
+        ID = {{ id }}<br />
+        <a class="btn btn-link" href="/#/purchase/list/all">Back to the list</a><br />
+      </p>
 
-    <p>
-      ACTION = {{ action }}<br />
-      ID = {{ id }}<br />
-      <a href="/#/purchase/list/all">Back to the list</a><br />
-    </p>
-
-    <table v-if="action === 'list'" class="table table-striped table-bordered table-hover">
-      <tr>
-        <td>ID</td>
-        <td>NAME</td>
-        <td>CUSTOMIZE</td>
-      </tr>
-      <tr v-for="c of cars" v-bind:key="c.car_id">
-        <td>{{ c.car_id }}</td>
-        <td>{{ c.car_name }}</td>
-        <td><a :href="'/#/purchase/customize/' + c.car_id">[CUSTOMIZE]</a></td>
-      </tr>
-    </table>
-
-    <div v-if="action === 'customize'">
-      <h2>Customize Car: {{ oneCar.car_name }}</h2>
-      <table class="table table-striped table-bordered table-hover">
-        <tr><td>SELECT COLOR</td>
+      <table v-if="action === 'list'" class="table table-striped table-bordered table-hover mt-4">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Customize</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="c of cars" :key="c.car_id">
+          <td>{{ c.car_id }}</td>
+          <td>{{ c.car_name }}</td>
           <td>
-            <select v-model="selectedFeatures.color">
-              <option v-for="f in colorFeatures" :value="f">{{ f.feature_name }} (Color: {{ f.feature_color }})</option>
-            </select>
+            <a class="btn btn-primary" :href="'/#/purchase/customize/' + c.car_id">[CUSTOMIZE]</a>
           </td>
         </tr>
-
-        <tr><td>SELECT MOTOR</td>
-          <td>
-            <select v-model="selectedFeatures.motor">
-              <option v-for="f in motorFeatures" :value="f">{{ f.feature_name }} (Power: {{ f.feature_added_power }}hp, Price: {{ f.feature_price }}€)</option>
-            </select>
-          </td>
-        </tr>
-
-        <tr><td>SELECT BRAKES</td>
-          <td>
-            <select v-model="selectedFeatures.brakes">
-              <option v-for="f in brakeFeatures" :value="f">{{ f.feature_name }} (Weight Added: {{ f.feature_added_weight }}kg, Price: {{ f.feature_price }}€)</option>
-            </select>
-          </td>
-        </tr>
-
-        <tr><td colspan="2">
-          <input type="button" value="ADD FEATURES" @click="addFeatures()" />
-        </td></tr>
+        </tbody>
       </table>
 
-      <h3>Features added to {{ oneCar.car_name }}:</h3>
-      <ul>
-        <li v-for="(f, key) in oneCar.features" :key="key">
-          {{ f.feature_name }}
-          <span v-if="f.feature_added_power">- Power: {{ f.feature_added_power }}hp</span>
-          <span v-if="f.feature_added_weight">- Weight: {{ f.feature_added_weight }}kg</span>
-          <span v-if="f.feature_color">- Color: {{ f.feature_color }}</span>
-          - Price: {{ f.feature_price }}€
-        </li>
-      </ul>
+      <div v-if="action === 'customize'" class="customization-section">
+        <h2 class="text-center">Customize Your Car: {{ oneCar.car_name }}</h2>
+        <p class="text-center"><strong>Base Price:</strong> {{ oneCar.car_base_price }} €</p>
+        <p class="text-center"><strong>Total Price:</strong> {{ calculateTotalPrice() }} €</p>
+
+        <table class="table table-striped table-bordered table-hover mt-4">
+          <tbody>
+          <tr>
+            <td>SELECT COLOR</td>
+            <td>
+              <select v-model="selectedFeatures.color" class="form-control">
+                <option v-for="f in colorFeatures" :value="f" :key="f.feature_id">
+                  {{ f.feature_name }} (Color: {{ f.feature_color }})
+                </option>
+              </select>
+            </td>
+          </tr>
+
+          <tr>
+            <td>SELECT MOTOR</td>
+            <td>
+              <select v-model="selectedFeatures.motor" class="form-control">
+                <option v-for="f in motorFeatures" :value="f" :key="f.feature_id">
+                  {{ f.feature_name }} (Power: {{ f.feature_added_power }}hp, Price: {{ f.feature_price }}€)
+                </option>
+              </select>
+            </td>
+          </tr>
+
+          <tr>
+            <td>SELECT BRAKES</td>
+            <td>
+              <select v-model="selectedFeatures.brakes" class="form-control">
+                <option v-for="f in brakeFeatures" :value="f" :key="f.feature_id">
+                  {{ f.feature_name }} (Weight Added: {{ f.feature_added_weight }}kg, Price: {{ f.feature_price }}€)
+                </option>
+              </select>
+            </td>
+          </tr>
+
+          <tr>
+            <td colspan="2" class="text-center">
+              <button class="btn btn-success" @click="purchaseCar()">GO TO PURCHASE</button>
+              <button class="btn btn-warning" @click="addToCart()">ADD TO CART</button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </template>
@@ -70,21 +84,15 @@
 export default {
   name: 'Cars',
   props: ['action', 'id'],
-  data () {
+  data() {
     return {
       cars: [],
       oneCar: {
         car_id: 0,
         car_name: 'xxx',
-        car_seat_num: 0,
-        car_creation_date: 0,
-        car_base_power: 0,
-        car_base_weight: 0,
         car_base_price: 0,
-        brand_id: 0,
         features: []
       },
-
       colorFeatures: [],
       motorFeatures: [],
       brakeFeatures: [],
@@ -92,16 +100,17 @@ export default {
         color: null,
         motor: null,
         brakes: null
-      }
-    }
+      },
+      lastCustomId: 0,
+    };
   },
   methods: {
     async getAllData() {
       try {
-
+        // Mock data for cars and features
         this.cars = [
-          { car_id: 1, car_name: "Audi S4", car_seat_num: 5, car_base_power: 300, car_base_weight: 1600, car_base_price: 45000, brand_id: 2, features: [] },
-          { car_id: 2, car_name: "BMW i8", car_seat_num: 4, car_base_power: 370, car_base_weight: 1400, car_base_price: 90000, brand_id: 1, features: [] }
+          { car_id: 1, car_name: "Audi S4", car_base_price: 45000 },
+          { car_id: 2, car_name: "BMW i8", car_base_price: 90000 }
         ];
         this.colorFeatures = [
           { feature_id: 1, feature_name: 'Red Paint', feature_color: 'Red', feature_price: 500 },
@@ -120,42 +129,91 @@ export default {
         ];
 
         this.refreshOneCar();
-      } catch (ex) {console.log(ex)}
+        this.loadLastCustomId();  // Load the last custom_id from local storage
+      } catch (ex) {
+        console.log(ex);
+      }
     },
 
     refreshOneCar() {
       if (this.$props.id === "all" || this.$props.id === "0") return;
-      try {this.oneCar = this.cars.find(car => car.car_id == this.$props.id);}
-      catch (ex) { console.log(ex); }
+      try {
+        this.oneCar = this.cars.find(car => car.car_id == this.$props.id);
+      } catch (ex) {
+        console.log(ex);
+      }
     },
 
-    addFeatures() {
+    loadLastCustomId() {
+      this.lastCustomId = JSON.parse(localStorage.getItem('lastCustomId')) || 0;
+    },
+
+    calculateTotalPrice() {
+      let basePrice = this.oneCar.car_base_price;
+      let featurePrice = 0;
+
+      if (this.selectedFeatures.color) featurePrice += this.selectedFeatures.color.feature_price;
+      if (this.selectedFeatures.motor) featurePrice += this.selectedFeatures.motor.feature_price;
+      if (this.selectedFeatures.brakes) featurePrice += this.selectedFeatures.brakes.feature_price;
+
+      return basePrice + featurePrice;
+    },
+
+    purchaseCar() {
+      const purchasedCar = JSON.parse(JSON.stringify(this.oneCar));
+      purchasedCar.total_price = this.calculateTotalPrice();
+      purchasedCar.features = [];
+
       if (this.selectedFeatures.color) {
-        this.oneCar.features.push({
-          feature_id: this.selectedFeatures.color.feature_id,
-          feature_name: this.selectedFeatures.color.feature_name,
-          feature_color: this.selectedFeatures.color.feature_color,
-          feature_price: this.selectedFeatures.color.feature_price
-        });
+        purchasedCar.features.push(this.selectedFeatures.color);
       }
-
       if (this.selectedFeatures.motor) {
-        this.oneCar.features.push({
-          feature_id: this.selectedFeatures.motor.feature_id,
-          feature_name: this.selectedFeatures.motor.feature_name,
-          feature_added_power: this.selectedFeatures.motor.feature_added_power,
-          feature_price: this.selectedFeatures.motor.feature_price
-        });
+        purchasedCar.features.push(this.selectedFeatures.motor);
+      }
+      if (this.selectedFeatures.brakes) {
+        purchasedCar.features.push(this.selectedFeatures.brakes);
       }
 
-      if (this.selectedFeatures.brakes) {
-        this.oneCar.features.push({
-          feature_id: this.selectedFeatures.brakes.feature_id,
-          feature_name: this.selectedFeatures.brakes.feature_name,
-          feature_added_weight: this.selectedFeatures.brakes.feature_added_weight,
-          feature_price: this.selectedFeatures.brakes.feature_price
-        });
+      // Generate a unique custom ID
+      purchasedCar.custom_id = this.getNextCustomId();
+
+      let purchasedCars = JSON.parse(localStorage.getItem('purchasedCars')) || [];
+      purchasedCars.push(purchasedCar);
+      localStorage.setItem('purchasedCars', JSON.stringify(purchasedCars));
+
+      window.location.href = '/#/checkout';
+    },
+
+    addToCart() {
+      const purchasedCar = JSON.parse(JSON.stringify(this.oneCar));
+      purchasedCar.total_price = this.calculateTotalPrice();
+      purchasedCar.features = [];
+
+      if (this.selectedFeatures.color) {
+        purchasedCar.features.push(this.selectedFeatures.color);
       }
+      if (this.selectedFeatures.motor) {
+        purchasedCar.features.push(this.selectedFeatures.motor);
+      }
+      if (this.selectedFeatures.brakes) {
+        purchasedCar.features.push(this.selectedFeatures.brakes);
+      }
+
+      // Generate a unique custom ID
+      purchasedCar.custom_id = this.getNextCustomId();
+
+      let purchasedCars = JSON.parse(localStorage.getItem('purchasedCars')) || [];
+      purchasedCars.push(purchasedCar);
+      localStorage.setItem('purchasedCars', JSON.stringify(purchasedCars));
+
+      alert(`${this.oneCar.car_name} has been added to your cart!`);
+    },
+
+    getNextCustomId() {
+      // Increment the custom ID and store it
+      this.lastCustomId += 1;
+      localStorage.setItem('lastCustomId', JSON.stringify(this.lastCustomId));
+      return this.lastCustomId;
     }
   },
 
@@ -164,22 +222,22 @@ export default {
       this.refreshOneCar();
     }
   },
+
   created() {
     this.getAllData();
   }
-}
+};
 </script>
 
 <style scoped>
-#app table {
-  width: 95%;
-  margin: 20px auto;
-}
-.purchase{
+.purchase {
   padding-top: 50px;
 }
-
-#app td {
-  text-align: left;
+.table {
+  width: 100%;
+  margin: 20px 0;
+}
+.text-center {
+  color: #333;
 }
 </style>

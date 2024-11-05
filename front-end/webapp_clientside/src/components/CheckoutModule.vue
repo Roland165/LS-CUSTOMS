@@ -1,30 +1,41 @@
 <template>
   <div class="checkout">
+    <h1 class="text-center">Checkout</h1>
 
-    <table class="table table-striped">
+    <table v-if="purchasedCars.length" class="table table-striped table-bordered table-hover">
       <thead>
       <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Base Price</th>
         <th>Select</th>
+        <th>Custom ID</th>
+        <th>Name</th>
+        <th>Total Price (€)</th>
+        <th>Features</th>
+        <th>Delete</th>
       </tr>
       </thead>
       <tbody>
-      <tr v-for="car in cars" :key="car.car_id">
-        <td>{{ car.car_id }}</td>
-        <td>{{ car.car_name }}</td>
-        <td>{{ car.car_base_price }}€</td>
+      <tr v-for="car in purchasedCars" :key="car.custom_id">
         <td>
-          <input type="checkbox" v-model="selectedCars" :value="car" @change="updateTotalPrice()">
+          <input type="checkbox" v-model="selectedCars" :value="car.custom_id" />
+        </td>
+        <td>{{ car.custom_id }}</td>
+        <td>{{ car.car_name }}</td>
+        <td>{{ car.total_price }} €</td>
+        <td>
+          <ul>
+            <li v-for="feature in car.features" :key="feature.feature_id">
+              {{ feature.feature_name }} (Price: {{ feature.feature_price }}€)
+            </li>
+          </ul>
+        </td>
+        <td>
+          <button @click="deleteCar(car.custom_id)">Delete</button>
         </td>
       </tr>
       </tbody>
     </table>
-
-    <h2>Total Price: {{ totalPrice }}€</h2>
-    <button @click="confirmPurchase">Confirm Purchase</button>
-
+    <p v-else>No cars in checkout.</p>
+    <button @click="confirmSelectedCars" :disabled="!selectedCars.length">Confirm Purchase</button>
   </div>
 </template>
 
@@ -33,74 +44,75 @@ export default {
   name: 'Checkout',
   data() {
     return {
-      cars: [],
+      purchasedCars: [],
       selectedCars: [],
-      totalPrice: 0
+      lastCustomId: 0,
     };
   },
   methods: {
-    async getAllData() {
-      this.cars = [
-        {
-          car_id: 1,
-          car_name: "Audi S4",
-          car_base_price: 40000,
-          car_seat_num: 5,
-          car_creation_date: 2018,
-          car_base_power: 300,
-          car_base_weight: 1500
-        },
-        {
-          car_id: 2,
-          car_name: "BMW i8",
-          car_base_price: 80000,
-          car_seat_num: 4,
-          car_creation_date: 2020,
-          car_base_power: 370,
-          car_base_weight: 1480
-        },
-        {
-          car_id: 3,
-          car_name: "Citroen C3",
-          car_base_price: 25000,
-          car_seat_num: 5,
-          car_creation_date: 2021,
-          car_base_power: 110,
-          car_base_weight: 1100
-        }
-      ];
+    loadPurchasedCars() {
+      this.purchasedCars = JSON.parse(localStorage.getItem('purchasedCars')) || [];
     },
-    updateTotalPrice() {
-      this.totalPrice = this.selectedCars.reduce((total, car) => {
-        return total + car.car_base_price;
-      }, 0);
-    },
-    confirmPurchase() {
-      if (this.selectedCars.length === 0) {
-        alert("Please select at least one car to purchase.");
-        return;
-      }
-      alert(`You have purchased ${this.selectedCars.length} car(s) for a total of ${this.totalPrice}€.`);
-    }
-  },
+    confirmSelectedCars() {
+      const newOrder = {
+        custom_id: this.getNextOrderId(),  // Generate the order ID
+        order_date: new Date().toISOString().split('T')[0],
+        cars: [],
+        total_price: 0,
+      };
 
+      this.selectedCars.forEach(customId => {
+        const car = this.purchasedCars.find(c => c.custom_id === customId);
+        if (car) {
+          newOrder.cars.push(car);
+          newOrder.total_price += car.total_price;
+        }
+      });
+
+      let orders = JSON.parse(localStorage.getItem('orders')) || [];
+      orders.push(newOrder);
+      localStorage.setItem('orders', JSON.stringify(orders));
+
+      // Clear selected cars from purchasedCars
+      this.purchasedCars = this.purchasedCars.filter(car => !this.selectedCars.includes(car.custom_id));
+      localStorage.setItem('purchasedCars', JSON.stringify(this.purchasedCars));
+
+      this.selectedCars = [];
+    },
+    deleteCar(customId) {
+      this.purchasedCars = this.purchasedCars.filter(car => car.custom_id !== customId);
+      localStorage.setItem('purchasedCars', JSON.stringify(this.purchasedCars));
+    },
+    loadLastCustomId() {
+      this.lastCustomId = JSON.parse(localStorage.getItem('lastCustomId')) || 0;
+    },
+    getNextOrderId() {
+      // Increment the order ID
+      return JSON.parse(localStorage.getItem('orderCounter')) || 0 + 1;
+    },
+    saveOrderCounter() {
+      const currentCounter = JSON.parse(localStorage.getItem('orderCounter')) || 0;
+      localStorage.setItem('orderCounter', JSON.stringify(currentCounter + 1));
+    },
+  },
   created() {
-    this.getAllData();
-  }
-}
+    this.loadPurchasedCars();
+    this.loadLastCustomId();  // Load last custom_id when component is created
+  },
+};
 </script>
 
-
 <style scoped>
-.checkout{
+.checkout {
   padding-top: 50px;
 }
-#app table {
-  width: 95%;
-  margin: 20px auto;
+.table {
+  width: 100%;
+  margin: 20px 0;
 }
-
-#app td {
-  text-align: left;
+.text-center {
+  color: #333;
 }
 </style>
+
+
