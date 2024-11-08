@@ -51,9 +51,6 @@ body {
   transition: background-color 0.3s ease;
 }
 
-.nav-bar:hover {
-  background-color: rgba(51, 51, 51, 0.95); /* Slightly more opaque on hover */
-}
 
 .nav-bar .container {
   display: flex;
@@ -68,15 +65,15 @@ body {
   font-weight: bold;
   font-size: 1.2em;
   padding: 10px 20px;
-  border-radius: 5px;
+  border-radius: 80px;
+  border : #0077b6 solid 3px;
   transition: background-color 0.3s ease;
 }
 
 .nav-bar a:hover {
-  background-color: rgba(85, 85, 85, 0.8); /* Semi-transparent hover state */
+  background-color: rgba(255, 255, 255, 0.3);
 }
 
-/* Responsive Styles */
 @media (max-width: 768px) {
   .nav-bar {
     flex-direction: column;

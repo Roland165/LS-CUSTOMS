@@ -7,11 +7,11 @@
     </section>
     <section class="content-section">
       <div class="container">
-        <div class="row">
-          <div class="col-md-6">
+        <div class="row align-items-center">
+          <div class="col-md-5">
             <img src="../medias/Supra_img.jpg" alt="Car Image" class="img-fluid">
           </div>
-          <div class="col-md-6">
+          <div class="col-md-5">
             <h1>Welcome to Our Car Customization Service</h1>
             <p>Experience the ultimate in car customization with our state-of-the-art tools and services. Whether you're looking to upgrade your vehicle's performance, enhance its aesthetics, or add personalized features, we have everything you need to make your dream car a reality.</p>
             <p>Start your journey today by browsing our selection of premium vehicles and customizing them to your exact specifications. With our easy-to-use interface and expert guidance, you'll be driving the car of your dreams in no time.</p>
@@ -57,6 +57,13 @@ export default {
   padding: 0 20px;
 }
 
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 100px;
+}
+
 .home h1 {
   color: #333;
   font-size: 2.5em;
@@ -77,6 +84,10 @@ export default {
 }
 
 @media (max-width: 768px) {
+  .container {
+    padding-top: 120px;
+  }
+
   .home h1 {
     font-size: 2em;
   }
