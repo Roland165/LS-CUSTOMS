@@ -1,9 +1,8 @@
 <template>
   <div class="home">
-    <!-- Full-screen video background -->
     <div class="video-background">
       <video autoplay loop muted playsinline class="video">
-        <source src="../medias/mclaren_p1_backroads_4k.mp4" type="video/mp4">
+        <source src="../medias/McLaren_Home_Video.mp4" type="video/mp4">
       </video>
     </div>
 
@@ -11,7 +10,7 @@
       <div class="container">
         <div class="row">
           <div class="col-md-6">
-            <img src="path/to/your/image.jpg" alt="Car Image" class="img-fluid">
+            <img src="../medias/Supra_img.jpg" alt="Car Image" class="img-fluid">
           </div>
           <div class="col-md-6">
             <h1>Welcome to Our Car Customization Service</h1>

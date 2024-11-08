@@ -5,7 +5,7 @@
       <p class="text-center">
         ACTION = {{ action }}<br />
         ID = {{ id }}<br />
-        <a class="btn btn-link" href="/#/purchase/list/all">Back to the list</a><br />
+        <router-link class="btn btn-link" to="/purchase/list/all">Back to the list</router-link><br />
       </p>
 
       <table v-if="action === 'list'" class="table table-striped table-bordered table-hover mt-4">
@@ -17,11 +17,11 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="c of cars" :key="c.car_id">
+        <tr v-for="c in cars" :key="c.car_id">
           <td>{{ c.car_id }}</td>
           <td>{{ c.car_name }}</td>
           <td>
-            <a class="btn btn-primary" :href="'/#/purchase/customize/' + c.car_id">[CUSTOMIZE]</a>
+            <router-link class="btn btn-primary" :to="'/purchase/customize/' + c.car_id">[CUSTOMIZE]</router-link>
           </td>
         </tr>
         </tbody>
@@ -82,7 +82,7 @@
 
 <script>
 export default {
-  name: 'Cars',
+  name: 'PurchaseModule',
   props: ['action', 'id'],
   data() {
     return {
@@ -107,7 +107,6 @@ export default {
   methods: {
     async getAllData() {
       try {
-        // Mock data for cars and features
         this.cars = [
           { car_id: 1, car_name: "Audi S4", car_base_price: 45000 },
           { car_id: 2, car_name: "BMW i8", car_base_price: 90000 }
@@ -129,7 +128,7 @@ export default {
         ];
 
         this.refreshOneCar();
-        this.loadLastCustomId();  // Load the last custom_id from local storage
+        this.loadLastCustomId();
       } catch (ex) {
         console.log(ex);
       }
@@ -174,14 +173,13 @@ export default {
         purchasedCar.features.push(this.selectedFeatures.brakes);
       }
 
-      // Generate a unique custom ID
       purchasedCar.custom_id = this.getNextCustomId();
 
       let purchasedCars = JSON.parse(localStorage.getItem('purchasedCars')) || [];
       purchasedCars.push(purchasedCar);
       localStorage.setItem('purchasedCars', JSON.stringify(purchasedCars));
 
-      window.location.href = '/#/checkout';
+      this.$router.push('/checkout');
     },
 
     addToCart() {
@@ -199,7 +197,6 @@ export default {
         purchasedCar.features.push(this.selectedFeatures.brakes);
       }
 
-      // Generate a unique custom ID
       purchasedCar.custom_id = this.getNextCustomId();
 
       let purchasedCars = JSON.parse(localStorage.getItem('purchasedCars')) || [];
@@ -210,7 +207,6 @@ export default {
     },
 
     getNextCustomId() {
-      // Increment the custom ID and store it
       this.lastCustomId += 1;
       localStorage.setItem('lastCustomId', JSON.stringify(this.lastCustomId));
       return this.lastCustomId;
@@ -231,13 +227,44 @@ export default {
 
 <style scoped>
 .purchase {
-  padding-top: 50px;
+  padding-top: 80px;
 }
-.table {
-  width: 100%;
-  margin: 20px 0;
-}
-.text-center {
+
+.purchase h1,
+.purchase h2,
+.purchase h3 {
   color: #333;
+}
+
+.purchase .table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.purchase th,
+.purchase td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.purchase th {
+  background-color: #333;
+  color: #fff;
+}
+
+.purchase .btn {
+  display: inline-block;
+  background-color: #0077b6;
+  color: #fff;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.purchase .btn:hover {
+  background-color: #005a8e;
 }
 </style>

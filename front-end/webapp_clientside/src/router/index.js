@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import Home from "@/components/Home.vue";
 import CheckoutModule from '@/components/CheckoutModule';
 import PurchaseModule from '@/components/PurchaseModule';
 import OrdersModule from '@/components/OrdersModule';
@@ -7,11 +8,16 @@ Vue.use(Router);
 
 export default new Router({
   routes: [
+
+
     {
       path: '/',
-      name: 'PurchaseModule',
-      component: PurchaseModule,
-      redirect: '/purchase/list/all',
+      redirect: '/home',
+    },
+    {
+      path: '/home',
+      name: 'home',
+      component: Home,
     },
     {
       path: '/purchase',
