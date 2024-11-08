@@ -1,12 +1,11 @@
 <template>
   <div class="home">
-    <div class="video-background">
+    <section class="video-section">
       <video autoplay loop muted playsinline class="video">
         <source src="../medias/McLaren_Home_Video.mp4" type="video/mp4">
       </video>
-    </div>
-
-    <div class="content-overlay">
+    </section>
+    <section class="content-section">
       <div class="container">
         <div class="row">
           <div class="col-md-6">
@@ -19,7 +18,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </section>
   </div>
 </template>
 
@@ -31,59 +30,43 @@ export default {
 
 <style scoped>
 .home {
-  position: relative;
+  width: 100%;
+}
+
+.video-section {
   width: 100%;
   height: 100vh;
   overflow: hidden;
-}
-
-.video-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  z-index: -1;
+  position: relative;
 }
 
 .video {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  min-width: 100%;
-  min-height: 100%;
-  width: auto;
-  height: auto;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 
-.content-overlay {
-  position: relative;
-  z-index: 1;
-  color: white;
-  background: rgba(0, 0, 0, 0.5);
-  min-height: 100vh;
+.content-section {
+  padding: 50px 0;
+  background: #fff;
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 0 20px;
 }
 
 .home h1 {
-  color: #fff;
+  color: #333;
   font-size: 2.5em;
   margin-bottom: 20px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .home p {
-  color: #fff;
+  color: #666;
   font-size: 1.2em;
   margin-bottom: 20px;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .img-fluid {
@@ -93,18 +76,17 @@ export default {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Responsive Styles */
 @media (max-width: 768px) {
-  .container {
-    padding-top: 120px;
-  }
-
   .home h1 {
     font-size: 2em;
   }
 
   .home p {
     font-size: 1em;
+  }
+
+  .content-section {
+    padding: 30px 0;
   }
 }
 </style>
