@@ -69,12 +69,21 @@
 
           <tr>
             <td colspan="2" class="text-center">
-              <button class="btn btn-success" @click="purchaseCar()">GO TO PURCHASE</button>
               <button class="btn btn-warning" @click="addToCart()">ADD TO CART</button>
             </td>
           </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+    <div v-if="showCartConfirmation" class="modal">
+      <div class="modal-content">
+        <h2>Added to Cart</h2>
+        <p>{{ oneCar.car_name }} has been added to your cart!</p>
+        <div class="modal-buttons">
+          <router-link to="/checkout" class="btn btn-primary">Go to Checkout</router-link>
+          <button class="btn btn-success" @click="showCartConfirmation = false">Continue Shopping</button>
+        </div>
       </div>
     </div>
   </div>
@@ -102,6 +111,7 @@ export default {
         brakes: null
       },
       lastCustomId: 0,
+      showCartConfirmation: false,
     };
   },
   methods: {
@@ -203,7 +213,7 @@ export default {
       purchasedCars.push(purchasedCar);
       sessionStorage.setItem('purchasedCars', JSON.stringify(purchasedCars));
 
-      alert(`${this.oneCar.car_name} has been added to your cart!`);
+      this.showCartConfirmation = true;
     },
 
     getNextCustomId() {
@@ -266,5 +276,38 @@ export default {
 
 .purchase .btn:hover {
   background-color: #005a8e;
+}
+
+.purchase .modal {
+  display: block;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.purchase .modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 30%;
+  text-align: center;
+}
+
+.purchase .modal-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .purchase .modal-content {
+    width: 90%;
+  }
 }
 </style>
