@@ -24,63 +24,90 @@
       </div>
 
       <div v-if="action === 'customize'" class="customization-section">
-        <h2 class="text-center">Customize Your Car: {{ oneCar.car_name }}</h2>
-        <p class="text-center"><strong>Base Price:</strong> {{ oneCar.car_base_price }} €</p>
-        <p class="text-center"><strong>Total Price:</strong> {{ calculateTotalPrice() }} €</p>
+        <div class="customization-header">
+          <h2>{{ oneCar.car_name }}</h2>
+          <div class="price-info">
+            <p class="base-price">Base Price: {{ oneCar.car_base_price }}€</p>
+            <p class="total-price">Total Price: {{ calculateTotalPrice() }}€</p>
+          </div>
+        </div>
 
-        <table class="table table-striped table-bordered table-hover mt-4">
-          <tbody>
-          <tr>
-            <td>SELECT COLOR</td>
-            <td>
-              <select v-model="selectedFeatures.color" class="form-control">
-                <option v-for="f in colorFeatures" :value="f" :key="f.feature_id">
-                  {{ f.feature_name }} (Color: {{ f.feature_color }})
-                </option>
-              </select>
-            </td>
-          </tr>
+        <div class="customization-content">
+          <div class="feature-sections">
+            <div class="feature-section">
+              <h3>Engine</h3>
+              <div class="feature-options">
+                <div
+                  v-for="engine in motorFeatures"
+                  :key="engine.feature_id"
+                  class="feature-card"
+                  :class="{ 'selected': selectedFeatures.motor === engine }"
+                  @click="selectedFeatures.motor = engine"
+                >
+                  <img :src="getEngineImage(engine.feature_name)" :alt="engine.feature_name">
+                  <div class="feature-info">
+                    <h4>{{ engine.feature_name }}</h4>
+                    <p>Power: {{ engine.feature_added_power }}hp</p>
+                    <p class="price">{{ engine.feature_price }}€</p>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-          <tr>
-            <td>SELECT MOTOR</td>
-            <td>
-              <select v-model="selectedFeatures.motor" class="form-control">
-                <option v-for="f in motorFeatures" :value="f" :key="f.feature_id">
-                  {{ f.feature_name }} (Power: {{ f.feature_added_power }}hp, Price: {{ f.feature_price }}€)
-                </option>
-              </select>
-            </td>
-          </tr>
+            <div class="feature-section">
+              <h3>Brakes</h3>
+              <div class="feature-options">
+                <div
+                  v-for="brake in brakeFeatures"
+                  :key="brake.feature_id"
+                  class="feature-card"
+                  :class="{ 'selected': selectedFeatures.brakes === brake }"
+                  @click="selectedFeatures.brakes = brake"
+                >
+                  <img :src="getBrakeImage(brake.feature_name)" :alt="brake.feature_name">
+                  <div class="feature-info">
+                    <h4>{{ brake.feature_name }}</h4>
+                    <p>Weight: {{ brake.feature_added_weight }}kg</p>
+                    <p class="price">{{ brake.feature_price }}€</p>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-          <tr>
-            <td>SELECT BRAKES</td>
-            <td>
-              <select v-model="selectedFeatures.brakes" class="form-control">
-                <option v-for="f in brakeFeatures" :value="f" :key="f.feature_id">
-                  {{ f.feature_name }} (Weight Added: {{ f.feature_added_weight }}kg, Price: {{ f.feature_price }}€)
-                </option>
-              </select>
-            </td>
-          </tr>
+            <div class="feature-section">
+              <h3>Color</h3>
+              <div class="color-options">
+                <div
+                  v-for="color in colorFeatures"
+                  :key="color.feature_id"
+                  class="color-card"
+                  :class="{ 'selected': selectedFeatures.color === color }"
+                  @click="selectedFeatures.color = color"
+                >
+                  <div class="color-sample" :style="{ backgroundColor: color.feature_color }"></div>
+                  <div class="feature-info">
+                    <h4>{{ color.feature_name }}</h4>
+                    <p class="price">{{ color.feature_price }}€</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-          <tr>
-            <td colspan="2" class="text-center">
-              <button class="btn btn-warning" @click="addToCart()">ADD TO CART</button>
-            </td>
-          </tr>
-          </tbody>
-        </table>
+          <div class="action-buttons">
+            <button class="btn btn-warning" @click="addToCart()">Add to Cart</button>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Cart Confirmation Modal -->
     <div v-if="showCartConfirmation" class="modal">
       <div class="modal-content">
         <h2>Added to Cart</h2>
         <p>{{ oneCar.car_name }} has been added to your cart!</p>
         <div class="modal-buttons">
           <router-link to="/checkout" class="btn btn-primary">Go to Checkout</router-link>
-          <button class="btn btn-success" @click="showCartConfirmation = false">Continue Shopping</button>
+          <button class="btn btn-success" @click="continueShopping">Continue Shopping</button>
         </div>
       </div>
     </div>
@@ -121,11 +148,33 @@ export default {
       }
       return '';
     },
-
+    getEngineImage(engineName) {
+      switch(engineName) {
+        case 'V6 Engine':
+          return require('../medias/v6_engine_img.jpg');
+        case 'V8 Engine':
+          return require('../medias/v8_engine_img.jpg');
+        case 'Electric Motor':
+          return require('../medias/electric_engine_img.jpg');
+        default:
+          return '';
+      }
+    },
+    getBrakeImage(brakeName) {
+      switch(brakeName) {
+        case 'Standard Brakes':
+          return require('../medias/standard_brakes_img.jpg');
+        case 'Performance Brakes':
+          return require('../medias/performance_brakes_img.jpg');
+        case 'Carbon Ceramic Brakes':
+          return require('../medias/carbon_brakes_img.jpg');
+        default:
+          return '';
+      }
+    },
     goToCustomize(carId) {
       this.$router.push(`/purchase/customize/${carId}`);
     },
-
     async getAllData() {
       try {
         this.cars = [
@@ -133,9 +182,9 @@ export default {
           { car_id: 2, car_name: "BMW i8", car_base_price: 90000 }
         ];
         this.colorFeatures = [
-          { feature_id: 1, feature_name: 'Red Paint', feature_color: 'Red', feature_price: 500 },
-          { feature_id: 2, feature_name: 'Blue Paint', feature_color: 'Blue', feature_price: 600 },
-          { feature_id: 3, feature_name: 'Matte Black', feature_color: 'Black', feature_price: 800 }
+          { feature_id: 1, feature_name: 'Red Paint', feature_color: 'red', feature_price: 500 },
+          { feature_id: 2, feature_name: 'Blue Paint', feature_color: 'blue', feature_price: 600 },
+          { feature_id: 3, feature_name: 'Matte Black', feature_color: 'black', feature_price: 800 }
         ];
         this.motorFeatures = [
           { feature_id: 4, feature_name: 'V6 Engine', feature_added_power: 50, feature_price: 5000 },
@@ -147,14 +196,12 @@ export default {
           { feature_id: 8, feature_name: 'Performance Brakes', feature_added_weight: 10, feature_price: 2000 },
           { feature_id: 9, feature_name: 'Carbon Ceramic Brakes', feature_added_weight: 5, feature_price: 4000 }
         ];
-
         this.refreshOneCar();
         this.loadLastCustomId();
       } catch (ex) {
         console.log(ex);
       }
     },
-
     refreshOneCar() {
       if (this.$props.id === "all" || this.$props.id === "0") return;
       try {
@@ -163,51 +210,21 @@ export default {
         console.log(ex);
       }
     },
-
     loadLastCustomId() {
       this.lastCustomId = JSON.parse(sessionStorage.getItem('lastCustomId')) || 0;
     },
-
     calculateTotalPrice() {
       let basePrice = this.oneCar.car_base_price;
       let featurePrice = 0;
-
       if (this.selectedFeatures.color) featurePrice += this.selectedFeatures.color.feature_price;
       if (this.selectedFeatures.motor) featurePrice += this.selectedFeatures.motor.feature_price;
       if (this.selectedFeatures.brakes) featurePrice += this.selectedFeatures.brakes.feature_price;
-
       return basePrice + featurePrice;
     },
-
-    purchaseCar() {
-      const purchasedCar = JSON.parse(JSON.stringify(this.oneCar));
-      purchasedCar.total_price = this.calculateTotalPrice();
-      purchasedCar.features = [];
-
-      if (this.selectedFeatures.color) {
-        purchasedCar.features.push(this.selectedFeatures.color);
-      }
-      if (this.selectedFeatures.motor) {
-        purchasedCar.features.push(this.selectedFeatures.motor);
-      }
-      if (this.selectedFeatures.brakes) {
-        purchasedCar.features.push(this.selectedFeatures.brakes);
-      }
-
-      purchasedCar.custom_id = this.getNextCustomId();
-
-      let purchasedCars = JSON.parse(sessionStorage.getItem('purchasedCars')) || [];
-      purchasedCars.push(purchasedCar);
-      sessionStorage.setItem('purchasedCars', JSON.stringify(purchasedCars));
-
-      this.$router.push('/checkout');
-    },
-
     addToCart() {
       const purchasedCar = JSON.parse(JSON.stringify(this.oneCar));
       purchasedCar.total_price = this.calculateTotalPrice();
       purchasedCar.features = [];
-
       if (this.selectedFeatures.color) {
         purchasedCar.features.push(this.selectedFeatures.color);
       }
@@ -217,29 +234,27 @@ export default {
       if (this.selectedFeatures.brakes) {
         purchasedCar.features.push(this.selectedFeatures.brakes);
       }
-
       purchasedCar.custom_id = this.getNextCustomId();
-
       let purchasedCars = JSON.parse(sessionStorage.getItem('purchasedCars')) || [];
       purchasedCars.push(purchasedCar);
       sessionStorage.setItem('purchasedCars', JSON.stringify(purchasedCars));
-
       this.showCartConfirmation = true;
     },
-
     getNextCustomId() {
       this.lastCustomId += 1;
       sessionStorage.setItem('lastCustomId', JSON.stringify(this.lastCustomId));
       return this.lastCustomId;
+    },
+    continueShopping() {
+      this.showCartConfirmation = false;
+      this.$router.push('/purchase/list/all');
     }
   },
-
   watch: {
     id(newVal, oldVal) {
       this.refreshOneCar();
     }
   },
-
   created() {
     this.getAllData();
   }
@@ -249,7 +264,20 @@ export default {
 <style scoped>
 .purchase {
   padding-top: 80px;
+}
 
+.purchase .btn {
+  display: inline-block;
+  background-color: #0077b6;
+  color: #fff;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.purchase .btn:hover {
+  background-color: #005a8e;
 }
 
 .car-grid {
@@ -268,14 +296,9 @@ export default {
   cursor: pointer;
 }
 
-.car-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
-
 .car-image {
   width: 100%;
-  height: 230px;
+  height: 300px;
   overflow: hidden;
 }
 
@@ -286,74 +309,90 @@ export default {
   transition: transform 0.3s ease;
 }
 
-.car-card:hover .car-image img {
-  transform: scale(1.05);
-}
-
 .car-info {
   padding: 1rem;
   text-align: center;
 }
 
-.car-info h3 {
-  margin: 0 0 0.3rem;
-  color: #333;
-  font-size: 1.2rem;
+.customization-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid #e5e5e5;
 }
 
-.car-info p {
-  margin: 0 0 0.5rem;
-  color: #666;
-  font-size: 0.9rem;
+.total-price {
+  color: #D5001C;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
-.purchase h1,
-.purchase h2,
-.purchase h3 {
-  color: #333;
+.feature-section {
+  margin-bottom: 3rem;
 }
 
-.purchase .table {
+.feature-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.feature-card {
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.feature-card.selected {
+  border: 2px solid #D5001C;
+  box-shadow: 0 4px 12px rgba(213, 0, 28, 0.1);
+}
+
+.feature-card img {
   width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
+  height: 150px;
+  object-fit: cover;
 }
 
-.purchase th,
-.purchase td {
-  padding: 10px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
+.color-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
 }
 
-.purchase th {
-  background-color: #333;
-  color: #fff;
+.color-card {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.purchase .btn {
-  display: inline-block;
-  background-color: #0077b6;
-  color: #fff;
-  text-decoration: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
+.color-card.selected {
+  border: 2px solid #D5001C;
 }
 
-.purchase .btn:hover {
-  background-color: #005a8e;
+.color-sample {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 1rem;
+  border: 1px solid #e5e5e5;
 }
 
 .modal {
-  display: block;
   position: fixed;
   z-index: 1;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
   background-color: rgba(0, 0, 0, 0.4);
 }
 
@@ -364,6 +403,7 @@ export default {
   border: 1px solid #888;
   width: 30%;
   text-align: center;
+  border-radius: 8px;
 }
 
 .modal-buttons {
@@ -375,11 +415,20 @@ export default {
 @media (max-width: 768px) {
   .car-grid {
     grid-template-columns: 1fr;
-    padding: 1rem;
   }
 
-  .car-image {
-    height: 250px;
+  .customization-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .feature-options,
+  .color-options {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-content {
+    width: 90%;
   }
 }
 </style>
