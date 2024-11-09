@@ -143,8 +143,15 @@ export default {
     getCarImage(carName) {
       if (carName === "Audi S4") {
         return require('../medias/AudiS4_img.jpg');
-      } else if (carName === "BMW i8") {
+      }
+      if (carName === "BMW i8") {
         return require('../medias/BMWi8_img.jpg');
+      }
+      if (carName === "Ferrari F12 Berlinetta") {
+        return require('../medias/F12_berlinetta_img.jpg');
+      }
+      if (carName === "BMW M3 E30") {
+        return require('../medias/BMW_M3_e30.jpg');
       }
       return '';
     },
@@ -179,7 +186,9 @@ export default {
       try {
         this.cars = [
           { car_id: 1, car_name: "Audi S4", car_base_price: 45000 },
-          { car_id: 2, car_name: "BMW i8", car_base_price: 90000 }
+          { car_id: 2, car_name: "BMW i8", car_base_price: 90000 },
+          { car_id: 3, car_name: "Ferrari F12 Berlinetta", car_base_price: 250000 },
+          { car_id: 4, car_name: "BMW M3 E30", car_base_price: 50000}
         ];
         this.colorFeatures = [
           { feature_id: 1, feature_name: 'Red Paint', feature_color: 'red', feature_price: 500 },
