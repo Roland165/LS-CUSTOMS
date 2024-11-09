@@ -35,7 +35,7 @@ export default {
 
 .video-section {
   width: 100%;
-  height: 100vh;
+  height: 95vh;
   overflow: hidden;
   position: relative;
 }

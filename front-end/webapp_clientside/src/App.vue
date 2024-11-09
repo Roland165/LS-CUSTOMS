@@ -42,7 +42,7 @@ body {
 
 .nav-bar {
   background-color: rgba(51, 51, 51, 0.4);
-  padding: 10px 0;
+  padding: 0px;
   position: fixed;
   width: 100%;
   top: 0;
