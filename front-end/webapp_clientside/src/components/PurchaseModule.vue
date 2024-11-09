@@ -144,7 +144,7 @@ export default {
     },
 
     loadLastCustomId() {
-      this.lastCustomId = JSON.parse(localStorage.getItem('lastCustomId')) || 0;
+      this.lastCustomId = JSON.parse(sessionStorage.getItem('lastCustomId')) || 0;
     },
 
     calculateTotalPrice() {
@@ -175,9 +175,9 @@ export default {
 
       purchasedCar.custom_id = this.getNextCustomId();
 
-      let purchasedCars = JSON.parse(localStorage.getItem('purchasedCars')) || [];
+      let purchasedCars = JSON.parse(sessionStorage.getItem('purchasedCars')) || [];
       purchasedCars.push(purchasedCar);
-      localStorage.setItem('purchasedCars', JSON.stringify(purchasedCars));
+      sessionStorage.setItem('purchasedCars', JSON.stringify(purchasedCars));
 
       this.$router.push('/checkout');
     },
@@ -199,16 +199,16 @@ export default {
 
       purchasedCar.custom_id = this.getNextCustomId();
 
-      let purchasedCars = JSON.parse(localStorage.getItem('purchasedCars')) || [];
+      let purchasedCars = JSON.parse(sessionStorage.getItem('purchasedCars')) || [];
       purchasedCars.push(purchasedCar);
-      localStorage.setItem('purchasedCars', JSON.stringify(purchasedCars));
+      sessionStorage.setItem('purchasedCars', JSON.stringify(purchasedCars));
 
       alert(`${this.oneCar.car_name} has been added to your cart!`);
     },
 
     getNextCustomId() {
       this.lastCustomId += 1;
-      localStorage.setItem('lastCustomId', JSON.stringify(this.lastCustomId));
+      sessionStorage.setItem('lastCustomId', JSON.stringify(this.lastCustomId));
       return this.lastCustomId;
     }
   },
