@@ -8,17 +8,42 @@
         <router-link class="btn btn-link" to="/purchase/list/all">Back to the list</router-link><br />
       </p>
 
-      <div v-if="action === 'list'" class="car-grid">
-        <div v-for="c in cars" :key="c.car_id" class="car-card" @click="goToCustomize(c.car_id)">
-          <div class="car-image">
-            <img :src="getCarImage(c.car_name)" :alt="c.car_name">
+      <div v-if="action === 'list'">
+        <div class="filters-section">
+          <div class="filter-controls">
+            <div class="filter-group">
+              <label for="brand-filter">Filter by Brand:</label>
+              <select id="brand-filter" v-model="selectedBrand" class="form-control">
+                <option value="all">All Brands</option>
+                <option v-for="brand in availableBrands" :key="brand" :value="brand">
+                  {{ brand }}
+                </option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label for="sort-option">Sort by:</label>
+              <select id="sort-option" v-model="sortOption" class="form-control">
+                <option value="none">None</option>
+                <option value="price-asc">Price (Increasing)</option>
+                <option value="price-desc">Price (Decreasing)</option>
+              </select>
+            </div>
           </div>
-          <div class="car-info">
-            <h3>{{ c.car_name }}</h3>
-            <p>Starting from {{ c.car_base_price }}€</p>
-            <router-link class="btn btn-primary" :to="'/purchase/customize/' + c.car_id">
-              Configure
-            </router-link>
+        </div>
+
+        <div class="car-grid">
+          <div v-for="c in filteredAndSortedCars" :key="c.car_id" class="car-card" @click="goToCustomize(c.car_id)">
+            <div class="car-image">
+              <img :src="getCarImage(c)" :alt="c.brand + ' ' + c.car_name">
+            </div>
+            <div class="car-info">
+              <h3>{{ c.brand }} {{ c.car_name }}</h3>
+              <p>Starting from {{ c.car_base_price }}€</p>
+              <router-link class="btn btn-primary" :to="'/purchase/customize/' + c.car_id">
+                Configure
+              </router-link>
+            </div>
           </div>
         </div>
       </div>
@@ -137,20 +162,22 @@ export default {
       },
       lastCustomId: 0,
       showCartConfirmation: false,
+      selectedBrand: 'all',
+      sortOption: 'none',
     };
   },
   methods: {
-    getCarImage(carName) {
-      if (carName === "Audi S4") {
+    getCarImage(car) {
+      if (car.brand === "Audi" && car.car_name === "S4") {
         return require('../medias/AudiS4_img.jpg');
       }
-      if (carName === "BMW i8") {
+      if (car.brand === "BMW" && car.car_name === "i8") {
         return require('../medias/BMWi8_img.jpg');
       }
-      if (carName === "Ferrari F12 Berlinetta") {
+      if (car.brand === "Ferrari" && car.car_name === "F12 Berlinetta") {
         return require('../medias/F12_berlinetta_img.jpg');
       }
-      if (carName === "BMW M3 E30") {
+      if (car.brand === "BMW" && car.car_name === "M3 E30") {
         return require('../medias/BMW_M3_e30.jpg');
       }
       return '';
@@ -185,10 +212,10 @@ export default {
     async getAllData() {
       try {
         this.cars = [
-          { car_id: 1, car_name: "Audi S4", car_base_price: 45000 },
-          { car_id: 2, car_name: "BMW i8", car_base_price: 90000 },
-          { car_id: 3, car_name: "Ferrari F12 Berlinetta", car_base_price: 250000 },
-          { car_id: 4, car_name: "BMW M3 E30", car_base_price: 50000}
+          { car_id: 1, car_name: "S4", brand: "Audi", car_base_price: 45000 },
+          { car_id: 2, car_name: "i8", brand: "BMW", car_base_price: 90000 },
+          { car_id: 3, car_name: "F12 Berlinetta", brand: "Ferrari", car_base_price: 250000 },
+          { car_id: 4, car_name: "M3 E30", brand: "BMW", car_base_price: 50000}
         ];
         this.colorFeatures = [
           { feature_id: 1, feature_name: 'Red Paint', feature_color: 'red', feature_price: 500 },
@@ -266,7 +293,27 @@ export default {
   },
   created() {
     this.getAllData();
-  }
+  },
+  computed: {
+    filteredAndSortedCars() {
+      let result = [...this.cars];
+
+      if (this.selectedBrand !== 'all') {
+        result = result.filter(car => car.brand === this.selectedBrand);
+      }
+
+      if (this.sortOption === 'price-asc') {
+        result.sort((a, b) => a.car_base_price - b.car_base_price);
+      } else if (this.sortOption === 'price-desc') {
+        result.sort((a, b) => b.car_base_price - a.car_base_price);
+      }
+
+      return result;
+    },
+    availableBrands() {
+      return [...new Set(this.cars.map(car => car.brand))];
+    }
+  },
 };
 </script>
 
@@ -421,6 +468,38 @@ export default {
   margin-top: 20px;
 }
 
+.filters-section {
+  margin-bottom: 2rem;
+}
+
+.filter-controls {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.filter-group label {
+  font-weight: bold;
+  margin: 0;
+}
+
+.filter-group select {
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  min-width: 150px;
+}
+
 @media (max-width: 768px) {
   .car-grid {
     grid-template-columns: 1fr;
@@ -438,6 +517,15 @@ export default {
 
   .modal-content {
     width: 90%;
+  }
+  .filter-controls {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .filter-group {
+    width: 100%;
+    justify-content: space-between;
   }
 }
 </style>
