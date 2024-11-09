@@ -1,31 +1,27 @@
 <template>
   <div class="purchase">
     <div class="container mt-5">
-      <h1 class="text-center">Customize</h1>
+      <h1 class="text-center">Choose Your Model</h1>
       <p class="text-center">
         ACTION = {{ action }}<br />
         ID = {{ id }}<br />
         <router-link class="btn btn-link" to="/purchase/list/all">Back to the list</router-link><br />
       </p>
 
-      <table v-if="action === 'list'" class="table table-striped table-bordered table-hover mt-4">
-        <thead>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Customize</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="c in cars" :key="c.car_id">
-          <td>{{ c.car_id }}</td>
-          <td>{{ c.car_name }}</td>
-          <td>
-            <router-link class="btn btn-primary" :to="'/purchase/customize/' + c.car_id">[CUSTOMIZE]</router-link>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+      <div v-if="action === 'list'" class="car-grid">
+        <div v-for="c in cars" :key="c.car_id" class="car-card" @click="goToCustomize(c.car_id)">
+          <div class="car-image">
+            <img :src="getCarImage(c.car_name)" :alt="c.car_name">
+          </div>
+          <div class="car-info">
+            <h3>{{ c.car_name }}</h3>
+            <p>Starting from {{ c.car_base_price }}€</p>
+            <router-link class="btn btn-primary" :to="'/purchase/customize/' + c.car_id">
+              Configure
+            </router-link>
+          </div>
+        </div>
+      </div>
 
       <div v-if="action === 'customize'" class="customization-section">
         <h2 class="text-center">Customize Your Car: {{ oneCar.car_name }}</h2>
@@ -76,6 +72,8 @@
         </table>
       </div>
     </div>
+
+    <!-- Cart Confirmation Modal -->
     <div v-if="showCartConfirmation" class="modal">
       <div class="modal-content">
         <h2>Added to Cart</h2>
@@ -115,6 +113,19 @@ export default {
     };
   },
   methods: {
+    getCarImage(carName) {
+      if (carName === "Audi S4") {
+        return require('../medias/AudiS4_img.jpg');
+      } else if (carName === "BMW i8") {
+        return require('../medias/BMWi8_img.jpg');
+      }
+      return '';
+    },
+
+    goToCustomize(carId) {
+      this.$router.push(`/purchase/customize/${carId}`);
+    },
+
     async getAllData() {
       try {
         this.cars = [
@@ -238,6 +249,62 @@ export default {
 <style scoped>
 .purchase {
   padding-top: 80px;
+
+}
+
+.car-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  padding: 2rem 0;
+}
+
+.car-card {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.car-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.car-image {
+  width: 100%;
+  height: 230px;
+  overflow: hidden;
+}
+
+.car-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.car-card:hover .car-image img {
+  transform: scale(1.05);
+}
+
+.car-info {
+  padding: 1rem;
+  text-align: center;
+}
+
+.car-info h3 {
+  margin: 0 0 0.3rem;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.car-info p {
+  margin: 0 0 0.5rem;
+  color: #666;
+  font-size: 0.9rem;
 }
 
 .purchase h1,
@@ -278,7 +345,7 @@ export default {
   background-color: #005a8e;
 }
 
-.purchase .modal {
+.modal {
   display: block;
   position: fixed;
   z-index: 1;
@@ -290,7 +357,7 @@ export default {
   background-color: rgba(0, 0, 0, 0.4);
 }
 
-.purchase .modal-content {
+.modal-content {
   background-color: #fefefe;
   margin: 15% auto;
   padding: 20px;
@@ -299,15 +366,20 @@ export default {
   text-align: center;
 }
 
-.purchase .modal-buttons {
+.modal-buttons {
   display: flex;
   justify-content: space-around;
   margin-top: 20px;
 }
 
 @media (max-width: 768px) {
-  .purchase .modal-content {
-    width: 90%;
+  .car-grid {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+
+  .car-image {
+    height: 250px;
   }
 }
 </style>

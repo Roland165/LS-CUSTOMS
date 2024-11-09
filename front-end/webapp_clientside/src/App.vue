@@ -23,7 +23,7 @@ body {
   font-family: 'Montserrat', sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f2f2f2;
+  background-color: #EEEFF2;
 }
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
