@@ -72,7 +72,7 @@ export default {
   },
   methods: {
     loadPurchasedCars() {
-      this.purchasedCars = JSON.parse(localStorage.getItem('purchasedCars')) || [];
+      this.purchasedCars = JSON.parse(sessionStorage.getItem('purchasedCars')) || [];
     },
     toggleSelectAll() {
       this.selectedCars = this.selectAll ? this.purchasedCars.map(car => car.custom_id) : [];
@@ -92,23 +92,22 @@ export default {
         total_price: this.totalPrice,
       };
 
-      let orders = JSON.parse(localStorage.getItem('orders')) || [];
+      let orders = JSON.parse(sessionStorage.getItem('orders')) || [];
       orders.push(newOrder);
-      localStorage.setItem('orders', JSON.stringify(orders));
+      sessionStorage.setItem('orders', JSON.stringify(orders));
 
       this.purchasedCars = this.purchasedCars.filter(car => !this.selectedCars.includes(car.custom_id));
-      localStorage.setItem('purchasedCars', JSON.stringify(this.purchasedCars));
-
+      sessionStorage.setItem('purchasedCars', JSON.stringify(this.purchasedCars));
       this.selectedCars = [];
       this.showConfirmation = false;
     },
     deleteCar(customId) {
       this.purchasedCars = this.purchasedCars.filter(car => car.custom_id !== customId);
-      localStorage.setItem('purchasedCars', JSON.stringify(this.purchasedCars));
+      sessionStorage.setItem('purchasedCars', JSON.stringify(this.purchasedCars));
     },
     getNextOrderId() {
-      const currentCounter = JSON.parse(localStorage.getItem('orderCounter')) || 0;
-      localStorage.setItem('orderCounter', JSON.stringify(currentCounter + 1));
+      const currentCounter = JSON.parse(sessionStorage.getItem('orderCounter')) || 0;
+      sessionStorage.setItem('orderCounter', JSON.stringify(currentCounter + 1));
       return currentCounter + 1;
     },
   },

@@ -12,9 +12,12 @@
             <img src="../medias/Supra_img.jpg" alt="Car Image" class="img-fluid">
           </div>
           <div class="col-md-5">
-            <h1>Welcome to Our Car Customization Service</h1>
-            <p>Experience the ultimate in car customization with our state-of-the-art tools and services. Whether you're looking to upgrade your vehicle's performance, enhance its aesthetics, or add personalized features, we have everything you need to make your dream car a reality.</p>
-            <p>Start your journey today by browsing our selection of premium vehicles and customizing them to your exact specifications. With our easy-to-use interface and expert guidance, you'll be driving the car of your dreams in no time.</p>
+            <h1>Welcome to Los Santos CUSTOMS</h1>
+            <p>Born from a passion for performance and esthetics, LS CUSTOMS was founded to build your perfect vehicle.
+              Our goal is to craft your own vision of mechanics and freedom, because each car is a part of you and you derseves the best.
+            </p>
+            <p>Start your journey today by browsing our selection of premium vehicles and customizing them to your exact specifications.
+              With our easy-to-use interface and expert guidance, you'll be driving the car of your dreams in no time.</p>
           </div>
         </div>
       </div>
@@ -35,7 +38,7 @@ export default {
 
 .video-section {
   width: 100%;
-  height: 100vh;
+  height: 95vh;
   overflow: hidden;
   position: relative;
 }
@@ -48,7 +51,7 @@ export default {
 
 .content-section {
   padding: 50px 0;
-  background: #fff;
+  background-color: #EEEFF2;
 }
 
 .container {

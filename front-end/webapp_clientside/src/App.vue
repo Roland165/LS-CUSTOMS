@@ -23,7 +23,7 @@ body {
   font-family: 'Montserrat', sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f2f2f2;
+  background-color: #EEEFF2;
 }
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
@@ -42,7 +42,7 @@ body {
 
 .nav-bar {
   background-color: rgba(51, 51, 51, 0.4);
-  padding: 10px 0;
+  padding: 0px;
   position: fixed;
   width: 100%;
   top: 0;

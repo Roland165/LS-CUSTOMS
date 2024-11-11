@@ -1,72 +1,80 @@
 <template>
-  <div class="order-history">
-    <div v-if="loading">Loading...</div>
-    <div v-else>
-
-
-      <div v-if="action === 'details' && order">
-        <h2 class="text-center mb-4">Order Details: {{ order.order_id }}</h2>
-        <p class="text-center mb-4">
-          ACTION = {{ action }}<br />
-          ID = {{ id }}<br />
-          <router-link to="/orders/list/all" class="btn btn-link">Back to the list</router-link>
-        </p>
-        <p class="text-center">Date: {{ formatDate(order.order_date) }}</p>
-        <h3 class="mt-4 mb-3">Cars Purchased</h3>
-        <div class="card mb-3" v-for="car in order.cars" :key="car.custom_id">
-          <div class="card-body">
-            <h5 class="card-title">{{ car.car_name }} - {{ car.total_price }}€</h5>
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item" v-for="feature in car.features" :key="feature.feature_id">
-                {{ feature.feature_name }} ({{ feature.feature_price }}€)
-              </li>
-            </ul>
-          </div>
-        </div>
-        <p class="text-right font-weight-bold">Total Order Price: {{ order.total_price }}€</p>
-      </div>
-
-      <div v-else-if="action === 'list'">
-        <h1 class="text-center mb-4">Order History</h1>
-        <p class="text-center mb-4">
-          ACTION = {{ action }}<br />
-          ID = {{ id }}<br />
-          <router-link to="/orders/list/all" class="btn btn-link">Back to the list</router-link>
-        </p>
-        <table class="table table-striped" v-if="orders.length > 0">
-          <thead>
-          <tr>
-            <th>Order ID</th>
-            <th>Date</th>
-            <th>Car(s) Purchased</th>
-            <th>Total Price</th>
-            <th>Details</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr v-for="order in orders" :key="order.order_id">
-            <td>{{ order.order_id }}</td>
-            <td>{{ formatDate(order.order_date) }}</td>
-            <td>
-              <ul class="list-unstyled">
-                <li v-for="car in order.cars" :key="car.custom_id">
-                  {{ car.car_name }} - {{ car.total_price }}€
-                </li>
-              </ul>
-            </td>
-            <td>{{ order.total_price }}€</td>
-            <td>
-              <router-link :to="'/orders/details/' + order.order_id" class="btn btn-sm btn-info">
-                DETAILS
-              </router-link>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-        <p v-else class="text-center">No previous orders found.</p>
-      </div>
+<div class="order-history">
+<div class="container mt-5">
+  <div v-if="loading" class="text-center">Loading...</div>
+  <div v-else-if="action === 'details' && order">
+    <h2 class="text-center mb-4">Order Details: {{ order.order_id }}</h2>
+    <p class="text-center">Date: {{ formatDate(order.order_date) }}</p>
+    <table class="table table-striped table-bordered table-hover">
+      <thead>
+      <tr>
+        <th>Car Name</th>
+        <th>Features</th>
+        <th>Price</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr v-for="car in order.cars" :key="car.custom_id">
+        <td>{{ car.car_name }}</td>
+        <td>
+          <ul class="list-unstyled mb-0">
+            <li v-for="feature in car.features" :key="feature.feature_id">
+              {{ feature.feature_name }} ({{ feature.feature_price }}€)
+            </li>
+          </ul>
+        </td>
+        <td>{{ car.total_price }}€</td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="text-right mt-3">
+      <h4>Total Order Price: {{ order.total_price }}€</h4>
+    </div>
+    <div class="text-center mt-4">
+      <router-link to="/orders/list/all" class="btn btn-primary">Back to List</router-link>
     </div>
   </div>
+
+
+  <div v-else-if="action === 'list'">
+    <h1 class="text-center mb-4">Order History</h1>
+    <p class="text-center mb-4">
+      ACTION = {{ action }}<br />
+      ID = {{ id }}<br />
+      <router-link to="/orders/list/all" class="btn btn-link">Back to the list</router-link>
+    </p>
+    <table class="table table-striped table-bordered table-hover" v-if="orders.length > 0">
+      <thead>
+      <tr>
+        <th>Order ID</th>
+        <th>Date</th>
+        <th>Car(s) Purchased</th>
+        <th>Total Price</th>
+        <th>Details</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr v-for="order in orders" :key="order.order_id">
+        <td>{{ order.order_id }}</td>
+        <td>{{ formatDate(order.order_date) }}</td>
+        <td>
+          <ul class="list-unstyled mb-0">
+            <li v-for="car in order.cars" :key="car.custom_id">
+              {{ car.car_name }} - {{ car.total_price }}€
+            </li>
+          </ul>
+        </td>
+        <td>{{ order.total_price }}€</td>
+        <td>
+          <router-link :to="'/orders/details/' + order.order_id" class="btn btn-info">DETAILS</router-link>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <p v-else class="text-center">No previous orders found.</p>
+  </div>
+</div>
+</div>
 </template>
 
 <script>
@@ -84,10 +92,8 @@ export default {
     getAllOrders() {
       this.loading = true;
       try {
-        // Load all orders from localStorage
-        this.orders = JSON.parse(localStorage.getItem('orders')) || [];
+        this.orders = JSON.parse(sessionStorage.getItem('orders')) || [];
 
-        // Load specific order if 'details' action is selected
         if (this.action === 'details' && this.id) {
           this.order = this.orders.find(order => order.order_id == this.id);
           if (!this.order) {
@@ -132,11 +138,12 @@ export default {
 
 .order-history h1,
 .order-history h2,
-.order-history h3 {
+.order-history h3,
+.order-history h4 {
   color: #333;
 }
 
-.order-history table {
+.order-history .table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
@@ -147,6 +154,7 @@ export default {
   padding: 10px;
   text-align: left;
   border-bottom: 1px solid #ddd;
+  vertical-align: middle;
 }
 
 .order-history th {
@@ -162,15 +170,44 @@ export default {
   padding: 8px 16px;
   border-radius: 4px;
   transition: background-color 0.3s ease;
+  border: none;
 }
 
 .order-history .btn:hover {
   background-color: #005a8e;
 }
 
+.order-history ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.order-history ul li {
+  margin-bottom: 5px;
+}
+
+.order-history ul li:last-child {
+  margin-bottom: 0;
+}
+
 @media (max-width: 768px) {
   .order-history {
     padding-top: 120px;
+  }
+
+  .order-history .table {
+    font-size: 0.9em;
+  }
+
+  .order-history th,
+  .order-history td {
+    padding: 8px;
+  }
+
+  .order-history .btn {
+    padding: 6px 12px;
+    font-size: 0.9em;
   }
 }
 </style>
