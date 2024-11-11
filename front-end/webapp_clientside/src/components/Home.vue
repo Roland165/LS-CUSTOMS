@@ -62,13 +62,8 @@ export default {
     scroller(){
       var checkBox = document.getElementById("Scroller");
       if (checkBox.checked === true){
-        if (window.scrollY === 0){
-          window.scrollTo({ top: this.scrollThreshold, behavior: 'smooth' });
-          this.fill = '#333333';
-        }
-        else {
-          checkBox.checked = false;
-        }
+        window.scrollTo({ top: this.scrollThreshold, behavior: 'smooth' });
+        this.fill = '#333333';
       } else {
         window.scrollTo({ top: 0, behavior: 'smooth' });
         this.fill = 'white';
