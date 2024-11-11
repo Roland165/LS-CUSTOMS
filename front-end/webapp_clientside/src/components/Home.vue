@@ -48,7 +48,7 @@ export default {
 
 <style scoped>
 .navigation-button{
-  bottom: 7vh;
+  bottom: 8vh;
   right: 50vw;
   --color: #0077b6;
   --size: 30px;
