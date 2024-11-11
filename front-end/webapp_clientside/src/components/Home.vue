@@ -8,7 +8,9 @@
     </section>
     <label class="navigation-button">
       <input type="checkbox" @click="scroller" id="Scroller">
-      <svg viewBox="0 0 512 512" height="1em" xmlns="http://www.w3.org/2000/svg" class="chevron-down"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg>
+      <svg viewBox="0 0 512 512" height="1em" xmlns="http://www.w3.org/2000/svg" class="chevron-down" :style="{ fill: fill }">
+        <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path>
+      </svg>
     </label>
     <section class="content-section">
       <div class="container">
@@ -33,13 +35,20 @@
 <script>
 export default {
   name: 'Home',
+  data(){
+    return{
+      fill: 'white'
+    }
+  },
   methods :{
     scroller(){
       var checkBox = document.getElementById("Scroller");
       if (checkBox.checked == true){
         window.scrollTo({ top: 600, behavior: 'smooth' });
+        this.fill = '#333333';
       } else {
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        this.fill = 'white';
       }
     },
   }
@@ -61,6 +70,9 @@ export default {
   user-select: none;
   fill: var(--color);
 }
+.navigation-button input {
+  display: none;
+}
 .navigation-button .chevron-down {
   position: absolute;
   animation: keyframes-return .5s;
@@ -69,7 +81,6 @@ export default {
 .navigation-button input:checked ~ .chevron-down {
   animation: keyframes-rotate .5s;
   transform: rotate(180deg);
-
 }
 
 .navigation-button input {
