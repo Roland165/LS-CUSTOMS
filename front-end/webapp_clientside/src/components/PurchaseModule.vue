@@ -102,13 +102,8 @@
             <div class="feature-section">
               <h3>Color</h3>
               <div class="color-options">
-                <div
-                  v-for="color in colorFeatures"
-                  :key="color.feature_id"
-                  class="color-card"
-                  :class="{ 'selected': selectedFeatures.color === color }"
-                  @click="selectedFeatures.color = color"
-                >
+                <div v-for="color in colorFeatures" :key="color.feature_id" class="color-card"
+                     :class="{ 'selected': selectedFeatures.color === color }" @click="selectedFeatures.color = color">
                   <div class="color-sample" :style="{ backgroundColor: color.feature_color }"></div>
                   <div class="feature-info">
                     <h4>{{ color.feature_name }}</h4>
@@ -351,7 +346,9 @@ export default {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
 }
-
+.car-card:hover {
+  transform: scale(1.05);
+}
 .car-image {
   width: 100%;
   height: 300px;
@@ -393,6 +390,12 @@ export default {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
+}
+.color-card:hover{
+  transform: scale(1.05);
+}
+.feature-card:hover {
+  transform: scale(1.05);
 }
 
 .feature-card {
