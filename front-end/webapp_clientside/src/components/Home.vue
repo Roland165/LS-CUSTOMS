@@ -7,7 +7,7 @@
 
     </section>
     <label class="navigation-button">
-      <input type="checkbox" @click="scroller" id="Scroller">
+      <input type="checkbox" @click="scroller" id="Scroller" :checked="isChecked">
       <svg viewBox="0 0 512 512" height="1em" xmlns="http://www.w3.org/2000/svg" class="chevron-down" :style="{ fill: fill }">
         <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path>
       </svg>
@@ -37,15 +37,38 @@ export default {
   name: 'Home',
   data(){
     return{
-      fill: 'white'
+      fill: 'white',
+      isChecked: false,
+      scrollThreshold: 600
     }
   },
+  mounted() {
+    window.addEventListener('scroll', this.handleScroll);
+  },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.handleScroll);
+  },
   methods :{
+    handleScroll() {
+      if (window.scrollY <= 15) {
+        this.fill = 'white';
+        this.isChecked = false;
+      }
+      else {
+        this.fill = '#333333';
+        this.isChecked = true;
+      }
+    },
     scroller(){
       var checkBox = document.getElementById("Scroller");
-      if (checkBox.checked == true){
-        window.scrollTo({ top: 600, behavior: 'smooth' });
-        this.fill = '#333333';
+      if (checkBox.checked === true){
+        if (window.scrollY === 0){
+          window.scrollTo({ top: this.scrollThreshold, behavior: 'smooth' });
+          this.fill = '#333333';
+        }
+        else {
+          checkBox.checked = false;
+        }
       } else {
         window.scrollTo({ top: 0, behavior: 'smooth' });
         this.fill = 'white';
@@ -58,7 +81,7 @@ export default {
 <style scoped>
 .navigation-button{
   bottom: 8vh;
-  right: 50vw;
+  right: 5vw;
   --color: #0077b6;
   --size: 30px;
   display: flex;
