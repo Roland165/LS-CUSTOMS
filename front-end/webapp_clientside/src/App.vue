@@ -2,10 +2,12 @@
   <div id="app">
     <nav class="nav-bar">
       <div class="container">
-        <router-link to="/">Home</router-link>
-        <router-link to="/purchase/list/all">Purchase</router-link>
-        <router-link to="/checkout/all">Checkout</router-link>
-        <router-link to="/orders/list/all">Orders</router-link>
+        <router-link to="/" class = "nav_bar_button">Home</router-link>
+        <router-link to="/purchase/list/all" class = "nav_bar_button">Purchase</router-link>
+        <router-link to="/">
+        <img src="../src/medias/LS-CUSTOMS_logo.png" alt="Logo" class="logo" @click="$router.push('/')"></router-link>
+        <router-link to="/checkout/all" class = "nav_bar_button">Checkout</router-link>
+        <router-link to="/orders/list/all" class = "nav_bar_button">Orders</router-link>
       </div>
     </nav>
     <router-view />
@@ -58,7 +60,7 @@ body {
   align-items: center;
 }
 
-.nav-bar a {
+.nav-bar .nav_bar_button {
   color: #fff;
   text-decoration: none;
   margin: 0 20px;
@@ -70,8 +72,13 @@ body {
   transition: background-color 0.3s ease;
 }
 
-.nav-bar a:hover {
+.nav-bar .nav_bar_button:hover {
   background-color: rgba(255, 255, 255, 0.3);
+}
+.logo {
+  height: 60px;
+  width: auto;
+  max-width: 100%;
 }
 
 @media (max-width: 768px) {
@@ -79,7 +86,7 @@ body {
     flex-direction: column;
     align-items: flex-start;
   }
-  .nav-bar a {
+  .nav-bar .nav_bar_button {
     margin: 10px 0;
   }
 }
