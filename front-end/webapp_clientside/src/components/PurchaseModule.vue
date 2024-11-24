@@ -172,7 +172,7 @@ export default {
         const imageName = `${formattedBrand}_${formattedModel}_img.jpg`;
 
         console.log('Trying to load image:', imageName);
-        return require(`../medias/${imageName}`);
+        return require(`../medias/car_img/${imageName}`);
       } catch (error) {
         console.error('Failed to load image:', error);
         return require('../medias/default_img.jpg');
@@ -181,11 +181,11 @@ export default {
     getEngineImage(engineName) {
       switch(engineName) {
         case 'V6 Engine':
-          return require('../medias/v6_engine_img.jpg');
+          return require('../medias/feature_img/v6_engine_img.jpg');
         case 'V8 Engine':
-          return require('../medias/v8_engine_img.jpg');
+          return require('../medias/feature_img/v8_engine_img.jpg');
         case 'Electric Motor':
-          return require('../medias/electric_engine_img.jpg');
+          return require('../medias/feature_img/electric_engine_img.jpg');
         default:
           return '';
       }
@@ -193,11 +193,11 @@ export default {
     getBrakeImage(brakeName) {
       switch(brakeName) {
         case 'Standard Brakes':
-          return require('../medias/standard_brakes_img.jpg');
+          return require('../medias/feature_img/standard_brakes_img.jpg');
         case 'Performance Brakes':
-          return require('../medias/performance_brakes_img.jpg');
+          return require('../medias/feature_img/performance_brakes_img.jpg');
         case 'Carbon Ceramic Brakes':
-          return require('../medias/carbon_brakes_img.jpg');
+          return require('../medias/feature_img/carbon_brakes_img.jpg');
         default:
           return '';
       }
