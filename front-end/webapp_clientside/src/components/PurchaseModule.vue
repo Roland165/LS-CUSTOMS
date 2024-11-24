@@ -135,6 +135,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   name: 'PurchaseModule',
   props: ['action', 'id'],
@@ -145,7 +146,7 @@ export default {
         car_id: 0,
         car_name: 'xxx',
         car_base_price: 0,
-        features: []
+        brand_name: '',
       },
       colorFeatures: [],
       motorFeatures: [],
@@ -163,19 +164,19 @@ export default {
   },
   methods: {
     getCarImage(car) {
-      if (car.brand === "Audi" && car.car_name === "S4") {
-        return require('../medias/AudiS4_img.jpg');
+      try {
+        const formattedBrand = car.brand_name.split(' ')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join('');
+        const formattedModel = car.car_name.replace(/[\s-()]/g, '');
+        const imageName = `${formattedBrand}_${formattedModel}_img.jpg`;
+
+        console.log('Trying to load image:', imageName);
+        return require(`../medias/${imageName}`);
+      } catch (error) {
+        console.error('Failed to load image:', error);
+        return require('../medias/default_img.jpg');
       }
-      if (car.brand === "BMW" && car.car_name === "i8") {
-        return require('../medias/BMWi8_img.jpg');
-      }
-      if (car.brand === "Ferrari" && car.car_name === "F12 Berlinetta") {
-        return require('../medias/F12_berlinetta_img.jpg');
-      }
-      if (car.brand === "BMW" && car.car_name === "M3 E30") {
-        return require('../medias/BMW_M3_e30.jpg');
-      }
-      return '';
     },
     getEngineImage(engineName) {
       switch(engineName) {
@@ -206,12 +207,14 @@ export default {
     },
     async getAllData() {
       try {
-        this.cars = [
-          { car_id: 1, car_name: "S4", brand: "Audi", car_base_price: 45000 },
-          { car_id: 2, car_name: "i8", brand: "BMW", car_base_price: 90000 },
-          { car_id: 3, car_name: "F12 Berlinetta", brand: "Ferrari", car_base_price: 250000 },
-          { car_id: 4, car_name: "M3 E30", brand: "BMW", car_base_price: 50000}
-        ];
+        const response = await axios.get('http://localhost:9000/carsapi/list');
+        this.cars = response.data.map(car => ({
+          car_id: car.car_id,
+          car_name: car.car_name,
+          car_base_price: car.car_base_price,
+          brand: car.brand_name,
+          brand_name: car.brand_name
+        }));
         this.colorFeatures = [
           { feature_id: 1, feature_name: 'Red Paint', feature_color: 'red', feature_price: 500 },
           { feature_id: 2, feature_name: 'Blue Paint', feature_color: 'blue', feature_price: 600 },
@@ -227,18 +230,21 @@ export default {
           { feature_id: 8, feature_name: 'Performance Brakes', feature_added_weight: 10, feature_price: 2000 },
           { feature_id: 9, feature_name: 'Carbon Ceramic Brakes', feature_added_weight: 5, feature_price: 4000 }
         ];
+
         this.refreshOneCar();
         this.loadLastCustomId();
       } catch (ex) {
-        console.log(ex);
+        console.error('Error fetching data:', ex);
+        alert('Failed to load cars. Please try again later.');
       }
     },
     refreshOneCar() {
       if (this.$props.id === "all" || this.$props.id === "0") return;
       try {
+        // Find the car by ID
         this.oneCar = this.cars.find(car => car.car_id == this.$props.id);
       } catch (ex) {
-        console.log(ex);
+        console.error(ex);
       }
     },
     loadLastCustomId() {
