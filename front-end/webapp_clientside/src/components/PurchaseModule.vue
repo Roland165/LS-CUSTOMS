@@ -7,7 +7,7 @@
         ID = {{ id }}<br />
         <router-link class="btn btn-link" to="/purchase/list/all">Back to the list</router-link><br />
       </p>
-
+      <router-link class="btn btn-link" to="/add-car">Add new car</router-link><br />
       <div v-if="action === 'list'">
         <div class="filters-section">
           <div class="filter-controls">
@@ -37,7 +37,7 @@
             <div class="car-image">
               <img :src="getCarImage(c)" :alt="c.brand + ' ' + c.car_name">
             </div>
-            <div class="car-info"> 
+            <div class="car-info">
               <h3>{{ c.brand }} {{ c.car_name }}</h3>
               <p>Starting from {{ parseFloat(c.car_base_price) }}€</p>
               <router-link class="btn btn-primary" :to="'/purchase/customize/' + c.car_id">
