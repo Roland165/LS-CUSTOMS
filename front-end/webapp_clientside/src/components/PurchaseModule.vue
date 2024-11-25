@@ -121,7 +121,7 @@
                   :key="feature.feature_id"
                   class="feature-card"
                   :class="{ 'selected': selectedFeaturesTab.includes(feature)}"
-                  @click="selectedFeaturesTab.push(feature)"
+                  @click="toggleFeatureSelect(feature)"
                 >
                   <!--<img :src="getEngineImage(engine.feature_name)" :alt="feature.feature_name">-->
                   <div class="feature-info">
@@ -334,7 +334,23 @@ export default {
     },
     beforeMount(){
       get
+    },
+    toggleFeatureSelect(feature){
+    if(this.selectedFeaturesTab.includes(feature)){
+      let temp = [];
+      for(let i = 0; i < this.selectedFeaturesTab.length; i++){
+        if(this.selectedFeaturesTab[i].feature_id != feature.feature_id){
+          temp.push(this.selectedFeaturesTab[i]);
+        }
+      }
+      this.selectedFeaturesTab = temp;
+      //removes feature from selectedFeaturesTab
+      console.log("Removed: "+feature.feature_name);
+    } else {
+      this.selectedFeaturesTab.push(feature);
+      console.log("Added: "+feature.feature_name);
     }
+  },
   },
   watch: {
     id(newVal, oldVal) {
