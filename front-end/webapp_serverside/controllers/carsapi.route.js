@@ -7,6 +7,7 @@ router.get('/list', carListAction);
 router.get('/show/:carId', carShowAction); // The carId after the : is a parameter
 router.get('/del/:carId', carDelAction);
 router.post('/update/:carId', carUpdateAction);
+router.get('/show/:carId/features', featureListAction);
 
 // http://localhost:9000/carsapi/brands
 async function brandListAction(request, response) {
@@ -31,6 +32,15 @@ async function carShowAction(request, response) {
     try {
         const oneCar = await carRepo.getOneCar(request.params.carId);
         response.json(oneCar);
+    } catch (error) {
+        response.status(500).json({ message: error.message });
+    }
+}
+
+async function featureListAction(request, response) {
+    try {
+        const features = await carRepo.getCarFeatures(request.params.carId);
+        response.json(features);
     } catch (error) {
         response.status(500).json({ message: error.message });
     }

@@ -111,11 +111,10 @@ module.exports = {
     async getCarFeatures(carId) {
         try {
             let sql = `
-                SELECT f.*
-                FROM feature f
-                JOIN conn_CS_F csf ON f.feature_id = csf.feat_id
-                JOIN conn_C_S cs ON csf.C_S_id = cs.C_S_id
-                WHERE cs.car_id = ?
+                SELECT DISTINCT f.feature_name, f.feature_id, f.feature_price,
+                f.feature_color, f.feature_added_power, f.feature_added_weight
+                FROM feature f JOIN conn_CS_F csf ON f.feature_id = csf.feat_id
+                JOIN conn_C_S cs ON csf.C_S_id = cs.C_S_id WHERE cs.car_id = ?
             `;
             const [rows, fields] = await pool.execute(sql, [carId]);
             console.log("CAR FEATURES FETCHED: " + rows.length);

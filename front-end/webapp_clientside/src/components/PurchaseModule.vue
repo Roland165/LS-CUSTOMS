@@ -37,7 +37,7 @@
             <div class="car-image">
               <img :src="getCarImage(c)" :alt="c.brand + ' ' + c.car_name">
             </div>
-            <div class="car-info">
+            <div class="car-info"> 
               <h3>{{ c.brand }} {{ c.car_name }}</h3>
               <p>Starting from {{ c.car_base_price }}€</p>
               <router-link class="btn btn-primary" :to="'/purchase/customize/' + c.car_id">
@@ -136,6 +136,7 @@
 
 <script>
 import axios from 'axios';
+import { onBeforeMount } from 'vue';
 export default {
   name: 'PurchaseModule',
   props: ['action', 'id'],
@@ -148,6 +149,7 @@ export default {
         car_base_price: 0,
         brand_name: '',
       },
+      features: [],
       colorFeatures: [],
       motorFeatures: [],
       brakeFeatures: [],
@@ -204,6 +206,7 @@ export default {
     },
     goToCustomize(carId) {
       this.$router.push(`/purchase/customize/${carId}`);
+      this.getFeaturesForCar(carId);
     },
     async getAllData() {
       try {
@@ -215,6 +218,7 @@ export default {
           brand: car.brand_name,
           brand_name: car.brand_name
         }));
+        this.features
         this.colorFeatures = [
           { feature_id: 1, feature_name: 'Red Paint', feature_color: 'red', feature_price: 500 },
           { feature_id: 2, feature_name: 'Blue Paint', feature_color: 'blue', feature_price: 600 },
@@ -236,6 +240,23 @@ export default {
       } catch (ex) {
         console.error('Error fetching data:', ex);
         alert('Failed to load cars. Please try again later.');
+      }
+    },
+    async getFeaturesForCar(carId) {
+      try {
+        const response = await axios.get(`http://localhost:9000/carsapi/show/${carId}/features`);
+        this.features = response.data.map(feature => ({
+          feature_id: feature.feature_id,
+          feature_name: feature.feature_name,
+          feature_price: feature.feature_price,
+          feature_color: feature.feature_color,
+          feature_added_power: feature.feature_added_power,
+          feature_added_weight: feature.feature_added_weight,
+        }));
+        console.log(this.features);
+      } catch (ex) {
+        console.error('Error fetching data:', ex);
+        alert('Failed to load features. Please try again later.');
       }
     },
     refreshOneCar() {
@@ -285,6 +306,9 @@ export default {
     continueShopping() {
       this.showCartConfirmation = false;
       this.$router.push('/purchase/list/all');
+    },
+    beforeMount(){
+      get
     }
   },
   watch: {
