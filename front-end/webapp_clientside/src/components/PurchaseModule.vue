@@ -129,7 +129,7 @@
                     <p>Added power: {{ feature.feature_added_power }}hp</p>
                     <p class="price">{{ feature.feature_price }}€</p>
                     <p>Color: {{ feature.feature_color }}</p>
-                    <p>Added power: {{ feature.feature_added_power }}hp</p>
+                    <p>Added weight: {{ feature.feature_added_weight }}Kg</p>
                   </div>
                 </div>
               </div>
@@ -196,7 +196,6 @@ export default {
         const formattedModel = car.car_name.replace(/[\s-()]/g, '');
         const imageName = `${formattedBrand}_${formattedModel}_img.jpg`;
 
-        console.log('Trying to load image:', imageName);
         return require(`../medias/car_img/${imageName}`);
       } catch (error) {
         console.error('Failed to load image:', error);
@@ -276,7 +275,6 @@ export default {
           feature_added_power: feature.feature_added_power,
           feature_added_weight: feature.feature_added_weight,
         }));
-        console.log(this.features);
       } catch (ex) {
         console.error('Error fetching data:', ex);
         alert('Failed to load features. Please try again later.');
@@ -300,6 +298,10 @@ export default {
       if (this.selectedFeatures.color) featurePrice += this.selectedFeatures.color.feature_price;
       if (this.selectedFeatures.motor) featurePrice += this.selectedFeatures.motor.feature_price;
       if (this.selectedFeatures.brakes) featurePrice += this.selectedFeatures.brakes.feature_price;
+      for(let feature of this.features){
+        featurePrice = featurePrice + parseFloat(feature.feature_price);
+        console.log(feature.feature_name+": "+feature.feature_price);
+      }
       return basePrice + featurePrice;
     },
     addToCart() {
