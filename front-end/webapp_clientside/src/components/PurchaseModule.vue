@@ -348,6 +348,7 @@ export default {
       console.log("Removed: "+feature.feature_name);
     } else {
       this.selectedFeaturesTab.push(feature);
+      //adds feature to selectedFeaturesTab
       console.log("Added: "+feature.feature_name);
     }
   },
