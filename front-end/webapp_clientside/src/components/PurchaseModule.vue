@@ -112,6 +112,28 @@
                 </div>
               </div>
             </div>
+
+            <div class="feature-section">
+              <h3>Other</h3>
+              <div class="feature-options">
+                <div
+                  v-for="feature in features"
+                  :key="feature.feature_id"
+                  class="feature-card"
+                  :class="{ 'selected': selectedFeaturesTab.includes(feature)}"
+                  @click="selectedFeaturesTab.push(feature)"
+                >
+                  <!--<img :src="getEngineImage(engine.feature_name)" :alt="feature.feature_name">-->
+                  <div class="feature-info">
+                    <h4>{{ feature.feature_name }}</h4>
+                    <p>Added power: {{ feature.feature_added_power }}hp</p>
+                    <p class="price">{{ feature.feature_price }}€</p>
+                    <p>Color: {{ feature.feature_color }}</p>
+                    <p>Added power: {{ feature.feature_added_power }}hp</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="action-buttons">
@@ -158,6 +180,7 @@ export default {
         motor: null,
         brakes: null
       },
+      selectedFeaturesTab: [],
       lastCustomId: 0,
       showCartConfirmation: false,
       selectedBrand: 'all',
