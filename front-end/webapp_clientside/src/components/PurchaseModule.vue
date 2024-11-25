@@ -39,7 +39,7 @@
             </div>
             <div class="car-info"> 
               <h3>{{ c.brand }} {{ c.car_name }}</h3>
-              <p>Starting from {{ c.car_base_price }}€</p>
+              <p>Starting from {{ parseFloat(c.car_base_price) }}€</p>
               <router-link class="btn btn-primary" :to="'/purchase/customize/' + c.car_id">
                 Configure
               </router-link>
@@ -293,12 +293,12 @@ export default {
       this.lastCustomId = JSON.parse(sessionStorage.getItem('lastCustomId')) || 0;
     },
     calculateTotalPrice() {
-      let basePrice = this.oneCar.car_base_price;
+      let basePrice = parseFloat(this.oneCar.car_base_price);
       let featurePrice = 0;
       if (this.selectedFeatures.color) featurePrice += this.selectedFeatures.color.feature_price;
       if (this.selectedFeatures.motor) featurePrice += this.selectedFeatures.motor.feature_price;
       if (this.selectedFeatures.brakes) featurePrice += this.selectedFeatures.brakes.feature_price;
-      for(let feature of this.features){
+      for(let feature of this.selectedFeaturesTab){
         featurePrice = featurePrice + parseFloat(feature.feature_price);
         console.log(feature.feature_name+": "+feature.feature_price);
       }
