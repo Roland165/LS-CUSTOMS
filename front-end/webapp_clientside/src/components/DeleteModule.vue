@@ -34,8 +34,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Confirmation Modal -->
       <div v-if="carToDelete" class="modal">
         <div class="modal-content">
           <h2>Confirm Deletion</h2>
@@ -107,7 +105,6 @@ export default {
       if (!this.carToDelete) return;
 
       try {
-        // Delete car from database
         const deleteResponse = await axios.get(`http://localhost:9000/carsapi/del/${this.carToDelete.car_id}`);
 
         if (deleteResponse.data.rowsDeleted > 0) {
@@ -117,14 +114,7 @@ export default {
             .join('');
           const formattedModel = this.carToDelete.car_name.replace(/[\s-()]/g, '');
           const imageName = `${formattedBrand}_${formattedModel}_img.jpg`;
-
-          // Note: Image deletion would typically be handled server-side
-          // This is a client-side representation
-
-          // Refresh the car list
           await this.fetchCars();
-
-          // Reset the carToDelete
           this.carToDelete = null;
 
           alert('Car deleted successfully!');
