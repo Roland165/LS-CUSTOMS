@@ -74,7 +74,32 @@ async function featureListAction(request, response) {
 
 async function carDelAction(request, response) {
     try {
-        const numRows = await carRepo.delOneCar(request.params.carId);
+        const carId = request.params.carId;
+        const car = await carRepo.getOneCar(carId);
+
+        if (!car) {
+            return response.status(404).json({ message: 'Car not found' });
+        }
+
+        const numRows = await carRepo.delOneCar(carId);
+
+        if (numRows > 0) {
+            try {
+                const formattedBrand = car.brand_name.split(' ')
+                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join('');
+                const formattedModel = car.car_name.replace(/[\s-()]/g, '');
+                const imageName = `${formattedBrand}_${formattedModel}_img.jpg`;
+                const imagePath = path.join(__dirname, '../../webapp_clientside/src/medias/car_img', imageName);
+                if (fs.existsSync(imagePath)) {
+                    fs.unlinkSync(imagePath);
+                    console.log(`Image ${imageName} deleted successfully`);
+                }
+            } catch (imageError) {
+                console.error('Error deleting image:', imageError);
+            }
+        }
+
         let result = { rowsDeleted: numRows };
         response.json(result);
     } catch (error) {
