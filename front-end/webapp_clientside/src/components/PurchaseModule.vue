@@ -33,11 +33,11 @@
         </div>
 
         <div class="car-grid">
-          <div v-for="c in filteredAndSortedCars" :key="c.car_id" class="car-card" @click="goToCustomize(c.car_id)">
+          <div v-for="c in filteredAndSortedCars" :key="'Cars'+c.car_id" class="car-card" @click="goToCustomize(c.car_id)">
             <div class="car-image">
               <img :src="getCarImage(c)" :alt="c.brand + ' ' + c.car_name">
             </div>
-            <div class="car-info">
+            <div class="car-info"> 
               <h3>{{ c.brand }} {{ c.car_name }}</h3>
               <p>Starting from {{ parseFloat(c.car_base_price) }}€</p>
               <router-link class="btn btn-primary" :to="'/purchase/customize/' + c.car_id">
@@ -113,12 +113,36 @@
               </div>
             </div>
 
+            
+            <div class="feature-section" v-show="this.featuresSpoiler.length != 0">
+              <h3>Spoilers</h3>
+              <div class="feature-options">
+                <div
+                  v-for="feature in featuresSpoiler"
+                  :key="'Spoiler'+feature.feature_id"
+                  class="feature-card"
+                  :class="{ 'selected': selectedFeaturesTab.includes(feature)}"
+                  @click="toggleFeatureSelect(feature)"
+                >
+                  <!--<img :src="getEngineImage(engine.feature_name)" :alt="feature.feature_name">-->
+                  <div class="feature-info">
+                    <h4>{{ feature.feature_name }}</h4>
+                    <p>Added power: {{ feature.feature_added_power }}hp</p>
+                    <p class="price">{{ feature.feature_price }}€</p>
+                    <p>Color: {{ feature.feature_color }}</p>
+                    <p>Added weight: {{ feature.feature_added_weight }}Kg</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          
+
             <div class="feature-section">
               <h3>Other</h3>
               <div class="feature-options">
                 <div
-                  v-for="feature in features"
-                  :key="feature.feature_id"
+                  v-for="feature in features" 
+                  :key="'Other'+feature.feature_id" 
                   class="feature-card"
                   :class="{ 'selected': selectedFeaturesTab.includes(feature)}"
                   @click="toggleFeatureSelect(feature)"
@@ -172,6 +196,9 @@ export default {
         brand_name: '',
       },
       features: [],
+      featuresSpoiler: [],
+      categorizedFeatures: [],
+      uncategorizedFeatures: [],
       colorFeatures: [],
       motorFeatures: [],
       brakeFeatures: [],
@@ -227,8 +254,10 @@ export default {
       }
     },
     goToCustomize(carId) {
-      this.$router.push(`/purchase/customize/${carId}`);
       this.getFeaturesForCar(carId);
+      //this.getSpoilersFeature();
+      this.getUncategorizedFeatures();
+      this.$router.push(`/purchase/customize/${carId}`);
     },
     async getAllData() {
       try {
@@ -275,10 +304,12 @@ export default {
           feature_added_power: feature.feature_added_power,
           feature_added_weight: feature.feature_added_weight,
         }));
+        console.log("this.getFeaturesForCar called.");
       } catch (ex) {
         console.error('Error fetching data:', ex);
         alert('Failed to load features. Please try again later.');
-      }
+      };
+    
     },
     refreshOneCar() {
       if (this.$props.id === "all" || this.$props.id === "0") return;
@@ -300,7 +331,6 @@ export default {
       if (this.selectedFeatures.brakes) featurePrice += this.selectedFeatures.brakes.feature_price;
       for(let feature of this.selectedFeaturesTab){
         featurePrice = featurePrice + parseFloat(feature.feature_price);
-        console.log(feature.feature_name+": "+feature.feature_price);
       }
       return basePrice + featurePrice;
     },
@@ -332,9 +362,6 @@ export default {
       this.showCartConfirmation = false;
       this.$router.push('/purchase/list/all');
     },
-    beforeMount(){
-      get
-    },
     toggleFeatureSelect(feature){
     if(this.selectedFeaturesTab.includes(feature)){
       let temp = [];
@@ -351,6 +378,34 @@ export default {
       //adds feature to selectedFeaturesTab
       console.log("Added: "+feature.feature_name);
     }
+  },
+  getSpoilersFeature(){
+    let spoilers = [];
+    this.featuresSpoiler = [];
+    for(let feature of this.features){
+      if(feature.feature_name.includes("spoiler")){
+        spoilers.push(feature)
+        this.featuresSpoiler.push(feature)
+        this.categorizedFeatures.push(feature);
+        console.log("Spoiler Feature: "+feature);
+      }
+    }
+    //this.featuresSpoiler.push(this.featuresSpoiler.pop());
+    //this.categorizedFeatures.push(this.categorizedFeatures.pop());
+    // test to try and force update v-for
+  
+  },
+  getUncategorizedFeatures(){
+    let temp = [];
+    this.uncategorizedFeatures = [];
+    for(let feature of this.features){
+      if(!(this.categorizedFeatures.includes(feature))){
+        this.uncategorizedFeatures.push(feature);
+        temp.push(feature);
+      }
+    }
+    //this.uncategorizedFeatures.push(this.uncategorizedFeatures.pop());
+    // test to try and force update v-for
   },
   },
   watch: {
