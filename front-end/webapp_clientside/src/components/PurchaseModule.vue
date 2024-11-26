@@ -7,7 +7,8 @@
         ID = {{ id }}<br />
         <router-link class="btn btn-link" to="/purchase/list/all">Back to the list</router-link><br />
       </p>
-
+      <router-link class="btn btn-link" to="/add-car">Add new car</router-link><br />
+      <router-link to="/delete-car" class="btn btn-danger">Delete Car</router-link>
       <div v-if="action === 'list'">
         <div class="filters-section">
           <div class="filter-controls">
@@ -33,13 +34,13 @@
         </div>
 
         <div class="car-grid">
-          <div v-for="c in filteredAndSortedCars" :key="c.car_id" class="car-card" @click="goToCustomize(c.car_id)">
+          <div v-for="c in filteredAndSortedCars" :key="'Cars'+c.car_id" class="car-card" @click="goToCustomize(c.car_id)">
             <div class="car-image">
               <img :src="getCarImage(c)" :alt="c.brand + ' ' + c.car_name">
             </div>
-            <div class="car-info">
+            <div class="car-info"> 
               <h3>{{ c.brand }} {{ c.car_name }}</h3>
-              <p>Starting from {{ c.car_base_price }}€</p>
+              <p>Starting from {{ parseFloat(c.car_base_price) }}€</p>
               <router-link class="btn btn-primary" :to="'/purchase/customize/' + c.car_id">
                 Configure
               </router-link>
@@ -112,6 +113,52 @@
                 </div>
               </div>
             </div>
+
+            
+            <div class="feature-section" v-show="this.featuresSpoiler.length != 0">
+              <h3>Spoilers</h3>
+              <div class="feature-options">
+                <div
+                  v-for="feature in featuresSpoiler"
+                  :key="'Spoiler'+feature.feature_id"
+                  class="feature-card"
+                  :class="{ 'selected': selectedFeaturesTab.includes(feature)}"
+                  @click="toggleFeatureSelect(feature)"
+                >
+                  <!--<img :src="getEngineImage(engine.feature_name)" :alt="feature.feature_name">-->
+                  <div class="feature-info">
+                    <h4>{{ feature.feature_name }}</h4>
+                    <p>Added power: {{ feature.feature_added_power }}hp</p>
+                    <p class="price">{{ feature.feature_price }}€</p>
+                    <p>Color: {{ feature.feature_color }}</p>
+                    <p>Added weight: {{ feature.feature_added_weight }}Kg</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          
+
+            <div class="feature-section">
+              <h3>Other</h3>
+              <div class="feature-options">
+                <div
+                  v-for="feature in features" 
+                  :key="'Other'+feature.feature_id" 
+                  class="feature-card"
+                  :class="{ 'selected': selectedFeaturesTab.includes(feature)}"
+                  @click="toggleFeatureSelect(feature)"
+                >
+                  <!--<img :src="getEngineImage(engine.feature_name)" :alt="feature.feature_name">-->
+                  <div class="feature-info">
+                    <h4>{{ feature.feature_name }}</h4>
+                    <p>Added power: {{ feature.feature_added_power }}hp</p>
+                    <p class="price">{{ feature.feature_price }}€</p>
+                    <p>Color: {{ feature.feature_color }}</p>
+                    <p>Added weight: {{ feature.feature_added_weight }}Kg</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="action-buttons">
@@ -135,6 +182,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+import { onBeforeMount } from 'vue';
 export default {
   name: 'PurchaseModule',
   props: ['action', 'id'],
@@ -145,8 +194,12 @@ export default {
         car_id: 0,
         car_name: 'xxx',
         car_base_price: 0,
-        features: []
+        brand_name: '',
       },
+      features: [],
+      featuresSpoiler: [],
+      categorizedFeatures: [],
+      uncategorizedFeatures: [],
       colorFeatures: [],
       motorFeatures: [],
       brakeFeatures: [],
@@ -155,6 +208,7 @@ export default {
         motor: null,
         brakes: null
       },
+      selectedFeaturesTab: [],
       lastCustomId: 0,
       showCartConfirmation: false,
       selectedBrand: 'all',
@@ -163,28 +217,27 @@ export default {
   },
   methods: {
     getCarImage(car) {
-      if (car.brand === "Audi" && car.car_name === "S4") {
-        return require('../medias/AudiS4_img.jpg');
+      try {
+        const formattedBrand = car.brand_name.split(' ')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join('');
+        const formattedModel = car.car_name.replace(/[\s-()]/g, '');
+        const imageName = `${formattedBrand}_${formattedModel}_img.jpg`;
+
+        return require(`../medias/car_img/${imageName}`);
+      } catch (error) {
+        console.error('Failed to load image:', error);
+        return require('../medias/default_img.jpg');
       }
-      if (car.brand === "BMW" && car.car_name === "i8") {
-        return require('../medias/BMWi8_img.jpg');
-      }
-      if (car.brand === "Ferrari" && car.car_name === "F12 Berlinetta") {
-        return require('../medias/F12_berlinetta_img.jpg');
-      }
-      if (car.brand === "BMW" && car.car_name === "M3 E30") {
-        return require('../medias/BMW_M3_e30.jpg');
-      }
-      return '';
     },
     getEngineImage(engineName) {
       switch(engineName) {
         case 'V6 Engine':
-          return require('../medias/v6_engine_img.jpg');
+          return require('../medias/feature_img/v6_engine_img.jpg');
         case 'V8 Engine':
-          return require('../medias/v8_engine_img.jpg');
+          return require('../medias/feature_img/v8_engine_img.jpg');
         case 'Electric Motor':
-          return require('../medias/electric_engine_img.jpg');
+          return require('../medias/feature_img/electric_engine_img.jpg');
         default:
           return '';
       }
@@ -192,26 +245,32 @@ export default {
     getBrakeImage(brakeName) {
       switch(brakeName) {
         case 'Standard Brakes':
-          return require('../medias/standard_brakes_img.jpg');
+          return require('../medias/feature_img/standard_brakes_img.jpg');
         case 'Performance Brakes':
-          return require('../medias/performance_brakes_img.jpg');
+          return require('../medias/feature_img/performance_brakes_img.jpg');
         case 'Carbon Ceramic Brakes':
-          return require('../medias/carbon_brakes_img.jpg');
+          return require('../medias/feature_img/carbon_brakes_img.jpg');
         default:
           return '';
       }
     },
     goToCustomize(carId) {
+      this.getFeaturesForCar(carId);
+      //this.getSpoilersFeature();
+      this.getUncategorizedFeatures();
       this.$router.push(`/purchase/customize/${carId}`);
     },
     async getAllData() {
       try {
-        this.cars = [
-          { car_id: 1, car_name: "S4", brand: "Audi", car_base_price: 45000 },
-          { car_id: 2, car_name: "i8", brand: "BMW", car_base_price: 90000 },
-          { car_id: 3, car_name: "F12 Berlinetta", brand: "Ferrari", car_base_price: 250000 },
-          { car_id: 4, car_name: "M3 E30", brand: "BMW", car_base_price: 50000}
-        ];
+        const response = await axios.get('http://localhost:9000/carsapi/list');
+        this.cars = response.data.map(car => ({
+          car_id: car.car_id,
+          car_name: car.car_name,
+          car_base_price: car.car_base_price,
+          brand: car.brand_name,
+          brand_name: car.brand_name
+        }));
+        this.features
         this.colorFeatures = [
           { feature_id: 1, feature_name: 'Red Paint', feature_color: 'red', feature_price: 500 },
           { feature_id: 2, feature_name: 'Blue Paint', feature_color: 'blue', feature_price: 600 },
@@ -227,29 +286,53 @@ export default {
           { feature_id: 8, feature_name: 'Performance Brakes', feature_added_weight: 10, feature_price: 2000 },
           { feature_id: 9, feature_name: 'Carbon Ceramic Brakes', feature_added_weight: 5, feature_price: 4000 }
         ];
+
         this.refreshOneCar();
         this.loadLastCustomId();
       } catch (ex) {
-        console.log(ex);
+        console.error('Error fetching data:', ex);
+        alert('Failed to load cars. Please try again later.');
       }
+    },
+    async getFeaturesForCar(carId) {
+      try {
+        const response = await axios.get(`http://localhost:9000/carsapi/show/${carId}/features`);
+        this.features = response.data.map(feature => ({
+          feature_id: feature.feature_id,
+          feature_name: feature.feature_name,
+          feature_price: feature.feature_price,
+          feature_color: feature.feature_color,
+          feature_added_power: feature.feature_added_power,
+          feature_added_weight: feature.feature_added_weight,
+        }));
+        console.log("this.getFeaturesForCar called.");
+      } catch (ex) {
+        console.error('Error fetching data:', ex);
+        alert('Failed to load features. Please try again later.');
+      };
+    
     },
     refreshOneCar() {
       if (this.$props.id === "all" || this.$props.id === "0") return;
       try {
+        // Find the car by ID
         this.oneCar = this.cars.find(car => car.car_id == this.$props.id);
       } catch (ex) {
-        console.log(ex);
+        console.error(ex);
       }
     },
     loadLastCustomId() {
       this.lastCustomId = JSON.parse(sessionStorage.getItem('lastCustomId')) || 0;
     },
     calculateTotalPrice() {
-      let basePrice = this.oneCar.car_base_price;
+      let basePrice = parseFloat(this.oneCar.car_base_price);
       let featurePrice = 0;
       if (this.selectedFeatures.color) featurePrice += this.selectedFeatures.color.feature_price;
       if (this.selectedFeatures.motor) featurePrice += this.selectedFeatures.motor.feature_price;
       if (this.selectedFeatures.brakes) featurePrice += this.selectedFeatures.brakes.feature_price;
+      for(let feature of this.selectedFeaturesTab){
+        featurePrice = featurePrice + parseFloat(feature.feature_price);
+      }
       return basePrice + featurePrice;
     },
     addToCart() {
@@ -279,7 +362,52 @@ export default {
     continueShopping() {
       this.showCartConfirmation = false;
       this.$router.push('/purchase/list/all');
+    },
+    toggleFeatureSelect(feature){
+    if(this.selectedFeaturesTab.includes(feature)){
+      let temp = [];
+      for(let i = 0; i < this.selectedFeaturesTab.length; i++){
+        if(this.selectedFeaturesTab[i].feature_id != feature.feature_id){
+          temp.push(this.selectedFeaturesTab[i]);
+        }
+      }
+      this.selectedFeaturesTab = temp;
+      //removes feature from selectedFeaturesTab
+      console.log("Removed: "+feature.feature_name);
+    } else {
+      this.selectedFeaturesTab.push(feature);
+      //adds feature to selectedFeaturesTab
+      console.log("Added: "+feature.feature_name);
     }
+  },
+  getSpoilersFeature(){
+    let spoilers = [];
+    this.featuresSpoiler = [];
+    for(let feature of this.features){
+      if(feature.feature_name.includes("spoiler")){
+        spoilers.push(feature)
+        this.featuresSpoiler.push(feature)
+        this.categorizedFeatures.push(feature);
+        console.log("Spoiler Feature: "+feature);
+      }
+    }
+    //this.featuresSpoiler.push(this.featuresSpoiler.pop());
+    //this.categorizedFeatures.push(this.categorizedFeatures.pop());
+    // test to try and force update v-for
+  
+  },
+  getUncategorizedFeatures(){
+    let temp = [];
+    this.uncategorizedFeatures = [];
+    for(let feature of this.features){
+      if(!(this.categorizedFeatures.includes(feature))){
+        this.uncategorizedFeatures.push(feature);
+        temp.push(feature);
+      }
+    }
+    //this.uncategorizedFeatures.push(this.uncategorizedFeatures.pop());
+    // test to try and force update v-for
+  },
   },
   watch: {
     id(newVal, oldVal) {

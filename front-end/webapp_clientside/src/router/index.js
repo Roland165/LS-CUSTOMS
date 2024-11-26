@@ -4,6 +4,8 @@ import Home from "@/components/Home.vue";
 import CheckoutModule from '@/components/CheckoutModule';
 import PurchaseModule from '@/components/PurchaseModule';
 import OrdersModule from '@/components/OrdersModule';
+import AddCarModule from "../components/AddCarModule.vue";
+import DeleteModule from '@/components/DeleteModule.vue'
 Vue.use(Router);
 
 export default new Router({
@@ -54,8 +56,16 @@ export default new Router({
     component: OrdersModule,
     props: true,
     },
-
-
+    {
+      path: '/add-car',
+      name: 'add-car',
+      component: AddCarModule,
+    },
+    {
+      path: '/delete-car',
+      name: 'DeleteCar',
+      component: DeleteModule
+    }
   ],
 });
 

@@ -1,49 +1,159 @@
-// controllers/carsapi.route.js
 const express = require('express');
 const router = express.Router();
 const carRepo = require('../utils/cars.repository');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+const uploadDir = path.join(__dirname, '../../webapp_clientside/src/medias/car_img');
+
+try {
+    if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+        console.log('Created directory:', uploadDir);
+    }
+    console.log('Full upload directory path:', path.resolve(uploadDir));
+} catch (error) {
+    console.error('Error creating directory:', error);
+}
+
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname);
+    }
+});
+
+const upload = multer({ storage: storage });
 
 router.get('/brands', brandListAction);
 router.get('/list', carListAction);
-router.get('/show/:carId', carShowAction); // the carId after the : is a paramater
+router.get('/show/:carId', carShowAction);
 router.get('/del/:carId', carDelAction);
 router.post('/update/:carId', carUpdateAction);
+router.get('/show/:carId/features', featureListAction);
+router.post('/add-car', upload.single('image'), addCarAction);
 
-// http://localhost:9000/carsapi/brands
 async function brandListAction(request, response) {
-    var brands = await carRepo.getAllBrands();
-    response.send(JSON.stringify(brands));
+    try {
+        const brands = await carRepo.getAllBrands();
+        response.json(brands);
+    } catch (error) {
+        response.status(500).json({ message: error.message });
+    }
 }
 
 async function carListAction(request, response) {
-    var cars = await carRepo.getAllCars();
-    response.send(JSON.stringify(cars));
+    try {
+        const cars = await carRepo.getAllCars();
+        response.json(cars);
+    } catch (error) {
+        response.status(500).json({ message: error.message });
+    }
 }
+
 async function carShowAction(request, response) {
-    var oneCar = await carRepo.getOneCar(request.params.carId);
-    response.send(JSON.stringify(oneCar));
+    try {
+        const oneCar = await carRepo.getOneCar(request.params.carId);
+        response.json(oneCar);
+    } catch (error) {
+        response.status(500).json({ message: error.message });
+    }
 }
+
+async function featureListAction(request, response) {
+    try {
+        const features = await carRepo.getCarFeatures(request.params.carId);
+        response.json(features);
+    } catch (error) {
+        response.status(500).json({ message: error.message });
+    }
+}
+
 async function carDelAction(request, response) {
-    // TODO: first remove extras for car, unless the car cannot be removed!!!
-    var numRows = await carRepo.delOneCar(request.params.carId);
-    let result = { rowsDeleted: numRows };
-    response.send(JSON.stringify(result));
+    try {
+        const carId = request.params.carId;
+        const car = await carRepo.getOneCar(carId);
+
+        if (!car) {
+            return response.status(404).json({ message: 'Car not found' });
+        }
+
+        const numRows = await carRepo.delOneCar(carId);
+
+        if (numRows > 0) {
+            try {
+                const formattedBrand = car.brand_name.split(' ')
+                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join('');
+                const formattedModel = car.car_name.replace(/[\s-()]/g, '');
+                const imageName = `${formattedBrand}_${formattedModel}_img.jpg`;
+                const imagePath = path.join(__dirname, '../../webapp_clientside/src/medias/car_img', imageName);
+                if (fs.existsSync(imagePath)) {
+                    fs.unlinkSync(imagePath);
+                    console.log(`Image ${imageName} deleted successfully`);
+                }
+            } catch (imageError) {
+                console.error('Error deleting image:', imageError);
+            }
+        }
+
+        let result = { rowsDeleted: numRows };
+        response.json(result);
+    } catch (error) {
+        response.status(500).json({ message: error.message });
+    }
 }
+
 async function carUpdateAction(request, response) {
-    // var json = JSON.stringify(request.body); // bodyParser can process json in body + regular POST form input too
-    // console.log(json);
-    // TODO: !!! INPUT VALIDATION !!!
-    var carId = request.params.carId;
-    if (carId === "0") carId = await carRepo.addOneCar(request.body.car_brand);
-    var isFancy = (request.body.car_isFancy === undefined || request.body.car_isFancy === false) ? 0 : 1;
-    var numRows = await carRepo.editOneCar(carId,
-        request.body.car_brand,
-        request.body.car_name,
-        request.body.car_baseprice,
-        isFancy,
-        request.body.car_realPrice);
-    let result = { rowsUpdated: numRows };
-    response.send(JSON.stringify(result));
+    try {
+        const carId = request.params.carId;
+        const isFancy = request.body.car_isFancy ? 1 : 0;
+        const numRows = await carRepo.editOneCar(carId,
+            request.body.car_brand,
+            request.body.car_name,
+            request.body.car_baseprice,
+            isFancy,
+            request.body.car_realPrice);
+        let result = { rowsUpdated: numRows };
+        response.json(result);
+    } catch (error) {
+        response.status(500).json({ message: error.message });
+    }
 }
+
+async function addCarAction(request, response) {
+    try {
+        console.log('Received car data:', request.body);
+        console.log('Received file:', request.file);
+
+        const carData = {
+            brand_id: request.body.brand_id,
+            car_name: request.body.car_name,
+            car_seat_num: request.body.car_seat_num,
+            car_creation_date: request.body.car_creation_date,
+            car_base_power: request.body.car_base_power,
+            car_base_weight: request.body.car_base_weight,
+            car_base_price: request.body.car_base_price
+        };
+
+        const carId = await carRepo.addOneCar(carData);
+
+        response.json({
+            success: true,
+            carId: carId,
+            message: 'Car added successfully'
+        });
+    } catch (error) {
+        console.error('Error adding car:', error);
+        response.status(500).json({
+            success: false,
+            message: error.message || 'Failed to add car'
+        });
+    }
+}
+
 
 module.exports = router;
