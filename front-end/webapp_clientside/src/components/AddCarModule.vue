@@ -7,10 +7,8 @@
           <router-link class="btn btn-link" to="/purchase/list/all">Back to the list</router-link>
         </p>
       </div>
-
       <div class="add-car-form">
         <form @submit.prevent="addCar" class="mt-4">
-          <!-- Brand and Model Section -->
           <div class="form-section">
             <h3 class="section-title">Car Identity</h3>
             <div class="form-group mb-4">
@@ -29,8 +27,6 @@
                      placeholder="e.g., 911 Turbo S">
             </div>
           </div>
-
-          <!-- Specifications Section -->
           <div class="form-section">
             <h3 class="section-title">Technical Specifications</h3>
             <div class="specs-grid">
@@ -64,8 +60,6 @@
               <input type="date" id="creation_date" v-model="newCar.car_creation_date" class="form-control" required>
             </div>
           </div>
-
-          <!-- Image Upload Section -->
           <div class="form-section">
             <h3 class="section-title">Car Image</h3>
             <div class="image-upload-container">
@@ -83,8 +77,6 @@
               <small class="text-muted">Image will be saved as: {{ getImageName }}</small>
             </div>
           </div>
-
-          <!-- Submit Section -->
           <div class="submit-section">
             <button type="submit" class="btn btn-primary">Add Car</button>
             <router-link to="/purchase/list/all" class="btn btn-secondary">Cancel</router-link>
@@ -143,7 +135,6 @@ export default {
       const file = event.target.files[0];
       if (file && file.type.startsWith('image/')) {
         this.newCar.imageFile = file;
-        // Create image preview
         const reader = new FileReader();
         reader.onload = e => {
           this.imagePreview = e.target.result;

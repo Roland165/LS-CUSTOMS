@@ -28,18 +28,13 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// Existing routes
 router.get('/brands', brandListAction);
 router.get('/list', carListAction);
 router.get('/show/:carId', carShowAction);
 router.get('/del/:carId', carDelAction);
 router.post('/update/:carId', carUpdateAction);
 router.get('/show/:carId/features', featureListAction);
-
-// New route for adding a car
 router.post('/add-car', upload.single('image'), addCarAction);
-
-// Existing action functions
 
 async function brandListAction(request, response) {
     try {
