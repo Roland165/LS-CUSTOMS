@@ -103,7 +103,6 @@ export default {
   data() {
     return {
       brands: [],
-      previewImage: null,
       newCar: {
         brand_id: '',
         car_name: '',
@@ -113,7 +112,8 @@ export default {
         car_base_weight: 0,
         car_base_price: 0,
         imageFile: null
-      }
+      },
+      imagePreview: null
     }
   },
   computed: {
@@ -143,17 +143,16 @@ export default {
       const file = event.target.files[0];
       if (file && file.type.startsWith('image/')) {
         this.newCar.imageFile = file;
-
         // Create image preview
         const reader = new FileReader();
-        reader.onload = (e) => {
-          this.previewImage = e.target.result;
+        reader.onload = e => {
+          this.imagePreview = e.target.result;
         };
         reader.readAsDataURL(file);
       } else {
         alert('Please select a valid image file');
         event.target.value = '';
-        this.previewImage = null;
+        this.imagePreview = null;
       }
     },
     async addCar() {
@@ -185,24 +184,19 @@ export default {
         }
       } catch (error) {
         console.error('Error adding car:', error);
-        alert('Failed to add car. Please try again.');
+        if (error.response) {
+          console.error('Error Response Data:', error.response.data);
+          console.error('Error Response Status:', error.response.status);
+          console.error('Error Response Headers:', error.response.headers);
+          alert(`Failed to add car: ${error.response.data.message || error.message}`);
+        } else if (error.request) {
+          console.error('Error Request:', error.request);
+          alert('No response received from server. Please check your connection.');
+        } else {
+          console.error('Error Message:', error.message);
+          alert(`Error: ${error.message}`);
+        }
       }
-    }
-  },
-  handleFileUpload(event) {
-    const file = event.target.files[0];
-    if (file && file.type.startsWith('image/')) {
-      this.newCar.imageFile = file;
-      // Create image preview
-      const reader = new FileReader();
-      reader.onload = e => {
-        this.imagePreview = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    } else {
-      alert('Please select a valid image file');
-      event.target.value = '';
-      this.imagePreview = null;
     }
   },
   created() {
@@ -210,6 +204,7 @@ export default {
   }
 }
 </script>
+
 <style scoped>
 .add-car {
   padding-top: 80px;
