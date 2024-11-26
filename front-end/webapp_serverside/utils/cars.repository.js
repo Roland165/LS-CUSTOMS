@@ -42,7 +42,7 @@ module.exports = {
             let sql = `
                 SELECT c.*, b.brand_name
                 FROM car c
-                JOIN brand b ON c.brand_id = b.brand_id
+                         JOIN brand b ON c.brand_id = b.brand_id
             `;
             const [rows, fields] = await pool.execute(sql);
             console.log("CARS FETCHED: " + rows.length);
@@ -58,7 +58,7 @@ module.exports = {
             let sql = `
                 SELECT c.*, b.brand_name
                 FROM car c
-                JOIN brand b ON c.brand_id = b.brand_id
+                         JOIN brand b ON c.brand_id = b.brand_id
                 WHERE c.brand_id = ?
             `;
             const [rows, fields] = await pool.execute(sql, [brandId]);
@@ -75,7 +75,7 @@ module.exports = {
             let sql = `
                 SELECT c.*, b.brand_name
                 FROM car c
-                JOIN brand b ON c.brand_id = b.brand_id
+                         JOIN brand b ON c.brand_id = b.brand_id
                 WHERE UPPER(c.car_name) LIKE UPPER(?)
             `;
             const [rows, fields] = await pool.execute(sql, [`%${name}%`]);
@@ -92,7 +92,7 @@ module.exports = {
             let sql = `
                 SELECT c.*, b.brand_name
                 FROM car c
-                JOIN brand b ON c.brand_id = b.brand_id
+                         JOIN brand b ON c.brand_id = b.brand_id
                 WHERE c.car_id = ?
             `;
             const [rows, fields] = await pool.execute(sql, [carId]);
@@ -112,9 +112,9 @@ module.exports = {
         try {
             let sql = `
                 SELECT DISTINCT f.feature_name, f.feature_id, f.feature_price,
-                f.feature_color, f.feature_added_power, f.feature_added_weight
+                                f.feature_color, f.feature_added_power, f.feature_added_weight
                 FROM feature f JOIN conn_CS_F csf ON f.feature_id = csf.feat_id
-                JOIN conn_C_S cs ON csf.C_S_id = cs.C_S_id WHERE cs.car_id = ?
+                               JOIN conn_C_S cs ON csf.C_S_id = cs.C_S_id WHERE cs.car_id = ?
             `;
             const [rows, fields] = await pool.execute(sql, [carId]);
             console.log("CAR FEATURES FETCHED: " + rows.length);
@@ -130,7 +130,7 @@ module.exports = {
             let sql = `
                 SELECT s.*
                 FROM store s
-                JOIN conn_C_S cs ON s.store_id = cs.store_id
+                         JOIN conn_C_S cs ON s.store_id = cs.store_id
                 WHERE cs.car_id = ?
             `;
             const [rows, fields] = await pool.execute(sql, [carId]);
@@ -188,13 +188,13 @@ module.exports = {
         try {
             let sql = `
                 UPDATE car SET
-                    car_name = ?,
-                    car_seat_num = ?,
-                    car_creation_date = ?,
-                    car_base_power = ?,
-                    car_base_weight = ?,
-                    car_base_price = ?,
-                    brand_id = ?
+                               car_name = ?,
+                               car_seat_num = ?,
+                               car_creation_date = ?,
+                               car_base_power = ?,
+                               car_base_weight = ?,
+                               car_base_price = ?,
+                               brand_id = ?
                 WHERE car_id = ?
             `;
             const [okPacket, fields] = await pool.execute(sql, [

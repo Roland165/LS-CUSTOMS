@@ -4,16 +4,13 @@ require('dotenv').config();
 // Create express.js web app
 const express = require('express');
 const app = express();
+const path = require('path');
 
 app.set("view engine", "ejs");
 app.set("views", "views");
 
-app.listen(process.env.WEB_PORT, '0.0.0.0',
-    function () { console.log("Listening on " + process.env.WEB_PORT); }
-);
-
 // *** MIDDLEWARES ***
-// Process form input (create request.body from POST data or JSON in the HTTP request)
+// Process form input
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -27,20 +24,23 @@ app.use(session({
     resave: false
 }));
 
-// Enable Cross-Origin Resource Sharing (needed for cross-origin API)
+// Enable CORS
 const cors = require('cors');
 app.use(cors());
 
-// *** ROUTES/CONTROLLERS ***
+// Serve static files
+app.use("/static", express.static(__dirname + '/static'));
+// Add this line to serve files from medias directory
+app.use("/medias", express.static(path.join(__dirname, '..', 'medias')));
 
-// Setup default route
+// *** ROUTES/CONTROLLERS ***
 app.get('/', (request, response) => {
     let clientIp = request.ip;
     response.send(`Hello, dear ${clientIp}. I am a nodejs website...`);
-    response.end(); // optional
+    response.end();
 });
 
-// Setup additional routes
-app.use("/static", express.static(__dirname + '/static'));
 app.use("/carsapi", require("./controllers/carsapi.route"));
-// app.use("/auth", require("./controllers/auth.route"));
+app.listen(process.env.WEB_PORT, '0.0.0.0',
+    function () { console.log("Listening on " + process.env.WEB_PORT); }
+);

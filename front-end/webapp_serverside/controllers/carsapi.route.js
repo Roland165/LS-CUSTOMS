@@ -1,15 +1,41 @@
 const express = require('express');
 const router = express.Router();
 const carRepo = require('../utils/cars.repository');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+const uploadDir = path.join(__dirname, '../../webapp_clientside/src/medias/car_img');
+
+try {
+    if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+        console.log('Created directory:', uploadDir);
+    }
+    console.log('Full upload directory path:', path.resolve(uploadDir));
+} catch (error) {
+    console.error('Error creating directory:', error);
+}
+
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname);
+    }
+});
+
+const upload = multer({ storage: storage });
 
 router.get('/brands', brandListAction);
 router.get('/list', carListAction);
-router.get('/show/:carId', carShowAction); // The carId after the : is a parameter
+router.get('/show/:carId', carShowAction);
 router.get('/del/:carId', carDelAction);
 router.post('/update/:carId', carUpdateAction);
 router.get('/show/:carId/features', featureListAction);
+router.post('/add-car', upload.single('image'), addCarAction);
 
-// http://localhost:9000/carsapi/brands
 async function brandListAction(request, response) {
     try {
         const brands = await carRepo.getAllBrands();
@@ -48,8 +74,32 @@ async function featureListAction(request, response) {
 
 async function carDelAction(request, response) {
     try {
-        // TODO: First remove extras for the car, unless the car cannot be removed!!!
-        const numRows = await carRepo.delOneCar(request.params.carId);
+        const carId = request.params.carId;
+        const car = await carRepo.getOneCar(carId);
+
+        if (!car) {
+            return response.status(404).json({ message: 'Car not found' });
+        }
+
+        const numRows = await carRepo.delOneCar(carId);
+
+        if (numRows > 0) {
+            try {
+                const formattedBrand = car.brand_name.split(' ')
+                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join('');
+                const formattedModel = car.car_name.replace(/[\s-()]/g, '');
+                const imageName = `${formattedBrand}_${formattedModel}_img.jpg`;
+                const imagePath = path.join(__dirname, '../../webapp_clientside/src/medias/car_img', imageName);
+                if (fs.existsSync(imagePath)) {
+                    fs.unlinkSync(imagePath);
+                    console.log(`Image ${imageName} deleted successfully`);
+                }
+            } catch (imageError) {
+                console.error('Error deleting image:', imageError);
+            }
+        }
+
         let result = { rowsDeleted: numRows };
         response.json(result);
     } catch (error) {
@@ -73,5 +123,37 @@ async function carUpdateAction(request, response) {
         response.status(500).json({ message: error.message });
     }
 }
+
+async function addCarAction(request, response) {
+    try {
+        console.log('Received car data:', request.body);
+        console.log('Received file:', request.file);
+
+        const carData = {
+            brand_id: request.body.brand_id,
+            car_name: request.body.car_name,
+            car_seat_num: request.body.car_seat_num,
+            car_creation_date: request.body.car_creation_date,
+            car_base_power: request.body.car_base_power,
+            car_base_weight: request.body.car_base_weight,
+            car_base_price: request.body.car_base_price
+        };
+
+        const carId = await carRepo.addOneCar(carData);
+
+        response.json({
+            success: true,
+            carId: carId,
+            message: 'Car added successfully'
+        });
+    } catch (error) {
+        console.error('Error adding car:', error);
+        response.status(500).json({
+            success: false,
+            message: error.message || 'Failed to add car'
+        });
+    }
+}
+
 
 module.exports = router;
