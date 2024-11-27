@@ -36,6 +36,33 @@ router.post('/update/:carId', carUpdateAction);
 router.get('/show/:carId/features', featureListAction);
 router.post('/add-car', upload.single('image'), addCarAction);
 
+router.post('/add-brand', brandAddAction);
+
+
+async function brandAddAction(request, response) {
+    try {
+        const brandData = {
+            brand_name: request.body.brand_name,
+            brand_country: request.body.brand_country,
+            brand_founded: request.body.brand_founded
+        };
+
+        const brandId = await carRepo.addOneBrand(brandData);
+
+        response.json({
+            success: true,
+            brandId: brandId,
+            message: 'Brand added successfully'
+        });
+    } catch (error) {
+        console.error('Error adding brand:', error);
+        response.status(500).json({
+            success: false,
+            message: error.message || 'Failed to add brand'
+        });
+    }
+}
+
 async function brandListAction(request, response) {
     try {
         const brands = await carRepo.getAllBrands();

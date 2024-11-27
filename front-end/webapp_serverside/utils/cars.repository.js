@@ -248,5 +248,24 @@ module.exports = {
             console.log(err);
             throw err;
         }
-    }
+    },
+    async addOneBrand(brand) {
+        try {
+            let sql = `
+      INSERT INTO brand (
+        brand_name, brand_country, brand_founded
+      ) VALUES (?, ?, ?)
+    `;
+            const [okPacket, fields] = await pool.execute(sql, [
+                brand.brand_name,
+                brand.brand_country,
+                brand.brand_founded
+            ]);
+            console.log("INSERT BRAND " + JSON.stringify(okPacket));
+            return okPacket.insertId;
+        } catch (err) {
+            console.log(err);
+            throw err;
+        }
+    },
 };

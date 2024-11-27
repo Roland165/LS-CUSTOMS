@@ -7,6 +7,7 @@
         ID = {{ id }}<br />
         <router-link class="btn btn-link" to="/purchase/list/all">Back to the list</router-link><br />
       </p>
+      <router-link class="btn btn-link" to="/add-brand">Add new brand</router-link>
       <router-link class="btn btn-link" to="/add-car">Add new car</router-link><br />
       <router-link to="/delete-car" class="btn btn-danger">Delete Car</router-link>
       <div v-if="action === 'list'">

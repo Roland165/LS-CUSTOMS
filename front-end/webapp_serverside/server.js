@@ -6,12 +6,16 @@ const express = require('express');
 const app = express();
 const path = require('path');
 
+const carsApiRoutes = require("./controllers/carsapi.route");
+app.use("/carsapi", carsApiRoutes);
+
 app.set("view engine", "ejs");
 app.set("views", "views");
 
 // *** MIDDLEWARES ***
 // Process form input
 const bodyParser = require("body-parser");
+app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -44,3 +48,17 @@ app.use("/carsapi", require("./controllers/carsapi.route"));
 app.listen(process.env.WEB_PORT, '0.0.0.0',
     function () { console.log("Listening on " + process.env.WEB_PORT); }
 );
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({
+        success: false,
+        message: 'Something broke!'
+    });
+});
+
+app.use((req, res, next) => {
+    res.status(404).json({
+        success: false,
+        message: 'Route not found'
+    });
+});
