@@ -53,7 +53,7 @@
         <div class="customization-header">
           <h2>{{ oneCar.car_name }}</h2>
           <div class="price-info">
-            <p class="base-price">Base Price: {{ oneCar.car_base_price }}€</p>
+            <p class="base-price">Base Price: {{ parseFloat(oneCar.car_base_price) }}€</p>
             <p class="total-price">Total Price: {{ calculateTotalPrice() }}€</p>
           </div>
         </div>
@@ -151,9 +151,9 @@
                   <!--<img :src="getEngineImage(engine.feature_name)" :alt="feature.feature_name">-->
                   <div class="feature-info">
                     <h4>{{ feature.feature_name }}</h4>
-                    <p>Added power: {{ feature.feature_added_power }}hp</p>
+                    <p v-if="feature.feature_added_power != 0">Added power: {{ feature.feature_added_power }}hp</p>
                     <p class="price">{{ feature.feature_price }}€</p>
-                    <p>Color: {{ feature.feature_color }}</p>
+                    <p v-if="feature.feature_color != null">Color: {{ feature.feature_color }}</p>
                     <p>Added weight: {{ feature.feature_added_weight }}Kg</p>
                   </div>
                 </div>
