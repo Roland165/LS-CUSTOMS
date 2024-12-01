@@ -2,7 +2,7 @@
   <div class="delete-car">
     <div class="container mt-5">
       <h1 class="text-center mb-4">Delete Cars</h1>
-      <router-link class="btn btn-link" to="/purchase/list/all">Back to the list</router-link>
+      <router-link class="btn btn-link" to="/admin">Back to DashBoard</router-link>
       <div class="filters-section mb-4">
         <div class="filter-controls">
           <div class="filter-group">
@@ -181,6 +181,13 @@ export default {
 .btn-danger {
   background-color: #dc3545;
   color: white;
+  display: inline-block;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  margin: 1%;
+
 }
 
 .btn-danger:hover {
@@ -230,4 +237,18 @@ export default {
   align-items: center;
   gap: 1rem;
 }
+.btn-link {
+  display: inline-block;
+  background-color: #0077b6;
+  color: #fff;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  margin: 1%;
+}
+.btn-link:hover {
+  background-color: #005a8e;
+}
+
 </style>

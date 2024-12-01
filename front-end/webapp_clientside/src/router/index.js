@@ -5,8 +5,10 @@ import CheckoutModule from '@/components/CheckoutModule';
 import PurchaseModule from '@/components/PurchaseModule';
 import OrdersModule from '@/components/OrdersModule';
 import AddCarModule from "../components/AddCarModule.vue";
-import DeleteModule from '@/components/DeleteModule.vue'
-import AddBrandModule from '@/components/AddBrandModule.vue'
+import DeleteModule from '@/components/DeleteCarModule.vue'
+import AddBrandModule from '@/components/AddBrandModule'
+import AdminModule from '@/components/AdminModule.vue'
+import DeleteBrandModule from '@/components/DeleteBrandModule.vue'
 Vue.use(Router);
 
 export default new Router({
@@ -59,7 +61,7 @@ export default new Router({
     },
     {
       path: '/add-car',
-      name: 'add-car',
+      name: 'AddCar',
       component: AddCarModule,
     },
     {
@@ -71,6 +73,16 @@ export default new Router({
       path: '/add-brand',
       name: 'AddBrand',
       component: AddBrandModule
+    },
+    {
+      path: '/delete-brand',
+      name: 'DeleteBrand',
+      component: DeleteBrandModule
+    },
+    {
+      path: '/admin',
+      name: 'Admin',
+      component: AdminModule,
     }
   ],
 });

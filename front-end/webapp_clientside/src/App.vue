@@ -2,12 +2,34 @@
   <div id="app">
     <nav class="nav-bar">
       <div class="container">
-        <router-link to="/" class = "nav_bar_button">Home</router-link>
-        <router-link to="/purchase/list/all" class = "nav_bar_button">Purchase</router-link>
-        <router-link to="/">
-        <img src="../src/medias/LS-CUSTOMS_logo.png" alt="Logo" class="logo" @click="$router.push('/')"></router-link>
-        <router-link to="/checkout/all" class = "nav_bar_button">Checkout</router-link>
-        <router-link to="/orders/list/all" class = "nav_bar_button">Orders</router-link>
+        <div class="nav-content">
+          <router-link to="/" class="nav_bar_button">Home</router-link>
+          <router-link to="/purchase/list/all" class="nav_bar_button purchase-button">Purchase</router-link>
+          <router-link to="/" class="logo-container">
+            <img src="../src/medias/LS-CUSTOMS_logo.png" alt="Logo" class="logo" @click="$router.push('/')">
+          </router-link>
+          <router-link to="/checkout/all" class="nav_bar_button checkout-button">Checkout</router-link>
+          <router-link to="/orders/list/all" class="nav_bar_button">Orders</router-link>
+        </div>
+        <router-link to="/admin">
+        <button class="cssbuttons-io-button account-button">
+          Account
+          <div class="icon">
+            <svg
+              height="24"
+              width="24"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M0 0h24v24H0z" fill="none"></path>
+              <path
+                d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
+                fill="currentColor"
+              ></path>
+            </svg>
+          </div>
+        </button>
+        </router-link>
       </div>
     </nav>
     <router-view />
@@ -27,13 +49,13 @@ body {
   padding: 0;
   background-color: #EEEFF2;
 }
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-
 }
 
 .container {
@@ -53,11 +75,19 @@ body {
   transition: background-color 0.3s ease;
 }
 
-
 .nav-bar .container {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+  position: relative;
+}
+
+.nav-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
 }
 
 .nav-bar .nav_bar_button {
@@ -68,26 +98,115 @@ body {
   font-size: 1.2em;
   padding: 10px 20px;
   border-radius: 80px;
-  border : #0077b6 solid 3px;
+  border: #0077b6 solid 3px;
   transition: background-color 0.3s ease;
+}
+
+.purchase-button {
+  margin-right: 80px !important;
+}
+
+.checkout-button {
+  margin-left: 140px !important;
 }
 
 .nav-bar .nav_bar_button:hover {
   background-color: rgba(255, 255, 255, 0.3);
 }
+
+.logo-container {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 .logo {
   height: 60px;
   width: auto;
   max-width: 100%;
 }
 
+.account-button {
+  background: #0077b6;
+  color: white;
+  font-family: inherit;
+  padding: 0.35em;
+  padding-left: 1.2em;
+  font-size: 17px;
+  font-weight: 500;
+  border-radius: 0.9em;
+  border: none;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  box-shadow: inset 0 0 1.6em -0.6em #0077b6;
+  overflow: hidden;
+  position: absolute;
+  right: -5%;
+  top: 22%;
+  height: 2.8em;
+  padding-right: 3.3em;
+  cursor: pointer;
+}
+
+.cssbuttons-io-button .icon {
+  background: white;
+  margin-left: 1em;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.2em;
+  width: 2.2em;
+  border-radius: 0.7em;
+  box-shadow: 0.1em 0.1em 0.6em 0.2em #0077;
+  right: 0.3em;
+  transition: all 0.3s;
+}
+
+.cssbuttons-io-button:hover .icon {
+  width: calc(100% - 0.6em);
+}
+
+.cssbuttons-io-button .icon svg {
+  width: 1.1em;
+  transition: transform 0.3s;
+  color: #0077;
+}
+
+.cssbuttons-io-button:hover .icon svg {
+  transform: translateX(0.1em);
+}
+
+.cssbuttons-io-button:active .icon {
+  transform: scale(0.95);
+}
+
 @media (max-width: 768px) {
-  .nav-bar {
+  .nav-bar .container {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
   }
-  .nav-bar .nav_bar_button {
+
+  .nav-content {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .logo-container {
+    position: static;
+    transform: none;
     margin: 10px 0;
+  }
+
+  .account-button {
+    position: static;
+    margin-top: 10px;
+    align-self: center;
+  }
+
+  .purchase-button, .checkout-button {
+    margin: 10px 20px !important;
   }
 }
 </style>

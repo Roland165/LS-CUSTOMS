@@ -3,9 +3,7 @@
     <div class="container mt-5">
       <div class="header-section mb-5">
         <h1 class="text-center">Add New Car</h1>
-        <p class="text-center">
-          <router-link class="btn btn-link" to="/purchase/list/all">Back to the list</router-link>
-        </p>
+        <router-link class="btn btn-link" to="/admin">Back to DashBoard</router-link>
       </div>
       <div class="add-car-form">
         <form @submit.prevent="addCar" class="mt-4">
@@ -338,6 +336,19 @@ export default {
   display: block;
   margin-top: 0.5rem;
   font-size: 0.875rem;
+}
+.btn-link {
+  display: inline-block;
+  background-color: #0077b6;
+  color: #fff;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  margin: 1%;
+}
+.btn-link:hover {
+  background-color: #005a8e;
 }
 
 @media (max-width: 768px) {

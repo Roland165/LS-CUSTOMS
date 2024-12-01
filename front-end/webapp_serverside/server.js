@@ -1,18 +1,16 @@
 // Populate object process.env from the .env file
 require('dotenv').config();
+const path = require('path'); // Add this line for path module
 
 // Create express.js web app
 const express = require('express');
 const app = express();
-const path = require('path');
-
-const carsApiRoutes = require("./controllers/carsapi.route");
-app.use("/carsapi", carsApiRoutes);
-
-app.set("view engine", "ejs");
-app.set("views", "views");
 
 // *** MIDDLEWARES ***
+// Enable CORS first
+const cors = require('cors');
+app.use(cors());
+
 // Process form input
 const bodyParser = require("body-parser");
 app.use(express.json());
@@ -28,26 +26,36 @@ app.use(session({
     resave: false
 }));
 
-// Enable CORS
-const cors = require('cors');
-app.use(cors());
+// Logging middleware
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url}`);
+    next();
+});
 
 // Serve static files
 app.use("/static", express.static(__dirname + '/static'));
-// Add this line to serve files from medias directory
 app.use("/medias", express.static(path.join(__dirname, '..', 'medias')));
 
+// View engine setup
+app.set("view engine", "ejs");
+app.set("views", "views");
+
 // *** ROUTES/CONTROLLERS ***
+// Import routes
+const carsApiRoutes = require("./controllers/carsapi.route");
+const brandsApiRoutes = require("./controllers/brandsapi.route");
+
+// Use routes
+app.use("/carsapi", carsApiRoutes);
+app.use("/brandsapi", brandsApiRoutes);
+
+// Basic root route
 app.get('/', (request, response) => {
     let clientIp = request.ip;
     response.send(`Hello, dear ${clientIp}. I am a nodejs website...`);
-    response.end();
 });
 
-app.use("/carsapi", require("./controllers/carsapi.route"));
-app.listen(process.env.WEB_PORT, '0.0.0.0',
-    function () { console.log("Listening on " + process.env.WEB_PORT); }
-);
+// Error handling middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({
@@ -56,9 +64,16 @@ app.use((err, req, res, next) => {
     });
 });
 
-app.use((req, res, next) => {
+// 404 handler - must be last
+app.use((req, res) => {
     res.status(404).json({
         success: false,
         message: 'Route not found'
     });
+});
+
+// Start server
+const port = process.env.WEB_PORT || 9000;
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Server is running on port ${port}`);
 });

@@ -4,18 +4,12 @@ const carRepo = require('../utils/cars.repository');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+
 const uploadDir = path.join(__dirname, '../../webapp_clientside/src/medias/car_img');
 
-try {
-    if (!fs.existsSync(uploadDir)) {
-        fs.mkdirSync(uploadDir, { recursive: true });
-        console.log('Created directory:', uploadDir);
-    }
-    console.log('Full upload directory path:', path.resolve(uploadDir));
-} catch (error) {
-    console.error('Error creating directory:', error);
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
 }
-
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -28,49 +22,13 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.get('/brands', brandListAction);
+// Route to get all cars
 router.get('/list', carListAction);
 router.get('/show/:carId', carShowAction);
-router.get('/del/:carId', carDelAction);
-router.post('/update/:carId', carUpdateAction);
 router.get('/show/:carId/features', featureListAction);
+router.get('/del/:carId', carDelAction);
 router.post('/add-car', upload.single('image'), addCarAction);
-
-router.post('/add-brand', brandAddAction);
-
-
-async function brandAddAction(request, response) {
-    try {
-        const brandData = {
-            brand_name: request.body.brand_name,
-            brand_country: request.body.brand_country,
-            brand_founded: request.body.brand_founded
-        };
-
-        const brandId = await carRepo.addOneBrand(brandData);
-
-        response.json({
-            success: true,
-            brandId: brandId,
-            message: 'Brand added successfully'
-        });
-    } catch (error) {
-        console.error('Error adding brand:', error);
-        response.status(500).json({
-            success: false,
-            message: error.message || 'Failed to add brand'
-        });
-    }
-}
-
-async function brandListAction(request, response) {
-    try {
-        const brands = await carRepo.getAllBrands();
-        response.json(brands);
-    } catch (error) {
-        response.status(500).json({ message: error.message });
-    }
-}
+router.post('/update/:carId', carUpdateAction);
 
 async function carListAction(request, response) {
     try {
@@ -120,15 +78,13 @@ async function carDelAction(request, response) {
                 const imagePath = path.join(__dirname, '../../webapp_clientside/src/medias/car_img', imageName);
                 if (fs.existsSync(imagePath)) {
                     fs.unlinkSync(imagePath);
-                    console.log(`Image ${imageName} deleted successfully`);
                 }
             } catch (imageError) {
                 console.error('Error deleting image:', imageError);
             }
         }
 
-        let result = { rowsDeleted: numRows };
-        response.json(result);
+        response.json({ rowsDeleted: numRows });
     } catch (error) {
         response.status(500).json({ message: error.message });
     }
@@ -144,8 +100,7 @@ async function carUpdateAction(request, response) {
             request.body.car_baseprice,
             isFancy,
             request.body.car_realPrice);
-        let result = { rowsUpdated: numRows };
-        response.json(result);
+        response.json({ rowsUpdated: numRows });
     } catch (error) {
         response.status(500).json({ message: error.message });
     }
@@ -153,9 +108,6 @@ async function carUpdateAction(request, response) {
 
 async function addCarAction(request, response) {
     try {
-        console.log('Received car data:', request.body);
-        console.log('Received file:', request.file);
-
         const carData = {
             brand_id: request.body.brand_id,
             car_name: request.body.car_name,
@@ -174,13 +126,11 @@ async function addCarAction(request, response) {
             message: 'Car added successfully'
         });
     } catch (error) {
-        console.error('Error adding car:', error);
         response.status(500).json({
             success: false,
             message: error.message || 'Failed to add car'
         });
     }
 }
-
 
 module.exports = router;
