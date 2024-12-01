@@ -43,7 +43,6 @@ router.delete('/del/:brandId', async (request, response) => {
     try {
         const brandId = request.params.brandId;
 
-        // Check if brand has associated cars
         const cars = await carRepo.getCarsByBrand(brandId);
         if (cars.length > 0) {
             return response.status(400).json({

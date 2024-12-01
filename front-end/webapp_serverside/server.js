@@ -1,6 +1,6 @@
 // Populate object process.env from the .env file
 require('dotenv').config();
-const path = require('path'); // Add this line for path module
+const path = require('path');
 
 // Create express.js web app
 const express = require('express');
