@@ -54,6 +54,7 @@
 
         <div class="customization-content">
           <div class="feature-sections">
+            <!--
             <div class="feature-section">
               <h3>Engine</h3>
               <div class="feature-options">
@@ -107,6 +108,7 @@
                 </div>
               </div>
             </div>
+          -->
 
 
             <div class="feature-section" v-show="this.featuresSpoiler.length != 0">
