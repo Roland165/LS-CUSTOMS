@@ -122,7 +122,7 @@ export default {
   methods: {
     async fetchBrands() {
       try {
-        const response = await axios.get('http://localhost:9000/carsapi/brands');
+        const response = await axios.get('http://localhost:9000/brandsapi/list');
         this.brands = response.data;
       } catch (error) {
         console.error('Error fetching brands:', error);
