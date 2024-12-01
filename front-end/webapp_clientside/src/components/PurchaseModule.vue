@@ -144,7 +144,7 @@
                   :class="{ 'selected': selectedFeaturesTab.includes(feature)}"
                   @click="toggleFeatureSelect(feature)"
                 >
-                  <!--<img :src="getEngineImage(engine.feature_name)" :alt="feature.feature_name">-->
+                  <!--<img :src="getEngineImage(engine.feature_name)" Fg:alt="feature.feature_name">-->
                   <div class="feature-info">
                     <h4>{{ feature.feature_name }}</h4>
                     <p v-if="feature.feature_added_power != 0">Added power: {{ feature.feature_added_power }}hp</p>

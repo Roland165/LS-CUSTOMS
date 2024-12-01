@@ -15,7 +15,7 @@
         >
           <div class="brand-info">
             <h3>{{ brand.brand_name }}</h3>
-            <p>Revenue: ${{ formatRevenue(brand.brand_revenue) }}</p>
+            <p>Revenue: ${{ formatRevenue(brand.brand_revenue) }} Million</p>
             <p>Creation Date: {{ formatDate(brand.brand_creation_date) }}</p>
             <p>Creator: {{ brand.brand_creator }}</p>
             <p>Creation Place: {{ brand.brand_creation_place }}</p>
