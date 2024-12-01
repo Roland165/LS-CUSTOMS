@@ -6,6 +6,7 @@ const featureRepo = require('../utils/features.repository');
 
 
 router.get('/list', featureListAction);
+router.post('/add', addFeatureAction);
 
 
 async function featureListAction(request, response) {
@@ -17,18 +18,18 @@ async function featureListAction(request, response) {
     }
 }
 
-router.post('/add', async (request, response) => {
-    console.log('Received brand data:', request.body);
+async function addFeatureAction(request, response) {
+    console.log('Received feature data:', request.body);
     try {
-        const brandData = {
-            brand_name: request.body.brand_name,
-            brand_revenue: request.body.brand_revenue,
-            brand_creation_date: request.body.brand_creation_date,
-            brand_creator: request.body.brand_creator,
-            brand_creation_place: request.body.brand_creation_place
+        const featureData = {
+            feature_name: request.body.feature_name,
+            feature_price: request.body.feature_price,
+            feature_color: request.body.feature_color,
+            feature_added_power: request.body.feature_added_power,
+            feature_added_weight: request.body.feature_added_weight
         };
 
-        const brandId = await brandRepo.addOneBrand(brandData);
+        const featureId = await featureRepo.addOneFeature(brandData);
 
         response.json({
             success: true,
@@ -42,7 +43,7 @@ router.post('/add', async (request, response) => {
             message: error.message || 'Failed to add brand'
         });
     }
-});
+};
 
 router.delete('/del/:brandId', async (request, response) => {
     try {

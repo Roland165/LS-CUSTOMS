@@ -51,6 +51,11 @@ module.exports = {
                 car.car_base_weight,
                 car.car_base_price
             ]);
+
+            //insert the new car into conn_C_S table with store LS_Origins so that we can link features to it.
+            let sqlConn = `INSERT INTO conn_C_S (car_id, store_id) VALUES (?, 4)`;
+            const [resultConn] = await pool.execute(sqlConn, [parseInt(result.insertId)]);
+
             return result.insertId;
         } catch (err) {
             console.error("Error in addOneCar:", err);

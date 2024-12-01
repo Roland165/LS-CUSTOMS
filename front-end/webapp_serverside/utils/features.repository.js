@@ -12,11 +12,11 @@ module.exports = {
         }
     },
 
-    async addOneBrand(brand) {
+    async addOneFeature(feature) {
         try {
-            console.log('Adding brand:', brand);
+            console.log('Adding feature:', feature);
             let sql = `
-                INSERT INTO brand (
+                INSERT INTO feature (
                     brand_name,
                     brand_revenue,
                     brand_creation_date,

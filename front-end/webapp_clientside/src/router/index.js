@@ -89,6 +89,11 @@ export default new Router({
       path: '/delete-feature',
       name: 'DeleteFeature',
       component: DeleteFeatureModule,
+    },
+    {
+      path: '/add-feature',
+      name: 'AddFeature',
+      component: AddFeatureModule,
     }
   ],
 });
