@@ -29,18 +29,18 @@ async function addFeatureAction(request, response) {
             feature_added_weight: request.body.feature_added_weight
         };
 
-        const featureId = await featureRepo.addOneFeature(brandData);
+        const featureId = await featureRepo.addOneFeature(featureData);
 
         response.json({
             success: true,
-            brandId: brandId,
-            message: 'Brand added successfully'
+            featureId: featureId,
+            message: 'Feature added successfully'
         });
     } catch (error) {
-        console.error('Error in add brand route:', error);
+        console.error('Error in add feature route:', error);
         response.status(500).json({
             success: false,
-            message: error.message || 'Failed to add brand'
+            message: error.message || 'Failed to add feature'
         });
     }
 };

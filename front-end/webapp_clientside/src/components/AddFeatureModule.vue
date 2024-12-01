@@ -4,57 +4,63 @@
       <h1 class="text-center mb-4">Add New Feature</h1>
       <router-link class="btn btn-link" to="/admin">Back to DashBoard</router-link>
       <div class="form-container">
-        <form @submit.prevent="addFeature"> <!--TODO: create addFeature-->
+        <form @submit.prevent="addFeature">
+
           <div class="form-group">
-            <label for="featurebrandName">Feature Name</label>
+            <label for="featureName">Feature Name</label>
             <input
               type="text"
               id="featureName"
-              v-model="brandData.brand_name"
+              v-model="featureData.feature_name"
               class="form-control"
               required
             >
           </div>
 
           <div class="form-group">
-            <label for="brandRevenue">Brand Revenue</label>
+            <label for="featurePrice">Price (€)</label>
+            <input
+              type="number" 
+              step="0.01"
+              min="0"
+              id="featurePrice"
+              v-model="featureData.feature_price"
+              class="form-control"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="featureColor">Color</label>
+            <input
+              type="text"
+              id="featureColor"
+              v-model="featureData.feature_color"
+              class="form-control"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="featureAddedPower">Added power (hp)</label>
             <input
               type="number"
-              id="featureRevenue"
-              v-model="brandData.brand_revenue"
+              min="0"
+              step="1"
+              id="featureAddedPower"
+              v-model="featureData.feature_added_power"
               class="form-control"
               required
             >
           </div>
 
           <div class="form-group">
-            <label for="brandCreationDate">Creation Date</label>
+            <label for="featureAddedWeight">Added Weight (Kg)</label>
             <input
-              type="date"
-              id="featureCreationDate"
-              v-model="brandData.brand_creation_date"
-              class="form-control"
-              required
-            >
-          </div>
-
-          <div class="form-group">
-            <label for="brandCreator">Creator</label>
-            <input
-              type="text"
-              id="featureCreator"
-              v-model="brandData.brand_creator"
-              class="form-control"
-              required
-            >
-          </div>
-
-          <div class="form-group">
-            <label for="featureCreationPlace">Creation Place</label>
-            <input
-              type="text"
-              id="brandCreationPlace"
-              v-model="brandData.brand_creation_place"
+              type="number"
+              step="0.01"
+              id="featureAddedWeight"
+              v-model="featureData.feature_added_weight"
               class="form-control"
               required
             >

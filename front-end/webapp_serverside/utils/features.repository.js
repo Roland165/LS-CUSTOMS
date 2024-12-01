@@ -17,23 +17,23 @@ module.exports = {
             console.log('Adding feature:', feature);
             let sql = `
                 INSERT INTO feature (
-                    brand_name,
-                    brand_revenue,
-                    brand_creation_date,
-                    brand_creator,
-                    brand_creation_place
+                    feature_name,
+                    feature_price,
+                    feature_color,
+                    feature_added_power,
+                    feature_added_weight
                 ) VALUES (?, ?, ?, ?, ?)
             `;
             const [result] = await pool.execute(sql, [
-                brand.brand_name,
-                brand.brand_revenue,
-                brand.brand_creation_date,
-                brand.brand_creator,
-                brand.brand_creation_place
+                feature.feature_name,
+                feature.feature_price,
+                feature.feature_color,
+                feature.feature_added_power,
+                feature.feature_added_weight
             ]);
             return result.insertId;
         } catch (err) {
-            console.error("Error in addOneBrand:", err);
+            console.error("Error in addOneFeature:", err);
             throw err;
         }
     },

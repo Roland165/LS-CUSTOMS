@@ -10,6 +10,7 @@ import AddBrandModule from '@/components/AddBrandModule'
 import AdminModule from '@/components/AdminModule.vue'
 import DeleteBrandModule from '@/components/DeleteBrandModule.vue'
 import DeleteFeatureModule from '@/components/DeleteFeatureModule.vue'
+import AddFeatureModule from '@/components/AddFeatureModule.vue'
 Vue.use(Router);
 
 export default new Router({

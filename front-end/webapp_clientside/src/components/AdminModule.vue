@@ -16,6 +16,12 @@
           <router-link to="/add-brand" class="btn btn-primary">Add Brand</router-link>
         </div>
 
+        <div class="action-card" @click="goToAddBrand">
+          <h3>Add New Brand</h3>
+          <p>Introduce a new automotive brand</p>
+          <router-link to="/add-brand" class="btn btn-primary">Add Brand</router-link>
+        </div>
+
         <div class="action-card" @click="goToDeleteCar">
           <h3>Delete Car</h3>
           <p>Remove a vehicle from the collection</p>
