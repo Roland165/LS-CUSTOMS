@@ -16,10 +16,10 @@
           <router-link to="/add-brand" class="btn btn-primary">Add Brand</router-link>
         </div>
 
-        <div class="action-card" @click="goToAddBrand">
-          <h3>Add New Brand</h3>
-          <p>Introduce a new automotive brand</p>
-          <router-link to="/add-brand" class="btn btn-primary">Add Brand</router-link>
+        <div class="action-card" @click="goToAddFeature">
+          <h3>Add New Feature</h3>
+          <p>Add a new performance or esthetic feature</p>
+          <router-link to="/add-feature" class="btn btn-primary">Add Feature</router-link>
         </div>
 
         <div class="action-card" @click="goToDeleteCar">
@@ -90,6 +90,9 @@ export default {
     goToDeleteFeature() {
       this.$router.push('/delete-feature');
     },
+    goToAddFeature() {
+      this.$router.push('/add-feature');
+    },
     async fetchStatistics() {
       try {
         // Fetch cars
@@ -121,7 +124,7 @@ export default {
 
 .admin-actions {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: 0.33fr 0.33fr 0.33fr;
   gap: 2rem;
   padding: 2rem 0;
 }

@@ -38,14 +38,14 @@ module.exports = {
         }
     },
 
-    async delOneBrand(brandId) {
+    async delOneFeature(featureId) {
         try {
-            let sql = "DELETE FROM brand WHERE brand_id = ?";
-            const [result] = await pool.execute(sql, [brandId]);
-            console.log("Brand deleted:", result.affectedRows);
+            let sql = "DELETE FROM feature WHERE feature_id = ?";
+            const [result] = await pool.execute(sql, [featureId]);
+            console.log("Feature deleted:", result.affectedRows);
             return result.affectedRows;
         } catch (err) {
-            console.error("Error in delOneBrand:", err);
+            console.error("Error in delOneFeature:", err);
             throw err;
         }
     },
@@ -62,6 +62,19 @@ module.exports = {
             return rows;
         } catch (err) {
             console.error("Error in getCarsByBrand:", err);
+            throw err;
+        }
+    },
+
+    async getOneFeature(featureId) {
+        try {
+            let sql = `
+                SELECT feature.* FROM feature WHERE feature.feature_id = ?
+            `;
+            const [rows] = await pool.execute(sql, [featureId]);
+            return rows[0];
+        } catch (err) {
+            console.error("Error in getOneFeature:", err);
             throw err;
         }
     },

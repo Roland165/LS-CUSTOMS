@@ -21,24 +21,14 @@
             <p>Added weight: {{ parseFloat(feature.feature_added_weight) }} Kg</p>
           </div>
 
-          <!--
           <div class="feature-actions">
-            <span
-              v-if="brand.carCount > 0"
-              class="cars-count-warning"
-            >
-              Cannot delete: {{ brand.carCount }} associated cars
-            </span>
-
             <button
               @click="confirmDeleteFeature(feature)" 
-              :disabled="brand.carCount > 0"
               class="btn btn-danger"
-            >  TODO: create confirmDeleteFeature 
+            >
               Delete Feature
             </button>
           </div>
-          -->
         </div>
       </div>
     </div>
@@ -56,67 +46,39 @@ export default {
     }
   },
   methods: {
-    formatRevenue(revenue) {
-      return revenue ? revenue.toLocaleString() : 'N/A';
-    },
     async fetchFeatures() {
       try {
         // Fetch feature
         const featuresResponse = await axios.get('http://localhost:9000/featuresapi/list');
-
-        /*
-        // Fetch cars for each brand to check associations
-        const brandsWithCarCount = await Promise.all(
-          brandsResponse.data.map(async (brand) => {
-            try {
-              const carsResponse = await axios.get(`http://localhost:9000/brandsapi/show/${brand.brand_id}/cars`);
-              const associatedCars = carsResponse.data
-
-              return {
-                ...brand,
-                carCount: associatedCars.length
-              };
-            } catch (error) {
-              console.error(`Error fetching cars for brand ${brand.brand_id}:`, error);
-              return {
-                ...brand,
-                carCount: 0
-              };
-            }
-          })
-        );
-        */
-
-        console.log(featuresResponse);
         this.features = featuresResponse.data
       } catch (error) {
-        console.error('Error fetching brands:', error);
-        alert('Failed to load brands');
+        console.error('Error fetching feature:', error);
+        alert('Failed to load feautre');
       }
-    },/*
-    async confirmDeleteBrand(brand) {
-      const confirmDelete = confirm(`Are you sure you want to delete the brand "${brand.brand_name}"?`);
+    },
+    async confirmDeleteFeature(feature) {
+      const confirmDelete = confirm(`Are you sure you want to delete the feature "${feature.feature_name}"?`);
 
       if (confirmDelete) {
         try {
-          const response = await axios.delete(`http://localhost:9000/brandsapi/del/${brand.brand_id}`);
+          const response = await axios.get(`http://localhost:9000/featuresapi/del/${parseInt(feature.feature_id)}`);
 
           if (response.data.success) {
-            alert('Brand deleted successfully');
-            this.fetchBrands();
+            alert('Feature deleted successfully');  
+            this.fetchFeatures();
           } else {
-            alert(response.data.message || 'Failed to delete brand');
+            alert(response.data.message || 'Failed to delete feature');
           }
         } catch (error) {
-          console.error('Error deleting brand:', error);
-          let errorMessage = 'Failed to delete brand';
+          console.error('Error deleting feature:', error);
+          let errorMessage = 'Failed to delete feature';
           if (error.response && error.response.data && error.response.data.message) {
             errorMessage = error.response.data.message;
           }
           alert(errorMessage);
         }
       }
-    }*/
+    }
   },
   created() {
     this.fetchFeatures();

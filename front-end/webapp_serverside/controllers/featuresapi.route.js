@@ -1,11 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const brandRepo = require('../utils/brands.repository');
-const carRepo = require('../utils/cars.repository');
 const featureRepo = require('../utils/features.repository');
 
 
 router.get('/list', featureListAction);
+router.get('/del/:featureId', featureDelAction);
 router.post('/add', addFeatureAction);
 
 
@@ -45,19 +44,20 @@ async function addFeatureAction(request, response) {
     }
 };
 
-router.delete('/del/:brandId', async (request, response) => {
+async function featureDelAction(request, response) {
     try {
-        const brandId = request.params.brandId;
+        const featureId = request.params.featureId;
+        const feature = await featureRepo.getOneFeature(featureId);
 
-        const cars = await carRepo.getCarsByBrand(brandId);
-        if (cars.length > 0) {
-            return response.status(400).json({
-                success: false,
-                message: 'Cannot delete brand with associated cars'
-            });
+
+        if (!feature) {
+            return response.status(404).json({ message: 'Feature not found' });
         }
 
-        const numRows = await brandRepo.delOneBrand(brandId);
+
+        const numRows = await featureRepo.delOneFeature(featureId);
+        console.log("NUMROWS: " + numRows)
+
         response.json({
             success: true,
             rowsDeleted: numRows
@@ -68,7 +68,7 @@ router.delete('/del/:brandId', async (request, response) => {
             message: error.message
         });
     }
-});
+}
 
 
 module.exports = router;

@@ -66,6 +66,7 @@ app.use((err, req, res, next) => {
     });
 });
 
+/*
 // 404 handler - must be last
 app.use((req, res) => {
     res.status(404).json({
@@ -73,6 +74,7 @@ app.use((req, res) => {
         message: 'Route not found'
     });
 });
+*/
 
 // Start server
 const port = process.env.WEB_PORT || 9000;
