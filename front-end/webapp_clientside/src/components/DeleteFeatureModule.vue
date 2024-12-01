@@ -2,7 +2,7 @@
   <div class="delete-feature-module">
     <div class="container mt-5">
       <h1 class="text-center mb-4">Delete Features</h1>
-      <router-link class="btn btn-link" to="/admin">Back to DashBoard</router-link>
+      <router-link class="btn btn-link" to="/admin">Back to Dashboard</router-link>
       <div v-if="features.length === 0" class="no-features-message">
         <p>No features available to delete.</p>
       </div>
@@ -173,10 +173,11 @@ export default {
 .btn {
   padding: 0.5rem 1rem;
   border-radius: 5px;
-  text-transform: uppercase;
   font-weight: bold;
   color: white;
-  cursor: pointer;
+  cursor: pointer;margin: 1%;
+  display: inline-block;
+  text-decoration: none;
 }
 
 .btn-danger {

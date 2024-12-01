@@ -451,6 +451,10 @@ export default {
   transition: background-color 0.3s ease;
 }
 
+.btn-link{
+  margin: 1%;
+}
+
 .purchase .btn:hover {
   background-color: #005a8e;
 }

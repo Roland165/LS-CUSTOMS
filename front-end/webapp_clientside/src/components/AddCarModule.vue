@@ -3,7 +3,7 @@
     <div class="container mt-5">
       <div class="header-section mb-5">
         <h1 class="text-center">Add New Car</h1>
-        <router-link class="btn btn-link" to="/admin">Back to DashBoard</router-link>
+        <router-link class="btn btn-link" to="/admin">Back to Dashboard</router-link>
       </div>
       <div class="add-car-form">
         <form @submit.prevent="addCar" class="mt-4">
@@ -67,7 +67,7 @@
                   <span>Choose an image</span>
                 </label>
                 <input type="file" id="carImage" @change="handleFileUpload" class="form-control"
-                       accept="image/*" required>
+                       accept="image/*">
               </div>
               <div class="image-preview" v-if="imagePreview">
                 <img :src="imagePreview" alt="Preview">
@@ -307,10 +307,20 @@ export default {
 .btn {
   padding: 0.75rem 2rem;
   font-weight: bold;
-  text-transform: uppercase;
   letter-spacing: 0.5px;
   transition: all 0.3s ease;
+  margin: 1%;
+  display: inline-block;
+  text-decoration: none;
+  border-radius: 4px;  
+  color: #fff;
+  font-size: 16px;
 }
+
+.btn:not(.btn-link){
+  text-transform: uppercase;
+}
+
 
 .btn-primary {
   background-color: #0077b6;
@@ -347,6 +357,7 @@ export default {
   transition: background-color 0.3s ease;
   margin: 1%;
 }
+
 .btn-link:hover {
   background-color: #005a8e;
 }

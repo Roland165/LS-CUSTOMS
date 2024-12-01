@@ -2,7 +2,7 @@
   <div class="delete-car">
     <div class="container mt-5">
       <h1 class="text-center mb-4">Delete Cars</h1>
-      <router-link class="btn btn-link" to="/admin">Back to DashBoard</router-link>
+      <router-link class="btn btn-link" to="/admin">Back to Dashboard</router-link>
       <div class="filters-section mb-4">
         <div class="filter-controls">
           <div class="filter-group">

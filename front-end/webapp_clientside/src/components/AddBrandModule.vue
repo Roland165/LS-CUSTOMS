@@ -2,7 +2,7 @@
   <div class="add-brand-module">
     <div class="container mt-5">
       <h1 class="text-center mb-4">Add New Brand</h1>
-      <router-link class="btn btn-link" to="/admin">Back to DashBoard</router-link>
+      <router-link class="btn btn-link" to="/admin">Back to Dashboard</router-link>
       <div class="form-container">
         <form @submit.prevent="addBrand">
           <div class="form-group">
@@ -149,8 +149,6 @@ label {
 }
 
 .btn {
-  display: block;
-  width: 100%;
   padding: 0.75rem;
   background-color: #0077b6;
   color: white;
@@ -160,6 +158,9 @@ label {
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin: 1%;
+  display: inline-block;
+  text-decoration: none;
 }
 
 .btn:hover {

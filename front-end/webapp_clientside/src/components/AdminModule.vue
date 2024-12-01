@@ -156,6 +156,8 @@ export default {
   border-radius: 5px;
   text-transform: uppercase;
   font-weight: bold;
+  text-decoration: none;
+  color: white;
 }
 
 .btn-primary {

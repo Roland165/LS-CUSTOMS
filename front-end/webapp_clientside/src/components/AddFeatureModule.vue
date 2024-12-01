@@ -126,6 +126,10 @@ export default {
   padding-top: 80px;
 }
 
+.btn-link{
+  padding: 8px 16px;
+}
+
 .form-container {
   max-width: 600px;
   margin: 0 auto;
@@ -155,17 +159,18 @@ label {
 }
 
 .btn {
-  display: block;
-  width: 100%;
+  display: inline-block;
   padding: 0.75rem;
   background-color: #0077b6;
   color: white;
   border: none;
+  text-decoration: none;
   border-radius: 5px;
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin: 1%;
 }
 
 .btn:hover {
