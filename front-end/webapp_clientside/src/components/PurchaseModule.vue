@@ -147,10 +147,10 @@
                   <!--<img :src="getEngineImage(engine.feature_name)" Fg:alt="feature.feature_name">-->
                   <div class="feature-info">
                     <h4>{{ feature.feature_name }}</h4>
-                    <p v-if="feature.feature_added_power != 0">Added power: {{ feature.feature_added_power }}hp</p>
-                    <p class="price">{{ feature.feature_price }}€</p>
+                    <p v-if="feature.feature_added_power != 0">Added power: {{ feature.feature_added_power }} hp</p>
+                    <p class="price">{{ parseFloat(feature.feature_price) }} €</p>
                     <p v-if="feature.feature_color != null">Color: {{ feature.feature_color }}</p>
-                    <p v-if="feature.feature_added_weight != 0">Added weight: {{ feature.feature_added_weight }}Kg</p>
+                    <p v-if="feature.feature_added_weight != 0">Added weight: {{ parseFloat(feature.feature_added_weight) }} Kg</p>
                   </div>
                 </div>
               </div>

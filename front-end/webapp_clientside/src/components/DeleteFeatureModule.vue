@@ -16,11 +16,12 @@
           <div class="feature-info">
             <h3>{{ feature.feature_name }}</h3>
             <p>Price: {{ parseFloat(feature.feature_price) }} €</p>
-            <p>Color: {{ feature.feature_color }}</p>
-            <p>Added power: {{ feature.feature_added_power }}</p>
-            <p>Added weight: {{ feature.feature_added_weight }}</p>
+            <p>Color: {{ String(feature.feature_color) }}</p>
+            <p>Added power: {{ feature.feature_added_power }} hp</p>
+            <p>Added weight: {{ parseFloat(feature.feature_added_weight) }} Kg</p>
           </div>
 
+          <!--
           <div class="feature-actions">
             <span
               v-if="brand.carCount > 0"
@@ -33,10 +34,11 @@
               @click="confirmDeleteFeature(feature)" 
               :disabled="brand.carCount > 0"
               class="btn btn-danger"
-            > <!-- TODO: create confirmDeleteFeature -->
+            >  TODO: create confirmDeleteFeature 
               Delete Feature
             </button>
           </div>
+          -->
         </div>
       </div>
     </div>
@@ -85,7 +87,8 @@ export default {
         );
         */
 
-        this.features = featuresResponse
+        console.log(featuresResponse);
+        this.features = featuresResponse.data
       } catch (error) {
         console.error('Error fetching brands:', error);
         alert('Failed to load brands');
@@ -113,10 +116,10 @@ export default {
           alert(errorMessage);
         }
       }
-    }
+    }*/
   },
   created() {
-    this.fetchBrands();*/
+    this.fetchFeatures();
   },
 }
 
