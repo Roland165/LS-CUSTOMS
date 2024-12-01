@@ -1,27 +1,27 @@
 <template>
-  <div class="delete-brand-module">
+  <div class="delete-feature-module">
     <div class="container mt-5">
-      <h1 class="text-center mb-4">Delete Brands</h1>
+      <h1 class="text-center mb-4">Delete Features</h1>
       <router-link class="btn btn-link" to="/admin">Back to DashBoard</router-link>
-      <div v-if="brands.length === 0" class="no-brands-message">
-        <p>No brands available to delete.</p>
+      <div v-if="features.length === 0" class="no-features-message">
+        <p>No features available to delete.</p>
       </div>
 
-      <div v-else class="brands-list">
+      <div v-else class="features-list">
         <div
-          v-for="brand in brands"
-          :key="brand.brand_id"
-          class="brand-card"
+          v-for="feature in features"
+          :key="feature.feature_id"
+          class="feature-card"
         >
-          <div class="brand-info">
-            <h3>{{ brand.brand_name }}</h3>
-            <p>Revenue: {{ formatRevenue(brand.brand_revenue) }} Million €</p>
-            <p>Creation Date: {{ formatDate(brand.brand_creation_date) }}</p>
-            <p>Creator: {{ brand.brand_creator }}</p>
-            <p>Creation Place: {{ brand.brand_creation_place }}</p>
+          <div class="feature-info">
+            <h3>{{ feature.feature_name }}</h3>
+            <p>Price: {{ parseFloat(feature.feature_price) }} €</p>
+            <p>Color: {{ feature.feature_color }}</p>
+            <p>Added power: {{ feature.feature_added_power }}</p>
+            <p>Added weight: {{ feature.feature_added_weight }}</p>
           </div>
 
-          <div class="brand-actions">
+          <div class="feature-actions">
             <span
               v-if="brand.carCount > 0"
               class="cars-count-warning"
@@ -30,11 +30,11 @@
             </span>
 
             <button
-              @click="confirmDeleteBrand(brand)"
+              @click="confirmDeleteFeature(feature)" 
               :disabled="brand.carCount > 0"
               class="btn btn-danger"
-            >
-              Delete Brand
+            > <!-- TODO: create confirmDeleteFeature -->
+              Delete Feature
             </button>
           </div>
         </div>
@@ -47,24 +47,22 @@
 import axios from 'axios';
 
 export default {
-  name: 'DeleteBrandModule',
+  name: 'DeleteFeatureModule',
   data() {
     return {
-      brands: []
+      features: []
     }
   },
   methods: {
     formatRevenue(revenue) {
       return revenue ? revenue.toLocaleString() : 'N/A';
     },
-    formatDate(date) {
-      return date ? new Date(date).toLocaleDateString() : 'N/A';
-    },
-    async fetchBrands() {
+    async fetchFeatures() {
       try {
-        // Fetch brands
-        const brandsResponse = await axios.get('http://localhost:9000/brandsapi/list');
+        // Fetch feature
+        const featuresResponse = await axios.get('http://localhost:9000/featuresapi/list');
 
+        /*
         // Fetch cars for each brand to check associations
         const brandsWithCarCount = await Promise.all(
           brandsResponse.data.map(async (brand) => {
@@ -85,13 +83,14 @@ export default {
             }
           })
         );
+        */
 
-        this.brands = brandsWithCarCount;
+        this.features = featuresResponse
       } catch (error) {
         console.error('Error fetching brands:', error);
         alert('Failed to load brands');
       }
-    },
+    },/*
     async confirmDeleteBrand(brand) {
       const confirmDelete = confirm(`Are you sure you want to delete the brand "${brand.brand_name}"?`);
 
@@ -117,24 +116,25 @@ export default {
     }
   },
   created() {
-    this.fetchBrands();
-  }
+    this.fetchBrands();*/
+  },
 }
+
 </script>
 
 <style scoped>
-.delete-brand-module {
+.delete-feature-module {
   padding-top: 80px;
 }
 
-.brands-list {
+.features-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1rem;
   padding: 20px;
 }
 
-.brand-card {
+.feature-card {
   background-color: white;
   border-radius: 10px;
   padding: 1.5rem;
@@ -144,17 +144,17 @@ export default {
   justify-content: space-between;
 }
 
-.brand-info h3 {
+.feature-info h3 {
   margin-bottom: 0.5rem;
   color: #333;
 }
 
-.brand-info p {
+.feature-info p {
   color: #666;
   margin: 0.25rem 0;
 }
 
-.brand-actions {
+.feature-actions {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -186,7 +186,7 @@ export default {
   cursor: not-allowed;
 }
 
-.no-brands-message {
+.no-features-message {
   text-align: center;
   color: #666;
   padding: 2rem;
@@ -208,7 +208,7 @@ export default {
   background-color: #005a8e;
 }
 @media (max-width: 768px) {
-  .brands-list {
+  .features-list {
     grid-template-columns: 1fr;
   }
 }

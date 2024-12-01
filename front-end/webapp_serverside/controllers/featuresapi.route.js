@@ -2,19 +2,20 @@ const express = require('express');
 const router = express.Router();
 const brandRepo = require('../utils/brands.repository');
 const carRepo = require('../utils/cars.repository');
+const featureRepo = require('../utils/features.repository');
 
 
-router.get('/show/:brandId/cars', brandListCarsAction);
+router.get('/list', featureListAction);
 
 
-router.get('/list', async (request, response) => {
+async function featureListAction(request, response) {
     try {
-        const brands = await brandRepo.getAllBrands();
-        response.json(brands);
+        const features = await featureRepo.getAllFeatures();
+        response.json(features);
     } catch (error) {
         response.status(500).json({ message: error.message });
     }
-});
+}
 
 router.post('/add', async (request, response) => {
     console.log('Received brand data:', request.body);
@@ -47,7 +48,7 @@ router.delete('/del/:brandId', async (request, response) => {
     try {
         const brandId = request.params.brandId;
 
-        const cars = await brandRepo.getCarsByBrand(brandId);
+        const cars = await carRepo.getCarsByBrand(brandId);
         if (cars.length > 0) {
             return response.status(400).json({
                 success: false,
@@ -67,17 +68,6 @@ router.delete('/del/:brandId', async (request, response) => {
         });
     }
 });
-
-async function brandListCarsAction(request, response) {
-    try {
-        const cars = await brandRepo.getCarsByBrand(request.params.brandId);
-        response.json(cars);
-    } catch (error) {
-        response.status(500).json({ message: error.message });
-    }
-}
-
-
 
 
 module.exports = router;

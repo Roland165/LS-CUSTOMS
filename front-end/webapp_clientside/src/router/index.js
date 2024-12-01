@@ -9,6 +9,7 @@ import DeleteModule from '@/components/DeleteCarModule.vue'
 import AddBrandModule from '@/components/AddBrandModule'
 import AdminModule from '@/components/AdminModule.vue'
 import DeleteBrandModule from '@/components/DeleteBrandModule.vue'
+import DeleteFeatureModule from '@/components/DeleteFeatureModule.vue'
 Vue.use(Router);
 
 export default new Router({
@@ -54,10 +55,10 @@ export default new Router({
       redirect: '/orders/list/all',
     },
     {
-    path: '/orders/:action/:id',
-    name: 'orders',
-    component: OrdersModule,
-    props: true,
+      path: '/orders/:action/:id',
+      name: 'orders',
+      component: OrdersModule,
+      props: true,
     },
     {
       path: '/add-car',
@@ -83,6 +84,11 @@ export default new Router({
       path: '/admin',
       name: 'Admin',
       component: AdminModule,
+    },
+    {
+      path: '/delete-feature',
+      name: 'DeleteFeature',
+      component: DeleteFeatureModule,
     }
   ],
 });

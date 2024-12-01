@@ -33,22 +33,6 @@ module.exports = {
         }
     },
 
-    async getCarsByBrand(brandId) {
-        try {
-            let sql = `
-                SELECT c.*, b.brand_name
-                FROM car c
-                JOIN brand b ON c.brand_id = b.brand_id
-                WHERE c.brand_id = ?
-            `;
-            const [rows] = await pool.execute(sql, [brandId]);
-            return rows;
-        } catch (err) {
-            console.error("Error in getCarsByBrand:", err);
-            throw err;
-        }
-    },
-
     async addOneCar(car) {
         try {
             let sql = `

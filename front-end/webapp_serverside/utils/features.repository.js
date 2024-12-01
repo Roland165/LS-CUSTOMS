@@ -1,13 +1,13 @@
 const pool = require('./db.include');
 
 module.exports = {
-    async getAllBrands() {
+    async getAllFeatures() {
         try {
-            let sql = "SELECT * FROM brand";
+            let sql = "SELECT * FROM feature";
             const [rows] = await pool.execute(sql);
             return rows;
         } catch (err) {
-            console.error("Error in getAllBrands:", err);
+            console.error("Error in getAllFeatures:", err);
             throw err;
         }
     },
