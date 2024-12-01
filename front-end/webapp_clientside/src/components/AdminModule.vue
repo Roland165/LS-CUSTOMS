@@ -27,6 +27,12 @@
           <p>Remove a brand from the database</p>
           <router-link to="/delete-brand" class="btn btn-danger">Delete Brand</router-link>
         </div>
+
+        <div class="action-card" @click="goToDeleteFeature">
+          <h3>Delete Feature</h3>
+          <p>Remove a feature from the database</p>
+          <router-link to="/delete-feature" class="btn btn-danger">Delete Feature</router-link>
+        </div>
       </div>
 
       <div class="statistics-section mt-5">
@@ -75,6 +81,9 @@ export default {
     goToDeleteBrand() {
       this.$router.push('/delete-brand');
     },
+    goToDeleteFeature() {
+      this.$router.push('/delete-feature');
+    },
     async fetchStatistics() {
       try {
         // Fetch cars
@@ -85,8 +94,8 @@ export default {
         const brandsResponse = await axios.get('http://localhost:9000/brandsapi/list');
         this.totalBrands = brandsResponse.data.length;
 
-        // Fetch features (you might need to create an endpoint for this)
-        const featuresResponse = await axios.get('http://localhost:9000/carsapi/features');
+        // Fetch features
+        const featuresResponse = await axios.get('http://localhost:9000/featuresapi/list');
         this.totalFeatures = featuresResponse.data.length;
       } catch (error) {
         console.error('Error fetching statistics:', error);
