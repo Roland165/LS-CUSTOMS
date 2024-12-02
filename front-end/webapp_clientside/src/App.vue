@@ -11,8 +11,6 @@
           <router-link to="/checkout/all" class="nav_bar_button checkout-button">Checkout</router-link>
           <router-link to="/orders/list/all" class="nav_bar_button">Orders</router-link>
         </div>
-
-        <!-- Account Button and Dropdown -->
         <div
           class="account-dropdown"
           @mouseenter="dropdownOpen = isLoggedIn"
@@ -40,8 +38,6 @@
               </div>
             </button>
           </router-link>
-
-          <!-- Dropdown Menu -->
           <div v-if="dropdownOpen && isLoggedIn" class="dropdown-menu">
             <div
               v-if="currentUser && currentUser.role === 'admin'"
@@ -73,11 +69,9 @@ export default {
   },
   computed: {
     accountButtonText() {
-      // Replace optional chaining with a safe navigation method
       return this.isLoggedIn && this.currentUser ? this.currentUser.username : 'Account';
     },
     isAdmin() {
-      // Similarly, replace optional chaining
       return this.currentUser && this.currentUser.role === 'admin';
     }
   },
@@ -104,7 +98,6 @@ export default {
           this.currentUser = JSON.parse(userStr);
           this.isLoggedIn = true;
         } catch (error) {
-          // Handle potential parsing error
           this.currentUser = null;
           this.isLoggedIn = false;
         }

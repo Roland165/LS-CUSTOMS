@@ -16,8 +16,6 @@
             Register
           </button>
         </div>
-
-        <!-- Login Form -->
         <form v-if="isLogin" @submit.prevent="handleLogin" class="auth-form">
           <div class="form-group">
             <label>Username</label>
@@ -45,8 +43,6 @@
             {{ error }}
           </div>
         </form>
-
-        <!-- Register Form -->
         <form v-else @submit.prevent="handleRegister" class="auth-form">
           <div class="form-group">
             <label>Username</label>
@@ -142,18 +138,11 @@ export default {
         );
 
         if (user) {
-          // Clear any existing session first
           sessionStorage.removeItem('currentUser');
-
-          // Store new user session
           sessionStorage.setItem('currentUser', JSON.stringify(user));
-
-          // Update parent component
           if (this.$root.$children[0].checkLoginStatus) {
             this.$root.$children[0].checkLoginStatus();
           }
-
-          // Redirect based on role
           if (user.role === 'admin') {
             this.$router.push('/admin');
           } else {
@@ -169,28 +158,22 @@ export default {
     },
 
     handleRegister() {
-      // Validate passwords match
       if (this.registerForm.password !== this.registerForm.confirmPassword) {
         this.error = 'Passwords do not match';
         return;
       }
-
-      // Get existing users
       const users = JSON.parse(sessionStorage.getItem('users') || '[]');
 
-      // Check if username already exists
       if (users.some(user => user.username === this.registerForm.username)) {
         this.error = 'Username already exists';
         return;
       }
 
-      // Check if email already exists
       if (users.some(user => user.email === this.registerForm.email)) {
         this.error = 'Email already exists';
         return;
       }
 
-      // Create new user
       const newUser = {
         username: this.registerForm.username,
         email: this.registerForm.email,
@@ -198,11 +181,9 @@ export default {
         role: 'user'  // Default role
       };
 
-      // Add to users array
       users.push(newUser);
       sessionStorage.setItem('users', JSON.stringify(users));
 
-      // Clear form and show success
       this.registerForm = {
         username: '',
         email: '',
@@ -210,7 +191,6 @@ export default {
         confirmPassword: ''
       };
 
-      // Switch to login form
       this.isLogin = true;
       alert('Registration successful! Please login.');
     }
