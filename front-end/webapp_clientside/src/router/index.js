@@ -11,6 +11,7 @@ import AdminModule from '@/components/AdminModule.vue'
 import DeleteBrandModule from '@/components/DeleteBrandModule.vue'
 import DeleteFeatureModule from '@/components/DeleteFeatureModule.vue'
 import AddFeatureModule from '@/components/AddFeatureModule.vue'
+import AuthModule from '@/components/AuthModule'
 Vue.use(Router);
 
 export default new Router({
@@ -95,6 +96,11 @@ export default new Router({
       path: '/add-feature',
       name: 'AddFeature',
       component: AddFeatureModule,
+    },
+    {
+      path: '/auth',
+      name: 'Auth',
+      component: AuthModule
     }
   ],
 });

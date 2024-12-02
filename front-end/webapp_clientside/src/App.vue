@@ -11,25 +11,50 @@
           <router-link to="/checkout/all" class="nav_bar_button checkout-button">Checkout</router-link>
           <router-link to="/orders/list/all" class="nav_bar_button">Orders</router-link>
         </div>
-        <router-link to="/admin">
-        <button class="cssbuttons-io-button account-button">
-          Account
-          <div class="icon">
-            <svg
-              height="24"
-              width="24"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
+
+        <!-- Account Button and Dropdown -->
+        <div
+          class="account-dropdown"
+          @mouseenter="dropdownOpen = isLoggedIn"
+          @mouseleave="dropdownOpen = false"
+        >
+          <router-link
+            :to="isLoggedIn ? '#' : '/auth'"
+            class="account-link"
+          >
+            <button class="cssbuttons-io-button account-button">
+              {{ accountButtonText }}
+              <div class="icon">
+                <svg
+                  height="24"
+                  width="24"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M0 0h24v24H0z" fill="none"></path>
+                  <path
+                    d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
+                    fill="currentColor"
+                  ></path>
+                </svg>
+              </div>
+            </button>
+          </router-link>
+
+          <!-- Dropdown Menu -->
+          <div v-if="dropdownOpen && isLoggedIn" class="dropdown-menu">
+            <div
+              v-if="currentUser && currentUser.role === 'admin'"
+              class="dropdown-item"
+              @click="goToAdmin"
             >
-              <path d="M0 0h24v24H0z" fill="none"></path>
-              <path
-                d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
-                fill="currentColor"
-              ></path>
-            </svg>
+              Admin Dashboard
+            </div>
+            <div class="dropdown-item" @click="logout">
+              Logout
+            </div>
           </div>
-        </button>
-        </router-link>
+        </div>
       </div>
     </nav>
     <router-view />
@@ -38,7 +63,64 @@
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  data() {
+    return {
+      dropdownOpen: false,
+      isLoggedIn: false,
+      currentUser: null
+    }
+  },
+  computed: {
+    accountButtonText() {
+      // Replace optional chaining with a safe navigation method
+      return this.isLoggedIn && this.currentUser ? this.currentUser.username : 'Account';
+    },
+    isAdmin() {
+      // Similarly, replace optional chaining
+      return this.currentUser && this.currentUser.role === 'admin';
+    }
+  },
+  methods: {
+    goToAdmin() {
+      if (this.isAdmin) {
+        this.$router.push('/admin');
+        this.dropdownOpen = false;
+      }
+    },
+    logout() {
+      console.log('Current user before logout:', this.currentUser);
+      sessionStorage.removeItem('currentUser');
+      this.isLoggedIn = false;
+      this.currentUser = null;
+      console.log('Logging out, redirecting to auth');
+      this.$router.push('/auth');
+      this.dropdownOpen = false;
+    },
+    checkLoginStatus() {
+      const userStr = sessionStorage.getItem('currentUser');
+      if (userStr) {
+        try {
+          this.currentUser = JSON.parse(userStr);
+          this.isLoggedIn = true;
+        } catch (error) {
+          // Handle potential parsing error
+          this.currentUser = null;
+          this.isLoggedIn = false;
+        }
+      } else {
+        this.currentUser = null;
+        this.isLoggedIn = false;
+      }
+    }
+  },
+  created() {
+    this.checkLoginStatus();
+    window.addEventListener('storage', this.checkLoginStatus);
+  },
+  beforeDestroy() {
+    window.removeEventListener('storage', this.checkLoginStatus);
+  }
 }
 </script>
 
@@ -182,10 +264,43 @@ body {
   transform: scale(0.95);
 }
 
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 40px);
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  z-index: 1000;
+  min-width: 200px;
+}
+
+.dropdown-item {
+  padding: 12px 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  color: #333;
+  text-align: left;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(0,119,182,0.1);
+  color: #0077b6;
+}
+.account-dropdown {
+  position: absolute;
+  right: -5%;
+  top: 22%;
+}
 @media (max-width: 768px) {
   .nav-bar .container {
     flex-direction: column;
     align-items: stretch;
+  }
+  .dropdown-menu {
+    position: static;
+    width: 100%;
   }
 
   .nav-content {
