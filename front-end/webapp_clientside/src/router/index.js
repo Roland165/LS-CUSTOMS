@@ -5,7 +5,13 @@ import CheckoutModule from '@/components/CheckoutModule';
 import PurchaseModule from '@/components/PurchaseModule';
 import OrdersModule from '@/components/OrdersModule';
 import AddCarModule from "../components/AddCarModule.vue";
-import DeleteModule from '@/components/DeleteModule.vue'
+import DeleteModule from '@/components/DeleteCarModule.vue'
+import AddBrandModule from '@/components/AddBrandModule'
+import AdminModule from '@/components/AdminModule.vue'
+import DeleteBrandModule from '@/components/DeleteBrandModule.vue'
+import DeleteFeatureModule from '@/components/DeleteFeatureModule.vue'
+import AddFeatureModule from '@/components/AddFeatureModule.vue'
+import AuthModule from '@/components/AuthModule'
 Vue.use(Router);
 
 export default new Router({
@@ -51,20 +57,50 @@ export default new Router({
       redirect: '/orders/list/all',
     },
     {
-    path: '/orders/:action/:id',
-    name: 'orders',
-    component: OrdersModule,
-    props: true,
+      path: '/orders/:action/:id',
+      name: 'orders',
+      component: OrdersModule,
+      props: true,
     },
     {
       path: '/add-car',
-      name: 'add-car',
+      name: 'AddCar',
       component: AddCarModule,
     },
     {
       path: '/delete-car',
       name: 'DeleteCar',
       component: DeleteModule
+    },
+    {
+      path: '/add-brand',
+      name: 'AddBrand',
+      component: AddBrandModule
+    },
+    {
+      path: '/delete-brand',
+      name: 'DeleteBrand',
+      component: DeleteBrandModule
+    },
+    {
+      path: '/admin',
+      name: 'Admin',
+      component: AdminModule,
+    },
+    {
+      path: '/delete-feature',
+      name: 'DeleteFeature',
+      component: DeleteFeatureModule,
+    },
+    {
+      path: '/add-feature',
+      name: 'AddFeature',
+      component: AddFeatureModule,
+    },
+    {
+      path: '/auth',
+      name: 'Auth',
+      component: AuthModule
     }
   ],
 });

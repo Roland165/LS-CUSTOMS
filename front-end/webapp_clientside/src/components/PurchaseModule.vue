@@ -2,13 +2,7 @@
   <div class="purchase">
     <div class="container mt-5">
       <h1 class="text-center">Choose Your Model</h1>
-      <p class="text-center">
-        ACTION = {{ action }}<br />
-        ID = {{ id }}<br />
-        <router-link class="btn btn-link" to="/purchase/list/all">Back to the list</router-link><br />
-      </p>
-      <router-link class="btn btn-link" to="/add-car">Add new car</router-link><br />
-      <router-link to="/delete-car" class="btn btn-danger">Delete Car</router-link>
+      <router-link class="btn btn-link" to="/purchase/list/all">Back to the list</router-link><br />
       <div v-if="action === 'list'">
         <div class="filters-section">
           <div class="filter-controls">
@@ -38,7 +32,7 @@
             <div class="car-image">
               <img :src="getCarImage(c)" :alt="c.brand + ' ' + c.car_name">
             </div>
-            <div class="car-info"> 
+            <div class="car-info">
               <h3>{{ c.brand }} {{ c.car_name }}</h3>
               <p>Starting from {{ parseFloat(c.car_base_price) }}€</p>
               <router-link class="btn btn-primary" :to="'/purchase/customize/' + c.car_id">
@@ -60,6 +54,7 @@
 
         <div class="customization-content">
           <div class="feature-sections">
+            <!--
             <div class="feature-section">
               <h3>Engine</h3>
               <div class="feature-options">
@@ -113,8 +108,9 @@
                 </div>
               </div>
             </div>
+          -->
 
-            
+
             <div class="feature-section" v-show="this.featuresSpoiler.length != 0">
               <h3>Spoilers</h3>
               <div class="feature-options">
@@ -136,25 +132,25 @@
                 </div>
               </div>
             </div>
-          
+
 
             <div class="feature-section">
               <h3>Other</h3>
               <div class="feature-options">
                 <div
-                  v-for="feature in features" 
-                  :key="'Other'+feature.feature_id" 
+                  v-for="feature in features"
+                  :key="'Other'+feature.feature_id"
                   class="feature-card"
                   :class="{ 'selected': selectedFeaturesTab.includes(feature)}"
                   @click="toggleFeatureSelect(feature)"
                 >
-                  <!--<img :src="getEngineImage(engine.feature_name)" :alt="feature.feature_name">-->
+                  <!--<img :src="getEngineImage(engine.feature_name)" Fg:alt="feature.feature_name">-->
                   <div class="feature-info">
                     <h4>{{ feature.feature_name }}</h4>
-                    <p v-if="feature.feature_added_power != 0">Added power: {{ feature.feature_added_power }}hp</p>
-                    <p class="price">{{ feature.feature_price }}€</p>
+                    <p v-if="feature.feature_added_power != 0">Added power: {{ feature.feature_added_power }} hp</p>
+                    <p class="price">{{ parseFloat(feature.feature_price) }} €</p>
                     <p v-if="feature.feature_color != null">Color: {{ feature.feature_color }}</p>
-                    <p>Added weight: {{ feature.feature_added_weight }}Kg</p>
+                    <p v-if="feature.feature_added_weight != 0">Added weight: {{ parseFloat(feature.feature_added_weight) }} Kg</p>
                   </div>
                 </div>
               </div>
@@ -310,7 +306,7 @@ export default {
         console.error('Error fetching data:', ex);
         alert('Failed to load features. Please try again later.');
       };
-    
+
     },
     refreshOneCar() {
       if (this.$props.id === "all" || this.$props.id === "0") return;
@@ -394,7 +390,7 @@ export default {
     //this.featuresSpoiler.push(this.featuresSpoiler.pop());
     //this.categorizedFeatures.push(this.categorizedFeatures.pop());
     // test to try and force update v-for
-  
+
   },
   getUncategorizedFeatures(){
     let temp = [];
@@ -453,6 +449,10 @@ export default {
   padding: 8px 16px;
   border-radius: 4px;
   transition: background-color 0.3s ease;
+}
+
+.btn-link{
+  margin: 1%;
 }
 
 .purchase .btn:hover {

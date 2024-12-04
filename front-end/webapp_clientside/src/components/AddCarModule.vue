@@ -3,9 +3,7 @@
     <div class="container mt-5">
       <div class="header-section mb-5">
         <h1 class="text-center">Add New Car</h1>
-        <p class="text-center">
-          <router-link class="btn btn-link" to="/purchase/list/all">Back to the list</router-link>
-        </p>
+        <router-link class="btn btn-link" to="/admin">Back to Dashboard</router-link>
       </div>
       <div class="add-car-form">
         <form @submit.prevent="addCar" class="mt-4">
@@ -69,7 +67,7 @@
                   <span>Choose an image</span>
                 </label>
                 <input type="file" id="carImage" @change="handleFileUpload" class="form-control"
-                       accept="image/*" required>
+                       accept="image/*">
               </div>
               <div class="image-preview" v-if="imagePreview">
                 <img :src="imagePreview" alt="Preview">
@@ -124,7 +122,7 @@ export default {
   methods: {
     async fetchBrands() {
       try {
-        const response = await axios.get('http://localhost:9000/carsapi/brands');
+        const response = await axios.get('http://localhost:9000/brandsapi/list');
         this.brands = response.data;
       } catch (error) {
         console.error('Error fetching brands:', error);
@@ -309,10 +307,20 @@ export default {
 .btn {
   padding: 0.75rem 2rem;
   font-weight: bold;
-  text-transform: uppercase;
   letter-spacing: 0.5px;
   transition: all 0.3s ease;
+  margin: 1%;
+  display: inline-block;
+  text-decoration: none;
+  border-radius: 4px;  
+  color: #fff;
+  font-size: 16px;
 }
+
+.btn:not(.btn-link){
+  text-transform: uppercase;
+}
+
 
 .btn-primary {
   background-color: #0077b6;
@@ -338,6 +346,20 @@ export default {
   display: block;
   margin-top: 0.5rem;
   font-size: 0.875rem;
+}
+.btn-link {
+  display: inline-block;
+  background-color: #0077b6;
+  color: #fff;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  margin: 1%;
+}
+
+.btn-link:hover {
+  background-color: #005a8e;
 }
 
 @media (max-width: 768px) {
