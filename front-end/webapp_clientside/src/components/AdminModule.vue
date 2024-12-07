@@ -39,6 +39,11 @@
           <p>Remove a feature from the database</p>
           <router-link to="/delete-feature" class="btn btn-danger">Delete Feature</router-link>
         </div>
+        <div class="action-card" @click="goToEditCar">
+          <h3>Edit Car</h3>
+          <p>Modify existing vehicle details</p>
+          <router-link to="/edit-car" class="btn btn-primary">Edit Car</router-link>
+        </div>
       </div>
 
       <div class="statistics-section mt-5">
@@ -92,6 +97,9 @@ export default {
     },
     goToAddFeature() {
       this.$router.push('/add-feature');
+    },
+    goToEditCar(){
+      this.this.$router.push('/edit-car');
     },
     async fetchStatistics() {
       try {

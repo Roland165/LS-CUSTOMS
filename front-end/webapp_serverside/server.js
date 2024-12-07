@@ -36,6 +36,14 @@ app.use((req, res, next) => {
 app.use("/static", express.static(__dirname + '/static'));
 app.use("/medias", express.static(path.join(__dirname, '..', 'medias')));
 
+
+const multer = require('multer');
+const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: {
+        fileSize: 5 * 1024 * 1024 // 5MB limit
+    }
+});
 // View engine setup
 app.set("view engine", "ejs");
 app.set("views", "views");

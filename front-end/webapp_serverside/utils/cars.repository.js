@@ -80,19 +80,25 @@ module.exports = {
     },
 
     async editOneCar(carId, car) {
+        const connection = await pool.getConnection();
         try {
+            await connection.beginTransaction();
+
+            console.log('Editing car details:', { carId, car });
+
             let sql = `
                 UPDATE car SET
-                    brand_id = ?,
-                    car_name = ?,
-                    car_seat_num = ?,
-                    car_creation_date = ?,
-                    car_base_power = ?,
-                    car_base_weight = ?,
-                    car_base_price = ?
+                               brand_id = ?,
+                               car_name = ?,
+                               car_seat_num = ?,
+                               car_creation_date = ?,
+                               car_base_power = ?,
+                               car_base_weight = ?,
+                               car_base_price = ?
                 WHERE car_id = ?
             `;
-            const [result] = await pool.execute(sql, [
+
+            const params = [
                 car.brand_id,
                 car.car_name,
                 car.car_seat_num,
@@ -101,11 +107,25 @@ module.exports = {
                 car.car_base_weight,
                 car.car_base_price,
                 carId
-            ]);
+            ];
+
+            params.forEach((param, index) => {
+                if (param === undefined || param === null) {
+                    console.error(`Invalid parameter at index ${index}: ${param}`);
+                    throw new Error(`Invalid parameter at index ${index}`);
+                }
+            });
+
+            const [result] = await connection.execute(sql, params);
+            await connection.commit();
+            console.log('Update result:', result);
+
             return result.affectedRows;
         } catch (err) {
-            console.error("Error in editOneCar:", err);
-            throw err;
+        console.error("Error in editOneCar:", err);
+        throw err;
+        } finally {
+            connection.release();
         }
     },
 
