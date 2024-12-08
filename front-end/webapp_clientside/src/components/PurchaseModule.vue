@@ -51,106 +51,121 @@
             <p class="total-price">Total Price: {{ calculateTotalPrice() }}€</p>
           </div>
         </div>
-
         <div class="customization-content">
           <div class="feature-sections">
-            <!--
-            <div class="feature-section">
-              <h3>Engine</h3>
+            <!-- SEATS  -->
+            <div class="feature-section" v-if="seatFeatures.length > 0">
+              <h3>Seats</h3>
               <div class="feature-options">
-                <div
-                  v-for="engine in motorFeatures"
-                  :key="engine.feature_id"
-                  class="feature-card"
-                  :class="{ 'selected': selectedFeatures.motor === engine }"
-                  @click="selectedFeatures.motor = engine"
-                >
-                  <img :src="getEngineImage(engine.feature_name)" :alt="engine.feature_name">
-                  <div class="feature-info">
-                    <h4>{{ engine.feature_name }}</h4>
-                    <p>Power: {{ engine.feature_added_power }}hp</p>
-                    <p class="price">{{ engine.feature_price }}€</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="feature-section">
-              <h3>Brakes</h3>
-              <div class="feature-options">
-                <div
-                  v-for="brake in brakeFeatures"
-                  :key="brake.feature_id"
-                  class="feature-card"
-                  :class="{ 'selected': selectedFeatures.brakes === brake }"
-                  @click="selectedFeatures.brakes = brake"
-                >
-                  <img :src="getBrakeImage(brake.feature_name)" :alt="brake.feature_name">
-                  <div class="feature-info">
-                    <h4>{{ brake.feature_name }}</h4>
-                    <p>Weight: {{ brake.feature_added_weight }}kg</p>
-                    <p class="price">{{ brake.feature_price }}€</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="feature-section">
-              <h3>Color</h3>
-              <div class="color-options">
-                <div v-for="color in colorFeatures" :key="color.feature_id" class="color-card"
-                     :class="{ 'selected': selectedFeatures.color === color }" @click="selectedFeatures.color = color">
-                  <div class="color-sample" :style="{ backgroundColor: color.feature_color }"></div>
-                  <div class="feature-info">
-                    <h4>{{ color.feature_name }}</h4>
-                    <p class="price">{{ color.feature_price }}€</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          -->
-
-
-            <div class="feature-section" v-show="this.featuresSpoiler.length != 0">
-              <h3>Spoilers</h3>
-              <div class="feature-options">
-                <div
-                  v-for="feature in featuresSpoiler"
-                  :key="'Spoiler'+feature.feature_id"
-                  class="feature-card"
-                  :class="{ 'selected': selectedFeaturesTab.includes(feature)}"
-                  @click="toggleFeatureSelect(feature)"
-                >
-                  <!--<img :src="getEngineImage(engine.feature_name)" :alt="feature.feature_name">-->
+                <div v-for="feature in seatFeatures" :key="'Seat'+feature.feature_id" class="feature-card"
+                     :class="{ 'selected': selectedFeaturesByType.seats === feature }" @click="selectFeatureByType('seats', feature)">
                   <div class="feature-info">
                     <h4>{{ feature.feature_name }}</h4>
-                    <p>Added power: {{ feature.feature_added_power }}hp</p>
-                    <p class="price">{{ feature.feature_price }}€</p>
-                    <p>Color: {{ feature.feature_color }}</p>
-                    <p>Added weight: {{ feature.feature_added_weight }}Kg</p>
+                    <p v-if="feature.feature_added_power">Added power: {{ feature.feature_added_power }} hp</p>
+                    <p class="price">{{ parseFloat(feature.feature_price) }} €</p>
+                    <p v-if="feature.feature_color">Color: {{ feature.feature_color }}</p>
+                    <p v-if="feature.feature_added_weight">Added weight: {{ parseFloat(feature.feature_added_weight) }} Kg</p>
                   </div>
                 </div>
               </div>
             </div>
 
-
-            <div class="feature-section">
-              <h3>Other</h3>
+            <!-- SPOILERS  -->
+            <div class="feature-section" v-if="spoilerFeatures.length > 0">
+              <h3>Spoilers</h3>
               <div class="feature-options">
-                <div
-                  v-for="feature in features"
-                  :key="'Other'+feature.feature_id"
-                  class="feature-card"
-                  :class="{ 'selected': selectedFeaturesTab.includes(feature)}"
-                  @click="toggleFeatureSelect(feature)"
-                >
-                  <!--<img :src="getEngineImage(engine.feature_name)" Fg:alt="feature.feature_name">-->
+                <div v-for="feature in spoilerFeatures" :key="'Spoiler'+feature.feature_id" class="feature-card"
+                     :class="{ 'selected': selectedFeaturesByType.spoilers === feature }" @click="selectFeatureByType('spoilers', feature)">
+                  <div class="feature-info">
+                    <h4>{{ feature.feature_name }}</h4>
+                    <p v-if="feature.feature_added_power">Added power: {{ feature.feature_added_power }} hp</p>
+                    <p class="price">{{ parseFloat(feature.feature_price) }} €</p>
+                    <p v-if="feature.feature_color">Color: {{ feature.feature_color }}</p>
+                    <p v-if="feature.feature_added_weight">Added weight: {{ parseFloat(feature.feature_added_weight) }} Kg</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- TIRES  -->
+            <div class="feature-section" v-if="tireFeatures.length > 0">
+              <h3>Tires</h3>
+              <div class="feature-options">
+                <div v-for="feature in tireFeatures" :key="'Tire'+feature.feature_id" class="feature-card"
+                  :class="{ 'selected': selectedFeaturesByType.tires === feature }" @click="selectFeatureByType('tires', feature)">
+                  <div class="feature-info">
+                    <h4>{{ feature.feature_name }}</h4>
+                    <p v-if="feature.feature_added_power">Added power: {{ feature.feature_added_power }} hp</p>
+                    <p class="price">{{ parseFloat(feature.feature_price) }} €</p>
+                    <p v-if="feature.feature_color">Color: {{ feature.feature_color }}</p>
+                    <p v-if="feature.feature_added_weight">Added weight: {{ parseFloat(feature.feature_added_weight) }} Kg</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- STEERING WHEEL -->
+            <div class="feature-section" v-if="steeringWheelFeatures.length > 0">
+              <h3>Steering Wheel</h3>
+              <div class="feature-options">
+                <div v-for="feature in steeringWheelFeatures" :key="'SteeringWheel'+feature.feature_id" class="feature-card"
+                  :class="{ 'selected': selectedFeaturesByType.steeringWheel === feature }" @click="selectFeatureByType('steeringWheel', feature)">
                   <div class="feature-info">
                     <h4>{{ feature.feature_name }}</h4>
                     <p v-if="feature.feature_added_power != 0">Added power: {{ feature.feature_added_power }} hp</p>
                     <p class="price">{{ parseFloat(feature.feature_price) }} €</p>
-                    <p v-if="feature.feature_color != null">Color: {{ feature.feature_color }}</p>
+                    <p v-if="feature.feature_color">Color: {{ feature.feature_color }}</p>
                     <p v-if="feature.feature_added_weight != 0">Added weight: {{ parseFloat(feature.feature_added_weight) }} Kg</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ECU REPROGRAMMING -->
+            <div class="feature-section" v-if="ecuProgrammingFeatures.length > 0">
+              <h3>ECU Programming</h3>
+              <div class="feature-options">
+                <div v-for="feature in ecuProgrammingFeatures" :key="'ECU Programming'+feature.feature_id" class="feature-card"
+                     :class="{ 'selected': selectedFeaturesByType.ecuProgramming === feature }" @click="selectFeatureByType('ecuProgramming', feature)">
+                  <div class="feature-info">
+                    <h4>{{ feature.feature_name }}</h4>
+                    <p v-if="feature.feature_added_power != 0">Added power: {{ feature.feature_added_power }} hp</p>
+                    <p class="price">{{ parseFloat(feature.feature_price) }} €</p>
+                    <p v-if="feature.feature_color">Color: {{ feature.feature_color }}</p>
+                    <p v-if="feature.feature_added_weight != 0">Added weight: {{ parseFloat(feature.feature_added_weight) }} Kg</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SUSPENSION -->
+            <div class="feature-section" v-if="suspensionFeatures.length > 0">
+              <h3>Suspension</h3>
+              <div class="feature-options">
+                <div v-for="feature in suspensionFeatures" :key="'Suspension'+feature.feature_id" class="feature-card"
+                     :class="{ 'selected': selectedFeaturesByType.suspension === feature }" @click="selectFeatureByType('suspension', feature)">
+                  <div class="feature-info">
+                    <h4>{{ feature.feature_name }}</h4>
+                    <p v-if="feature.feature_added_power != 0">Added power: {{ feature.feature_added_power }} hp</p>
+                    <p class="price">{{ parseFloat(feature.feature_price) }} €</p>
+                    <p v-if="feature.feature_color">Color: {{ feature.feature_color }}</p>
+                    <p v-if="feature.feature_added_weight != 0">Added weight: {{ parseFloat(feature.feature_added_weight) }} Kg</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- OTHERS  -->
+            <div class="feature-section" v-if="otherFeatures.length > 0">
+              <h3>Other Features</h3>
+              <div class="feature-options">
+                <div v-for="feature in otherFeatures" :key="'Other'+feature.feature_id" class="feature-card"
+                  :class="{ 'selected': selectedFeaturesTab.includes(feature)}" @click="toggleFeatureSelect(feature)">
+                  <div class="feature-info">
+                    <h4>{{ feature.feature_name }}</h4>
+                    <p v-if="feature.feature_added_power">Added power: {{ feature.feature_added_power }} hp</p>
+                    <p class="price">{{ parseFloat(feature.feature_price) }} €</p>
+                    <p v-if="feature.feature_color">Color: {{ feature.feature_color }}</p>
+                    <p v-if="feature.feature_added_weight">Added weight: {{ parseFloat(feature.feature_added_weight) }} Kg</p>
                   </div>
                 </div>
               </div>
@@ -179,7 +194,6 @@
 
 <script>
 import axios from 'axios';
-import { onBeforeMount } from 'vue';
 export default {
   name: 'PurchaseModule',
   props: ['action', 'id'],
@@ -204,6 +218,14 @@ export default {
         motor: null,
         brakes: null
       },
+      selectedFeaturesByType: {
+        seats: null,
+        spoilers: null,
+        tires: null,
+        steeringWheel: null,
+        ecuProgramming : null,
+        suspension: null,
+      },
       selectedFeaturesTab: [],
       lastCustomId: 0,
       showCartConfirmation: false,
@@ -224,30 +246,6 @@ export default {
       } catch (error) {
         console.error('Failed to load image:', error);
         return require('../medias/default_img.jpg');
-      }
-    },
-    getEngineImage(engineName) {
-      switch(engineName) {
-        case 'V6 Engine':
-          return require('../medias/feature_img/v6_engine_img.jpg');
-        case 'V8 Engine':
-          return require('../medias/feature_img/v8_engine_img.jpg');
-        case 'Electric Motor':
-          return require('../medias/feature_img/electric_engine_img.jpg');
-        default:
-          return '';
-      }
-    },
-    getBrakeImage(brakeName) {
-      switch(brakeName) {
-        case 'Standard Brakes':
-          return require('../medias/feature_img/standard_brakes_img.jpg');
-        case 'Performance Brakes':
-          return require('../medias/feature_img/performance_brakes_img.jpg');
-        case 'Carbon Ceramic Brakes':
-          return require('../medias/feature_img/carbon_brakes_img.jpg');
-        default:
-          return '';
       }
     },
     goToCustomize(carId) {
@@ -320,21 +318,47 @@ export default {
     loadLastCustomId() {
       this.lastCustomId = JSON.parse(sessionStorage.getItem('lastCustomId')) || 0;
     },
+    selectFeatureByType(type, feature) {
+      if (this.selectedFeaturesByType[type] === feature) {
+        // Deselect if already selected
+        this.selectedFeaturesByType[type] = null;
+      } else {
+        // Select new feature
+        this.selectedFeaturesByType[type] = feature;
+      }
+    },
+
     calculateTotalPrice() {
       let basePrice = parseFloat(this.oneCar.car_base_price);
       let featurePrice = 0;
-      if (this.selectedFeatures.color) featurePrice += this.selectedFeatures.color.feature_price;
-      if (this.selectedFeatures.motor) featurePrice += this.selectedFeatures.motor.feature_price;
-      if (this.selectedFeatures.brakes) featurePrice += this.selectedFeatures.brakes.feature_price;
-      for(let feature of this.selectedFeaturesTab){
-        featurePrice = featurePrice + parseFloat(feature.feature_price);
-      }
+
+      // Add prices from type-specific features
+      Object.values(this.selectedFeaturesByType).forEach(feature => {
+        if (feature) {
+          featurePrice += parseFloat(feature.feature_price);
+        }
+      });
+
+      // Add prices from multi-select features
+      this.selectedFeaturesTab.forEach(feature => {
+        featurePrice += parseFloat(feature.feature_price);
+      });
+
       return basePrice + featurePrice;
     },
+
     addToCart() {
       const purchasedCar = JSON.parse(JSON.stringify(this.oneCar));
       purchasedCar.total_price = this.calculateTotalPrice();
-      purchasedCar.features = [];
+
+      // Combine features from different selection methods
+      purchasedCar.features = [
+        ...Object.values(this.selectedFeaturesByType).filter(f => f !== null),
+        ...this.selectedFeaturesTab
+      ];
+
+      /*
+      // Keep existing color, motor, and brake selections if needed
       if (this.selectedFeatures.color) {
         purchasedCar.features.push(this.selectedFeatures.color);
       }
@@ -344,6 +368,8 @@ export default {
       if (this.selectedFeatures.brakes) {
         purchasedCar.features.push(this.selectedFeatures.brakes);
       }
+      */
+
       purchasedCar.custom_id = this.getNextCustomId();
       let purchasedCars = JSON.parse(sessionStorage.getItem('purchasedCars')) || [];
       purchasedCars.push(purchasedCar);
@@ -404,6 +430,7 @@ export default {
     //this.uncategorizedFeatures.push(this.uncategorizedFeatures.pop());
     // test to try and force update v-for
   },
+
   },
   watch: {
     id(newVal, oldVal) {
@@ -414,6 +441,49 @@ export default {
     this.getAllData();
   },
   computed: {
+    seatFeatures() {
+      return this.features.filter(f =>
+        f.feature_name.toLowerCase().includes('seat')
+      );
+    },
+    spoilerFeatures() {
+      return this.features.filter(f =>
+        f.feature_name.toLowerCase().includes('spoiler')
+      );
+    },
+    tireFeatures() {
+      return this.features.filter(f =>
+        f.feature_name.toLowerCase().includes('tire')
+      );
+    },
+    steeringWheelFeatures() {
+      return this.features.filter(f =>
+        f.feature_name.toLowerCase().includes('steering') ||
+        f.feature_name.toLowerCase().includes('wheel')
+      );
+    },
+    ecuProgrammingFeatures() {
+      return this.features.filter(f =>
+        f.feature_name.toLowerCase().includes('ecu') ||
+        f.feature_name.toLowerCase().includes('programming')
+      );
+    },
+    suspensionFeatures() {
+      return this.features.filter(f =>
+        f.feature_name.toLowerCase().includes('suspension') ||
+        f.feature_name.toLowerCase().includes('coilovers')
+      );
+    },
+    otherFeatures() {
+      return this.features.filter(f =>
+        !this.seatFeatures.includes(f) &&
+        !this.spoilerFeatures.includes(f) &&
+        !this.tireFeatures.includes(f) &&
+        !this.steeringWheelFeatures.includes(f) &&
+        !this.ecuProgrammingFeatures.includes(f)&&
+        !this.suspensionFeatures.includes(f)
+      );
+    },
     filteredAndSortedCars() {
       let result = [...this.cars];
 
