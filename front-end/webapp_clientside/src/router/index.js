@@ -14,6 +14,7 @@ import AddFeatureModule from '@/components/AddFeatureModule.vue'
 import AuthModule from '@/components/AuthModule'
 import EditCarModule from '@/components/EditCarModule.vue'
 import EditBrandModule from '@/components/EditBrandModule';
+import AuthDemoModule from '@/components/AuthDemoModule';
 Vue.use(Router);
 
 export default new Router({
@@ -120,6 +121,11 @@ export default new Router({
       name: 'EditBrandDetail',
       component: EditBrandModule,
       props: true
+    },
+    {
+      path: '/auth-demo',
+      name: 'AuthenticationDemo',
+      component: AuthDemoModule
     },
   ],
 });
