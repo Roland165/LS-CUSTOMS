@@ -38,19 +38,6 @@
         <div class="edit-form" v-if="carToEdit">
           <h2>Edit Car: {{ carToEdit.brand_name }} {{ carToEdit.car_name }}</h2>
           <form @submit.prevent="updateCar">
-            <div class="form-group">
-              <label>Brand</label>
-              <select v-model="carToEdit.brand_id" class="form-control" required>
-                <option v-for="brand in brands" :key="brand.brand_id" :value="brand.brand_id">
-                  {{ brand.brand_name }}
-                </option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label>Model Name</label>
-              <input type="text" v-model="carToEdit.car_name" class="form-control" required>
-            </div>
 
             <div class="form-group">
               <label>Base Price (€)</label>
@@ -83,7 +70,7 @@
               <div class="image-preview" v-if="imagePreview">
                 <img :src="imagePreview" alt="Preview">
               </div>
-              <div class="current-image" v-else>
+              <div class="current-image" v-else-if="carToEdit">
                 <img :src="getCarImage(carToEdit)" :alt="carToEdit.car_name">
               </div>
             </div>
@@ -170,8 +157,10 @@ export default {
         alert('Please select a valid image file');
         event.target.value = '';
         this.imagePreview = null;
+        this.newImageFile = null;
       }
     },
+
     async fetchCars() {
       try {
         const response = await axios.get('http://localhost:9000/carsapi/list');
@@ -190,17 +179,31 @@ export default {
         alert('Failed to load brands. Please try again.');
       }
     },
-    async fetchCarDetails(id) {
+
+    async fetchCarDetails(carId) {
       try {
-        const response = await axios.get(`http://localhost:9000/carsapi/show/${id}`);
-        this.carToEdit = response.data;
+        const response = await axios.get(`http://localhost:9000/carsapi/show/${carId}`);
+        console.log('Fetched car details:', response.data);
+
+        const date = new Date(response.data.car_creation_date);
+        const formattedDate = date.toISOString().split('T')[0];
+
+        this.carToEdit = {
+          ...response.data,
+          car_creation_date: formattedDate
+        };
+
+        console.log('Formatted date:', formattedDate);
       } catch (error) {
         console.error('Error fetching car details:', error);
-        alert('Failed to load car details. Please try again.');
+        alert('Failed to fetch car details');
       }
     },
+
     async updateCar() {
       try {
+        const formData = new FormData();
+
         const carData = {
           brand_id: parseInt(this.carToEdit.brand_id),
           car_name: this.carToEdit.car_name,
@@ -211,14 +214,33 @@ export default {
           car_base_price: parseFloat(this.carToEdit.car_base_price)
         };
 
-        console.log('Sending update data:', carData);
+        const selectedBrand = this.brands.find(b => b.brand_id === this.carToEdit.brand_id);
+        const brandName = selectedBrand ? selectedBrand.brand_name : 'Unknown';
+
+        if (this.newImageFile) {
+          const formattedBrand = brandName.split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join('');
+          const formattedModel = this.carToEdit.car_name.replace(/[\s-()]/g, '');
+          const newFileName = `${formattedBrand}_${formattedModel}_img.jpg`;
+
+          const newFile = new File([this.newImageFile], newFileName, {
+            type: this.newImageFile.type
+          });
+
+          formData.append('image', newFile);
+        }
+
+        Object.keys(carData).forEach(key => {
+          formData.append(key, carData[key]);
+        });
 
         const response = await axios.post(
           `http://localhost:9000/carsapi/update/${this.carToEdit.car_id}`,
-          carData,
+          formData,
           {
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'multipart/form-data'
             }
           }
         );
@@ -228,7 +250,15 @@ export default {
           this.$router.push('/edit-car');
         }
       } catch (error) {
-        console.error('Update Error:')
+        console.error('Update Error:', {
+          message: error.message,
+          response: error.response ? {
+            data: error.response.data,
+            status: error.response.status
+          } : 'No response',
+          request: error.request ? 'Request made' : 'No request'
+        });
+
         alert('Failed to update car: ' +
           (error.response && error.response.data ?
             error.response.data.message :
@@ -236,6 +266,7 @@ export default {
       }
     }
   },
+
   async created() {
     await this.fetchCars();
     await this.fetchBrands();
