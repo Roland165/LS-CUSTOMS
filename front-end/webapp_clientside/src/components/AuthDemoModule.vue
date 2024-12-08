@@ -32,7 +32,6 @@ export default {
         else
           response = await axios.get("http://localhost:9000/auth/"+endpoint);
         this.msg = JSON.stringify(response.data);
-        console.log("sendRequest NO ERROR test max");
       } catch (error) {
         console.log(error);
       }

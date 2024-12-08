@@ -12,6 +12,7 @@ router.get("/admin", auth.authorizeRequest("ADMIN"), userdataAction); // expose 
 router.get("/protected", protectedGetAction); // execute authorization in action method: needed for resource-based auth
 router.post("/login", loginPostAction);
 router.get("/logout", logoutAction);
+router.get("/isadmin", isAdminAction);
 
 // use same endpoints for both roles
 async function userdataAction(request, response) {
@@ -66,6 +67,16 @@ function logoutAction(request, response) {
     }
     response.send(JSON.stringify(resultObject));
   });
+}
+
+async function isAdminAction(request, response) {
+  let bool = false;
+  if (request.isAuthenticated()) {
+    if (request.user.user_role === "ADMIN") {
+      bool = true;
+    }
+  }
+  response.send(bool);
 }
 
 module.exports = router;
