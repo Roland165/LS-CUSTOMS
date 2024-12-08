@@ -44,6 +44,11 @@
           <p>Modify existing vehicle details</p>
           <router-link to="/edit-car" class="btn btn-primary">Edit Car</router-link>
         </div>
+        <div class="action-card" @click="goToEditBrand">
+          <h3>Edit Brand</h3>
+          <p>Modify existing brand details</p>
+          <router-link to="/edit-brand" class="btn btn-primary">Edit Brand</router-link>
+        </div>
       </div>
 
       <div class="statistics-section mt-5">
@@ -100,6 +105,9 @@ export default {
     },
     goToEditCar(){
       this.this.$router.push('/edit-car');
+    },
+    goToEditBrand(){
+      this.this.$router.push('/edit-brand');
     },
     async fetchStatistics() {
       try {

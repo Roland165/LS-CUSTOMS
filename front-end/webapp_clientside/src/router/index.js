@@ -13,6 +13,7 @@ import DeleteFeatureModule from '@/components/DeleteFeatureModule.vue'
 import AddFeatureModule from '@/components/AddFeatureModule.vue'
 import AuthModule from '@/components/AuthModule'
 import EditCarModule from '@/components/EditCarModule.vue'
+import EditBrandModule from '@/components/EditBrandModule';
 Vue.use(Router);
 
 export default new Router({
@@ -107,6 +108,17 @@ export default new Router({
       path: '/edit-car/:id?',
       name: 'EditCar',
       component: EditCarModule,
+      props: true
+    },
+    {
+      path: '/edit-brand',
+      name: 'EditBrand',
+      component: EditBrandModule
+    },
+    {
+      path: '/edit-brand/:id',
+      name: 'EditBrandDetail',
+      component: EditBrandModule,
       props: true
     },
   ],
