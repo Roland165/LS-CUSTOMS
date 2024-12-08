@@ -11,6 +11,16 @@ module.exports = {
             throw err;
         }
     },
+    async getOneBrand(brandId) {
+        try {
+            let sql = "SELECT * FROM brand WHERE brand_id = ?";
+            const [rows] = await pool.execute(sql)
+            return rows;
+        } catch (err) {
+            console.error("Error in getOneBrand:", err);
+            throw err;
+        }
+    },
 
     async addOneBrand(brand) {
         try {
@@ -65,4 +75,31 @@ module.exports = {
             throw err;
         }
     },
+
+    async editOneBrand(brandId, brand) {
+        try {
+            console.log('Updating brand:', brand);
+            let sql = `
+            UPDATE brand 
+            SET brand_name = ?,
+                brand_revenue = ?,
+                brand_creation_date = ?,
+                brand_creator = ?,
+                brand_creation_place = ?
+            WHERE brand_id = ?
+        `;
+            const [result] = await pool.execute(sql, [
+                brand.brand_name,
+                brand.brand_revenue,
+                brand.brand_creation_date,
+                brand.brand_creator,
+                brand.brand_creation_place,
+                brandId
+            ]);
+            return result.affectedRows;
+        } catch (err) {
+            console.error("Error in editOneBrand:", err);
+            throw err;
+        }
+    }
 };

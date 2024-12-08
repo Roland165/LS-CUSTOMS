@@ -6,13 +6,12 @@
       <template v-if="!id">
         <router-link class="btn btn-link" to="/admin">Back to DashBoard</router-link>
 
-        <!-- Brands List -->
         <div class="brands-grid">
           <div v-for="brand in brands" :key="brand.brand_id" class="brand-card">
             <div class="brand-info">
               <h3>{{ brand.brand_name }}</h3>
-              <p>Creation Year: {{ brand.brand_creation_year }}</p>
-              <p>Country: {{ brand.brand_country }}</p>
+              <p>Creation Date: {{ formatDate(brand.brand_creation_date) }}</p>
+              <p>Creator: {{ brand.brand_creator }}</p>
               <router-link
                 :to="`/edit-brand/${brand.brand_id}`"
                 class="btn btn-primary"
@@ -25,8 +24,7 @@
       </template>
 
       <template v-else>
-        <router-link class="btn btn-link" to="/edit-brand">Back to Brands List</router-link>
-
+        <router-link class="btn btn-link" to="/edit-brand">Back to Edit</router-link>
         <div class="edit-form" v-if="brandToEdit">
           <h2>Edit Brand: {{ brandToEdit.brand_name }}</h2>
           <form @submit.prevent="updateBrand">
@@ -36,13 +34,23 @@
             </div>
 
             <div class="form-group">
-              <label>Creation Year</label>
-              <input type="number" v-model="brandToEdit.brand_creation_year" class="form-control" required>
+              <label>Creation Date</label>
+              <input type="date" v-model="brandToEdit.brand_creation_date" class="form-control" required>
             </div>
 
             <div class="form-group">
-              <label>Country</label>
-              <input type="text" v-model="brandToEdit.brand_country" class="form-control" required>
+              <label>Creator</label>
+              <input type="text" v-model="brandToEdit.brand_creator" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+              <label>Creation Place</label>
+              <input type="text" v-model="brandToEdit.brand_creation_place" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+              <label>Revenue</label>
+              <input type="number" v-model="brandToEdit.brand_revenue" class="form-control" required>
             </div>
 
             <div class="form-actions">
@@ -75,12 +83,18 @@ export default {
       brandToEdit: {
         brand_id: null,
         brand_name: '',
-        brand_creation_year: null,
-        brand_country: ''
+        brand_creation_date: new Date().toISOString().split('T')[0],
+        brand_creator: '',
+        brand_creation_place: '',
+        brand_revenue: 0
       }
     };
   },
   methods: {
+    formatDate(dateString) {
+      if (!dateString) return '';
+      return new Date(dateString).toLocaleDateString();
+    },
     async fetchBrands() {
       try {
         const response = await axios.get('http://localhost:9000/brandsapi/list');
@@ -94,7 +108,17 @@ export default {
       try {
         const response = await axios.get(`http://localhost:9000/brandsapi/show/${brandId}`);
         console.log('Fetched brand details:', response.data);
-        this.brandToEdit = response.data;
+
+        this.brandToEdit = {
+          brand_id: response.data.brand_id,
+          brand_name: response.data.brand_name || '',
+          brand_creation_date: response.data.brand_creation_date ?
+            new Date(response.data.brand_creation_date).toISOString().split('T')[0] :
+            new Date().toISOString().split('T')[0],
+          brand_creator: response.data.brand_creator || '',
+          brand_creation_place: response.data.brand_creation_place || '',
+          brand_revenue: response.data.brand_revenue || 0
+        };
       } catch (error) {
         console.error('Error fetching brand details:', error);
         alert('Failed to fetch brand details');
@@ -103,10 +127,17 @@ export default {
     async updateBrand() {
       try {
         const brandData = {
-          brand_name: this.brandToEdit.brand_name,
-          brand_creation_year: parseInt(this.brandToEdit.brand_creation_year),
-          brand_country: this.brandToEdit.brand_country
+          brand_name: this.brandToEdit.brand_name || '',
+          brand_creation_date: this.brandToEdit.brand_creation_date || new Date().toISOString().split('T')[0],
+          brand_creator: this.brandToEdit.brand_creator || '',
+          brand_creation_place: this.brandToEdit.brand_creation_place || '',
+          brand_revenue: this.brandToEdit.brand_revenue || 0
         };
+
+        if (!brandData.brand_name.trim()) {
+          alert('Brand name is required');
+          return;
+        }
 
         console.log('Sending update data:', brandData);
 
@@ -130,14 +161,14 @@ export default {
           response: error.response ? {
             data: error.response.data,
             status: error.response.status
-          } : 'No response',
-          request: error.request ? 'Request made' : 'No request'
+          } : 'No response'
         });
 
         alert('Failed to update brand: ' +
           (error.response && error.response.data ?
             error.response.data.message :
-            error.message));
+            error.message)
+        );
       }
     }
   },

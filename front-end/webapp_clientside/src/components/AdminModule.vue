@@ -42,12 +42,12 @@
         <div class="action-card" @click="goToEditCar">
           <h3>Edit Car</h3>
           <p>Modify existing vehicle details</p>
-          <router-link to="/edit-car" class="btn btn-primary">Edit Car</router-link>
+          <router-link to="/edit-car" class="btn btn-success">Edit Car</router-link>
         </div>
         <div class="action-card" @click="goToEditBrand">
           <h3>Edit Brand</h3>
           <p>Modify existing brand details</p>
-          <router-link to="/edit-brand" class="btn btn-primary">Edit Brand</router-link>
+          <router-link to="/edit-brand" class="btn btn-success">Edit Brand</router-link>
         </div>
       </div>
 
@@ -187,6 +187,10 @@ export default {
 .btn-danger {
   background-color: #dc3545;
   border-color: #dc3545;
+}
+.btn-success {
+  background-color: #5cb85c;
+  border-color: #5cb85c;
 }
 
 .statistics-section {
