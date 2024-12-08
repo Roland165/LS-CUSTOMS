@@ -119,8 +119,4 @@ router.post('/update/:brandId', async (request, response) => {
     }
 });
 
-
-
-
-
 module.exports = router;
