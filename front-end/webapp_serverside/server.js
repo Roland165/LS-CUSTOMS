@@ -9,8 +9,8 @@ const app = express();
 // *** MIDDLEWARES ***
 // Enable CORS first
 const cors = require('cors');
-app.use(cors()); // changed to comment for PASSPORT
-//app.use(cors({ origin: "http://localhost:8080", credentials: false, methods: ['GET', 'POST'] })); // PASSPORT
+//app.use(cors()); // changed to comment for PASSPORT
+app.use(cors({ origin: "http://localhost:8081", credentials: false, methods: ['GET', 'POST'] })); // PASSPORT
 
 // Process form input
 const bodyParser = require("body-parser");
@@ -23,15 +23,15 @@ const session = require("express-session");
 app.use(session({
     secret: "SecretRandomStringDskghadslkghdlkghdghaksdghdksh",
     saveUninitialized: true,
-    cookie: { maxAge: 1000 * 60 * 60 * 24 }, // 1 day in msec // changed to comment for PASSPORT
-    //cookie: { maxAge: 1000 * 60 * 60 * 24, httpOnly: false, secure: false }, // PASSPORT
+    //cookie: { maxAge: 1000 * 60 * 60 * 24 }, // 1 day in msec // changed to comment for PASSPORT
+    cookie: { maxAge: 1000 * 60 * 60 * 24, httpOnly: false, secure: false }, // PASSPORT
     resave: false
 }));
 
 // configure passport
-//const auth = require("./utils/users.auth"); // PASSPORT
-//auth.initializeAuthentications(app); // PASSPORT
-//app.use("/auth", require("./controllers/auth.route")); // PASSPORT
+const auth = require("./utils/users.auth"); // PASSPORT
+auth.initializeAuthentications(app); // PASSPORT
+app.use("/auth", require("./controllers/auth.route")); // PASSPORT
 
 // Logging middleware
 app.use((req, res, next) => {
