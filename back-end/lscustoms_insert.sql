@@ -1,3 +1,4 @@
+
 USE lscustoms;
 
 
@@ -233,3 +234,8 @@ VALUES (1,1), (2,1), (3,1), (4,1), (5,1), (6,1), (7,1), (8,1), (9,1),
 (40,18), (41,18), (42,18), (43,18), (44,18), (45,18), (46,18), (47,18), (48,18), (49,18),
 (51,18), (53,18), (54,18), (55,18), (56,18), (57,18), (58,18), (59,18),
 (60,18), (61,18), (62,18), (63,18), (64,18), (65,18), (67,18), (68,18);
+
+ALTER TABLE users AUTO_INCREMENT = 1;
+INSERT IGNORE INTO users(user_created, user_name, user_email, user_role, user_pass)
+VALUES (now(), 'admin', 'admin@gmail.com', 'ADMIN', sha2(concat(now(), 'admin'), 224)),
+(now(), 'user', 'user@gmail.com', 'USER', sha2(concat(now(), 'user'), 224));
