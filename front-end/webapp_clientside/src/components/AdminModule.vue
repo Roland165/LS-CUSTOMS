@@ -104,10 +104,10 @@ export default {
       this.$router.push('/add-feature');
     },
     goToEditCar(){
-      this.this.$router.push('/edit-car');
+      this.$router.push('/edit-car');
     },
     goToEditBrand(){
-      this.this.$router.push('/edit-brand');
+      this.$router.push('/edit-brand');
     },
     async fetchStatistics() {
       try {
