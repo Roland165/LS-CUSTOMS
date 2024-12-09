@@ -3,6 +3,7 @@ const router = express.Router();
 const brandRepo = require('../utils/brands.repository');
 const carRepo = require('../utils/cars.repository');
 
+router.get('/show/:brandId/cars', brandListCarsAction);
 
 router.get('/show/:brandId', async (request, response) => {
     try {
@@ -118,5 +119,15 @@ router.post('/update/:brandId', async (request, response) => {
         });
     }
 });
+
+
+async function brandListCarsAction(request, response) {
+    try {
+        const cars = await brandRepo.getCarsByBrand(request.params.brandId);
+        response.json(cars);
+    } catch (error) {
+        response.status(500).json({ message: error.message });
+    }
+}
 
 module.exports = router;

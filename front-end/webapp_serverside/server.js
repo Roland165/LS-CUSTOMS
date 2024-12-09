@@ -10,7 +10,7 @@ const app = express();
 // Enable CORS first
 const cors = require('cors');
 //app.use(cors()); // changed to comment for PASSPORT
-app.use(cors({ origin: "http://localhost:8081", credentials: false, methods: ['GET', 'POST'] })); // PASSPORT
+app.use(cors({ origin: "http://localhost:8081", credentials: true, methods: ['GET', 'POST'] })); // PASSPORT
 
 // Process form input
 const bodyParser = require("body-parser");
