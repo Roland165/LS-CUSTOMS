@@ -60,11 +60,13 @@ app.set("views", "views");
 const carsApiRoutes = require("./controllers/carsapi.route");
 const brandsApiRoutes = require("./controllers/brandsapi.route");
 const featuresApiRoutes = require("./controllers/featuresapi.route");
+const storeApiRouter = require('./controllers/storeapi.route');
 
 // Use routes
 app.use("/carsapi", carsApiRoutes);
 app.use("/brandsapi", brandsApiRoutes);
 app.use("/featuresapi", featuresApiRoutes);
+app.use('/storeapi', storeApiRouter);
 
 // Basic root route
 app.get('/', (request, response) => {
