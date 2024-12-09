@@ -4,6 +4,9 @@ const carRepo = require('../utils/cars.repository');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+// brand and feature Repo used for fetch statistics
+const brandRepo = require('../utils/brands.repository');
+const featureRepo = require('../utils/features.repository');
 
 const uploadDir = path.join(__dirname, '../../webapp_clientside/src/medias/car_img');
 
@@ -28,7 +31,8 @@ router.get('/show/:carId', carShowAction);
 router.get('/show/:carId/features', featureListAction);
 router.get('/del/:carId', carDelAction);
 router.post('/add-car', upload.single('image'), addCarAction);
-router.post('/update/:carId',  upload.single('image'), addCarAction);
+router.post('/update/:carId', upload.single('image'), addCarAction);
+router.get('/getstats', getDBStatsAction);
 
 
 async function carListAction(request, response) {
@@ -169,6 +173,22 @@ async function addCarAction(request, response) {
 
     } catch (error) {
         console.error('Update error:', error);
+    }
+}
+
+
+async function getDBStatsAction(request, response) {
+    try {
+        let arrayNum = { carsNum: 0, brandsNum: 0, featuresNum: 0 };
+        const cars = await carRepo.getAllCars();
+        arrayNum.carsNum = cars.length;
+        const brands = await brandRepo.getAllBrands();
+        arrayNum.brandsNum = brands.length;
+        const features = await featureRepo.getAllFeatures();
+        arrayNum.featuresNum = features.length;
+        response.json(arrayNum);
+    } catch (error) {
+        response.status(500).json({ message: error.message });
     }
 }
 

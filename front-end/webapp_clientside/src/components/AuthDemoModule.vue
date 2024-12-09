@@ -29,8 +29,10 @@ export default {
         if (method === "post") {
           response = await axios.post("http://localhost:9000/auth/"+endpoint, params);
         }
-        else
+        else{
           response = await axios.get("http://localhost:9000/auth/"+endpoint);
+          console.log(response);
+        }
         this.msg = JSON.stringify(response.data);
       } catch (error) {
         console.log(error);

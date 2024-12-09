@@ -3,51 +3,53 @@
     <div class="container mt-5">
       <h1 class="text-center mb-4">Admin Dashboard</h1>
 
-      <div class="admin-actions">
-        <div class="action-card" @click="goToAddCar">
-          <h3>Add New Car</h3>
-          <p>Expand our collection with a new vehicle</p>
-          <router-link to="/add-car" class="btn btn-primary">Add Car</router-link>
-        </div>
+      <div class="is-admin" v-if="this.isAdminBool">
+        <div class="admin-actions">
+          <div class="action-card" @click="goToAddCar">
+            <h3>Add New Car</h3>
+            <p>Expand our collection with a new vehicle</p>
+            <router-link to="/add-car" class="btn btn-primary">Add Car</router-link>
+          </div>
 
-        <div class="action-card" @click="goToAddBrand">
-          <h3>Add New Brand</h3>
-          <p>Introduce a new automotive brand</p>
-          <router-link to="/add-brand" class="btn btn-primary">Add Brand</router-link>
-        </div>
+          <div class="action-card" @click="goToAddBrand">
+            <h3>Add New Brand</h3>
+            <p>Introduce a new automotive brand</p>
+            <router-link to="/add-brand" class="btn btn-primary">Add Brand</router-link>
+          </div>
 
-        <div class="action-card" @click="goToAddFeature">
-          <h3>Add New Feature</h3>
-          <p>Add a new performance or esthetic feature</p>
-          <router-link to="/add-feature" class="btn btn-primary">Add Feature</router-link>
-        </div>
+          <div class="action-card" @click="goToAddFeature">
+            <h3>Add New Feature</h3>
+            <p>Add a new performance or esthetic feature</p>
+            <router-link to="/add-feature" class="btn btn-primary">Add Feature</router-link>
+          </div>
 
-        <div class="action-card" @click="goToDeleteCar">
-          <h3>Delete Car</h3>
-          <p>Remove a vehicle from the collection</p>
-          <router-link to="/delete-car" class="btn btn-danger">Delete Car</router-link>
-        </div>
+          <div class="action-card" @click="goToDeleteCar">
+            <h3>Delete Car</h3>
+            <p>Remove a vehicle from the collection</p>
+            <router-link to="/delete-car" class="btn btn-danger">Delete Car</router-link>
+          </div>
 
-        <div class="action-card" @click="goToDeleteBrand">
-          <h3>Delete Brand</h3>
-          <p>Remove a brand from the database</p>
-          <router-link to="/delete-brand" class="btn btn-danger">Delete Brand</router-link>
-        </div>
+          <div class="action-card" @click="goToDeleteBrand">
+            <h3>Delete Brand</h3>
+            <p>Remove a brand from the database</p>
+            <router-link to="/delete-brand" class="btn btn-danger">Delete Brand</router-link>
+          </div>
 
-        <div class="action-card" @click="goToDeleteFeature">
-          <h3>Delete Feature</h3>
-          <p>Remove a feature from the database</p>
-          <router-link to="/delete-feature" class="btn btn-danger">Delete Feature</router-link>
-        </div>
-        <div class="action-card" @click="goToEditCar">
-          <h3>Edit Car</h3>
-          <p>Modify existing vehicle details</p>
-          <router-link to="/edit-car" class="btn btn-success">Edit Car</router-link>
-        </div>
-        <div class="action-card" @click="goToEditBrand">
-          <h3>Edit Brand</h3>
-          <p>Modify existing brand details</p>
-          <router-link to="/edit-brand" class="btn btn-success">Edit Brand</router-link>
+          <div class="action-card" @click="goToDeleteFeature">
+            <h3>Delete Feature</h3>
+            <p>Remove a feature from the database</p>
+            <router-link to="/delete-feature" class="btn btn-danger">Delete Feature</router-link>
+          </div>
+          <div class="action-card" @click="goToEditCar">
+            <h3>Edit Car</h3>
+            <p>Modify existing vehicle details</p>
+            <router-link to="/edit-car" class="btn btn-success">Edit Car</router-link>
+          </div>
+          <div class="action-card" @click="goToEditBrand">
+            <h3>Edit Brand</h3>
+            <p>Modify existing brand details</p>
+            <router-link to="/edit-brand" class="btn btn-success">Edit Brand</router-link>
+          </div>
         </div>
       </div>
 
@@ -74,6 +76,7 @@
 
 <script>
 import axios from 'axios';
+import {isAdmin} from "../authfunctions.js";
 
 export default {
   name: 'AdminModule',
@@ -81,7 +84,8 @@ export default {
     return {
       totalCars: 0,
       totalBrands: 0,
-      totalFeatures: 0
+      totalFeatures: 0,
+      isAdminBool: false
     }
   },
   methods: {
@@ -111,23 +115,24 @@ export default {
     },
     async fetchStatistics() {
       try {
-        // Fetch cars
-        const carsResponse = await axios.get('http://localhost:9000/carsapi/list');
-        this.totalCars = carsResponse.data.length;
+        // Fetch statistics (combined 3 requests into 1 to not crash the server)
+        let arrayNum = await axios.get('http://localhost:9000/carsapi/getstats');
 
-        // Fetch brands
-        const brandsResponse = await axios.get('http://localhost:9000/brandsapi/list');
-        this.totalBrands = brandsResponse.data.length;
-
-        // Fetch features
-        const featuresResponse = await axios.get('http://localhost:9000/featuresapi/list');
-        this.totalFeatures = featuresResponse.data.length;
+        this.totalCars = arrayNum.data.carsNum;
+        this.totalBrands = arrayNum.data.brandsNum;
+        this.totalFeatures = arrayNum.data.featuresNum;
       } catch (error) {
         console.error('Error fetching statistics:', error);
       }
+    },
+    async updateIsAdminBool(){
+      let isAdminVar = (await isAdmin());
+      console.log("isAdmin: "+isAdminVar.data);
+      this.isAdminBool = isAdminVar.data;
     }
   },
   created() {
+    this.updateIsAdminBool();
     this.fetchStatistics();
   }
 }

@@ -12,6 +12,7 @@ const cors = require('cors');
 //app.use(cors()); // changed to comment for PASSPORT
 app.use(cors({ origin: "http://localhost:8081", credentials: true, methods: ['GET', 'POST'] })); // PASSPORT
 
+
 // Process form input
 const bodyParser = require("body-parser");
 app.use(express.json());
@@ -60,6 +61,7 @@ app.set("views", "views");
 const carsApiRoutes = require("./controllers/carsapi.route");
 const brandsApiRoutes = require("./controllers/brandsapi.route");
 const featuresApiRoutes = require("./controllers/featuresapi.route");
+const passport = require('passport');
 
 // Use routes
 app.use("/carsapi", carsApiRoutes);

@@ -96,6 +96,8 @@
 </template>
 
 <script>
+import { sendRequest } from '../authfunctions';
+
 export default {
   name: 'AuthModule',
   data() {
@@ -130,20 +132,26 @@ export default {
   methods: {
     async handleLogin() {
       try {
+        let response = await sendRequest('post', 'login',{ username: String(this.loginForm.username), userpass: String(this.loginForm.password) });
+
         const users = JSON.parse(sessionStorage.getItem('users') || '[]');
 
         const user = users.find(
           u => u.username === this.loginForm.username &&
             u.password === this.loginForm.password
         );
+        console.log("user var JSON");
+        console.log(user);
 
-        if (user) {
+        if (response.loginResult) {
           sessionStorage.removeItem('currentUser');
           sessionStorage.setItem('currentUser', JSON.stringify(user));
           if (this.$root.$children[0].checkLoginStatus) {
             this.$root.$children[0].checkLoginStatus();
           }
-          if (user.role === 'admin') {
+          let userRole = await sendRequest('get', 'protected');
+          console.log("get protected response: "+userRole);
+          if (userRole === 'ADMIN') {
             this.$router.push('/admin');
           } else {
             this.$router.push('/');
