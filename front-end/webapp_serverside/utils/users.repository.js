@@ -12,9 +12,9 @@ module.exports = {
   async getOneUser(userName) {
     try {
       let conn = await pool.getConnection();
-      let sql = "SELECT user_id,user_name,user_email,user_role FROM users WHERE user_name = ? "; 
+      let sql = "SELECT user_id,user_name,user_email,user_role FROM users WHERE user_name = ? ";
       // must leave out the password+hash info from result!
-      const [rows, fields] = await pool.execute(sql, [ userName ]);
+      const [rows, fields] = await pool.execute(sql, [userName]);
       if (rows.length == 1) {
         return rows[0];
       } else {
@@ -25,13 +25,13 @@ module.exports = {
       throw err;
     }
   },
-  
+
   async areValidCredentials(username, password) {
     try {
-      let sql = "SELECT * FROM USERS WHERE user_name = ? AND user_pass COLLATE utf8mb4_general_ci  = sha2(concat(user_created, ?), 224) COLLATE utf8mb4_general_ci "; 
+      let sql = "SELECT * FROM USERS WHERE user_name = ? AND user_pass COLLATE utf8mb4_general_ci  = sha2(concat(user_created, ?), 224) COLLATE utf8mb4_general_ci ";
       // TODO: better salt + pw hash (bcrypt, pbkdf2, argon2)
       // COLLATE usually not needed (mariaDb compatibility)
-      const [rows, fields] = await pool.execute(sql, [username, password]); 
+      const [rows, fields] = await pool.execute(sql, [username, password]);
       console.log(rows);
       if (rows.length == 1 && rows[0].user_name === username) {
         return true;
@@ -42,5 +42,29 @@ module.exports = {
       console.log(err);
       throw err;
     }
-  }
+  },
+
+  async registerNewUser(user) {
+    try {
+      console.log('Adding user: ', user);
+      let sql = `
+            INSERT INTO users (
+                user_role,
+                user_created,
+                user_name,
+                user_pass,
+                user_email
+            ) VALUES ("USER", now(), ?, sha2(concat(now(), ?), 224), ?)
+        `;
+      const [result] = await pool.execute(sql, [
+        user.username,
+        user.password,
+        user.email
+      ]);
+      return result.insertId;
+    } catch (err) {
+      console.error("Error in registerNewUser:", err);
+      throw err;
+    }
+  },
 }; 

@@ -12,7 +12,7 @@ router.get("/admin", auth.authorizeRequest("ADMIN"), userdataAction); // expose 
 router.get("/protected", protectedGetAction); // execute authorization in action method: needed for resource-based auth
 router.post("/login", loginPostAction);
 router.get("/logout", logoutAction);
-//router.get("/isadmin", isAdminAction);
+router.post("/register", registerAction);
 
 // use same endpoints for both roles
 async function userdataAction(request, response) {
@@ -69,16 +69,29 @@ function logoutAction(request, response) {
   });
 }
 
-/*
-async function isAdminAction(request, response) {
-  let bool = false;
-  //if (request.isAuthenticated()) {
-  if (request.user.user_role === "ADMIN") {
-    bool = true;
+async function registerAction(request, response) {
+  console.log('Received user data:', request.body);
+  try {
+    const userData = {
+      username: request.body.username,
+      password: request.body.password,
+      email: request.body.email,
+    };
+
+    const userId = await userRepo.registerNewUser(userData);
+
+    response.json({
+      success: true,
+      userId: userId,
+      message: 'User added successfully'
+    });
+  } catch (error) {
+    console.error('Error in registerAction route:', error);
+    response.status(500).json({
+      success: false,
+      message: error.message || 'Failed to add user'
+    });
   }
-  //}
-  response.send(bool);
-}
-*/
+};
 
 module.exports = router;
