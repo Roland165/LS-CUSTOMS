@@ -40,4 +40,8 @@ export async function updateIsAdminBool() {
   return isAdminVar.data;
 }
 
+export async function logoutUser() {
+  let response = await axios.get("http://localhost:9000/auth/logout");
+  return response.data.logoutResult;
+}
 

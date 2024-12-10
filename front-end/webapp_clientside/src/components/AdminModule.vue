@@ -76,7 +76,7 @@
 
 <script>
 import axios from 'axios';
-import {updateIsAdminBool} from "../authfunctions.js";
+import {updateIsAdminBool, isLoggedIn} from "../authfunctions.js";
 
 export default {
   name: 'AdminModule',

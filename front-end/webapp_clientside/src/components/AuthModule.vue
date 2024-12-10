@@ -98,6 +98,7 @@
 <script>
 import { sendRequest } from '../authfunctions';
 
+
 export default {
   name: 'AuthModule',
   data() {
@@ -143,21 +144,28 @@ export default {
           u => u.username === this.loginForm.username &&
             u.password === this.loginForm.password
         );
-        console.log("user var JSON");
-        console.log(user);
 
         if (response.loginResult) {
           sessionStorage.removeItem('currentUser');
           sessionStorage.setItem('currentUser', JSON.stringify(user));
-          if (this.$root.$children[0].checkLoginStatus) {
-            this.$root.$children[0].checkLoginStatus();
-          }
+          //if (this.$root.$children[0].checkLoginStatus) {
+          //  this.$root.$children[0].checkLoginStatus();
+          //}
+          
+          sessionStorage.setItem("isLoggedInBool", true)
+          sessionStorage.setItem("username",this.loginForm.username);
+
           let userRole = await sendRequest('get', 'protected');
           console.log("get protected response: "+userRole);
+          
+          sessionStorage.setItem("role",userRole);
+          
           if (userRole === 'ADMIN') {
             this.$router.push('/admin');
+            await location.reload()
           } else {
             this.$router.push('/');
+            await location.reload()
           }
         } else {
           this.error = 'Invalid username or password';
