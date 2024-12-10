@@ -66,7 +66,7 @@ router.post('/add', async (request, response) => {
     }
 });
 
-router.delete('/del/:brandId', async (request, response) => {
+router.get('/del/:brandId', async (request, response) => {
     try {
         const brandId = request.params.brandId;
 

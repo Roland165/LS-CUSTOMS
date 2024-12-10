@@ -99,7 +99,7 @@ export default {
 
       if (confirmDelete) {
         try {
-          const response = await axios.delete(`http://localhost:9000/brandsapi/del/${brand.brand_id}`);
+          const response = await axios.get(`http://localhost:9000/brandsapi/del/${brand.brand_id}`);
 
           if (response.data.success) {
             alert('Brand deleted successfully');

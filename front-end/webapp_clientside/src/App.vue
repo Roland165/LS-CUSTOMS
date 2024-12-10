@@ -21,7 +21,7 @@
             class="account-link"
           >
             <button class="cssbuttons-io-button account-button" @click="goToAuthPage">
-              {{ accountText }}
+              {{ accountButtonText }}
               <div class="icon">
                 <svg
                   height="24"
@@ -69,16 +69,14 @@ export default {
       username: null,
       role: null,
       isLoggedIn: false,
-      accountText: "Account"
     }
   },
   computed: {
     accountButtonText() {
-      if(Boolean(this.isLoggedIn)){
-        console.log("accountButtonText ACTIVATED"+this.username+this.isLoggedIn)
+      if(this.username != "null"){
         return this.username
       }else{
-        return 'Account'
+        return "Account"
       }
     },
     isAdmin() {
@@ -94,8 +92,6 @@ export default {
     },
     async logout() {
       if(await logoutUser()){
-        //console.log('Current user before logout:', this.currentUser);
-        //sessionStorage.removeItem('currentUser');
         
         sessionStorage.setItem("isLoggedInBool", false);
         this.isLoggedIn = false;

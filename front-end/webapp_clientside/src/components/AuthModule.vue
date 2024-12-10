@@ -118,6 +118,7 @@ export default {
     }
   },
   created() {
+    /*
     if (!sessionStorage.getItem('users')) {
       const initialUsers = [
         {
@@ -129,6 +130,7 @@ export default {
       ];
       sessionStorage.setItem('users', JSON.stringify(initialUsers));
     }
+      */
   },
   methods: {
     async handleLogin() {
@@ -138,16 +140,9 @@ export default {
           userpass: String(this.loginForm.password)
         });
 
-        const users = JSON.parse(sessionStorage.getItem('users') || '[]');
-
-        const user = users.find(
-          u => u.username === this.loginForm.username &&
-            u.password === this.loginForm.password
-        );
-
         if (response.loginResult) {
-          sessionStorage.removeItem('currentUser');
-          sessionStorage.setItem('currentUser', JSON.stringify(user));
+          //sessionStorage.removeItem('currentUser');
+          //sessionStorage.setItem('currentUser', JSON.stringify(user));
           //if (this.$root.$children[0].checkLoginStatus) {
           //  this.$root.$children[0].checkLoginStatus();
           //}
@@ -159,7 +154,7 @@ export default {
           console.log("get protected response: "+userRole);
           
           sessionStorage.setItem("role",userRole);
-          
+
           if (userRole === 'ADMIN') {
             this.$router.push('/admin');
             await location.reload()
@@ -181,7 +176,7 @@ export default {
         this.error = 'Passwords do not match';
         return;
       }
-      const users = JSON.parse(sessionStorage.getItem('users') || '[]');
+      //const users = JSON.parse(sessionStorage.getItem('users') || '[]');
 
       let response = await sendRequest('post', 'register',{
         username: String(this.registerForm.username),
@@ -189,15 +184,17 @@ export default {
         email: String(this.registerForm.email)
       });
 
+      /*
       const newUser = {
         username: this.registerForm.username,
         email: this.registerForm.email,
         password: this.registerForm.password,
         role: 'user'  // Default role
       };
+      */
 
-      users.push(newUser);
-      sessionStorage.setItem('users', JSON.stringify(users));
+      //users.push(newUser);
+      //sessionStorage.setItem('users', JSON.stringify(users));
 
       this.registerForm = {
         username: '',
