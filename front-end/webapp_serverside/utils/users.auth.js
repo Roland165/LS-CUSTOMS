@@ -32,7 +32,7 @@ module.exports = {
       console.log("DE - SERIALIZING... ");
       console.log(userObj);
       let userFromDb = await usersRepo.getOneUser(userObj.name);
-      console.log(userFromDb);
+      //console.log(userFromDb);
       doneFunction(null, userFromDb);
     });
   },
