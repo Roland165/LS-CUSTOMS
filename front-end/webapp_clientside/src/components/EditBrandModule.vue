@@ -1,5 +1,5 @@
 <template>
-  <div class="edit-brand">
+  <div class="edit-brand" v-if="isAdminBool">
     <div class="container mt-5">
       <h1 class="text-center mb-4">Edit Brands</h1>
 
@@ -68,6 +68,7 @@
 
 <script>
 import axios from 'axios';
+import { updateIsAdminBool } from '../authfunctions';
 
 export default {
   name: 'EditBrandModule',
@@ -87,7 +88,8 @@ export default {
         brand_creator: '',
         brand_creation_place: '',
         brand_revenue: 0
-      }
+      },
+      isAdminBool: false,
     };
   },
   methods: {
@@ -173,6 +175,7 @@ export default {
     }
   },
   async created() {
+    this.isAdminBool = (await updateIsAdminBool())
     await this.fetchBrands();
     if (this.id) {
       await this.fetchBrandDetails(this.id);

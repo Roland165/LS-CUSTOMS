@@ -1,5 +1,5 @@
 <template>
-  <div class="delete-feature-module">
+  <div class="delete-feature-module" v-if="isAdminBool">
     <div class="container mt-5">
       <h1 class="text-center mb-4">Delete Features</h1>
       <router-link class="btn btn-link" to="/admin">Back to Dashboard</router-link>
@@ -37,12 +37,14 @@
 
 <script>
 import axios from 'axios';
+import { updateIsAdminBool } from '../authfunctions';
 
 export default {
   name: 'DeleteFeatureModule',
   data() {
     return {
-      features: []
+      features: [],
+      isAdminBool: false,
     }
   },
   methods: {
@@ -80,7 +82,8 @@ export default {
       }
     }
   },
-  created() {
+  async created() {
+    this.isAdminBool = (await updateIsAdminBool());
     this.fetchFeatures();
   },
 }

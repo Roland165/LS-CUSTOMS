@@ -3,12 +3,11 @@ const router = express.Router();
 const brandRepo = require('../utils/brands.repository');
 const carRepo = require('../utils/cars.repository');
 
-router.get('/show/:brandId/cars', brandListCarsAction);
 
 router.get('/show/:brandId', async (request, response) => {
     try {
         const brandId = request.params.brandId;
-        const brand = await brandRepo.getOneBrand(brandId);
+        const brand = await brandRepo.getOneBrand(String(brandId));
         response.json(brand);
     } catch (error) {
         console.error('Error:', error);
@@ -19,6 +18,7 @@ router.get('/show/:brandId', async (request, response) => {
     }
 });
 
+router.get('/show/:brandId/cars', brandListCarsAction);
 
 
 router.get('/list', async (request, response) => {

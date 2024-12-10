@@ -1,5 +1,5 @@
 <template>
-  <div class="add-brand-module">
+  <div class="add-brand-module" v-if="isAdminBool">
     <div class="container mt-5">
       <h1 class="text-center mb-4">Add New Brand</h1>
       <router-link class="btn btn-link" to="/admin">Back to Dashboard</router-link>
@@ -69,6 +69,7 @@
 
 <script>
 import axios from 'axios';
+import { updateIsAdminBool } from '../authfunctions';
 
 export default {
   name: 'AddBrandModule',
@@ -80,7 +81,8 @@ export default {
         brand_creation_date: '',
         brand_creator: '',
         brand_creation_place: ''
-      }
+      },
+      isAdminBool: false,
     }
   },
   methods: {
@@ -110,7 +112,10 @@ export default {
         }
         alert(errorMessage);
       }
-    }
+    },
+  },
+  async created() {
+      this.isAdminBool = (await updateIsAdminBool());
   }
 }
 </script>

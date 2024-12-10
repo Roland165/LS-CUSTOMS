@@ -14,7 +14,7 @@ module.exports = {
     async getOneBrand(brandId) {
         try {
             let sql = "SELECT * FROM brand WHERE brand_id = ?";
-            const [rows] = await pool.execute(sql)
+            const [rows] = await pool.execute(sql, [brandId])
             return rows;
         } catch (err) {
             console.error("Error in getOneBrand:", err);

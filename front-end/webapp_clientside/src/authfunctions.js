@@ -31,4 +31,13 @@ export async function sendRequest(method, endpoint, params) {
   }
 }
 
+export async function updateIsAdminBool() {
+  let isAdminVar = (await isAdmin());
+  console.log("isAdmin: " + isAdminVar.data);
+  if (!isAdminVar.data) {
+    alert("401 Unauthorized: You are not administrator.")
+  }
+  return isAdminVar.data;
+}
+
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="add-car">
+  <div class="add-car" v-if="isAdminBool">
     <div class="container mt-5">
       <div class="header-section mb-5">
         <h1 class="text-center">Add New Car</h1>
@@ -87,6 +87,7 @@
 
 <script>
 import axios from 'axios';
+import { updateIsAdminBool } from '../authfunctions';
 
 export default {
   name: 'AddCarModule',
@@ -103,7 +104,8 @@ export default {
         car_base_price: 0,
         imageFile: null
       },
-      imagePreview: null
+      imagePreview: null,
+      isAdminBool: false
     }
   },
   computed: {
@@ -186,9 +188,10 @@ export default {
           alert(`Error: ${error.message}`);
         }
       }
-    }
+    },
   },
-  created() {
+  async created() {
+    this.isAdminBool = (await updateIsAdminBool());
     this.fetchBrands();
   }
 }

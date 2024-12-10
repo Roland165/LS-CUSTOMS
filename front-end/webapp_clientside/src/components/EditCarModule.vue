@@ -1,5 +1,5 @@
 <template>
-  <div class="edit-car">
+  <div class="edit-car" v-if="isAdminBool">
     <div class="container mt-5">
       <h1 class="text-center mb-4">Edit Cars</h1>
 
@@ -90,6 +90,7 @@
 
 <script>
 import axios from 'axios';
+import { updateIsAdminBool } from '../authfunctions';
 
 export default {
   name: 'EditCarModule',
@@ -115,7 +116,8 @@ export default {
       brands: [],
       selectedBrand: 'all',
       newImageFile: null,
-      imagePreview: null
+      imagePreview: null,
+      isAdminBool: false,
     }
   },
   computed: {
@@ -268,6 +270,7 @@ export default {
   },
 
   async created() {
+    this.isAdminBool = (await updateIsAdminBool())
     await this.fetchCars();
     await this.fetchBrands();
 

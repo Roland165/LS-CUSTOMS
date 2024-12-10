@@ -1,5 +1,5 @@
 <template>
-  <div class="add-feature-module">
+  <div class="add-feature-module" v-if="isAdminBool">
     <div class="container mt-5">
       <h1 class="text-center mb-4">Add New Feature</h1>
       <router-link class="btn btn-link" to="/admin">Back to DashBoard</router-link>
@@ -75,6 +75,7 @@
 
 <script>
 import axios from 'axios';
+import { updateIsAdminBool } from '../authfunctions';
 
 export default {
   name: 'AddFeatureModule',
@@ -86,7 +87,8 @@ export default {
         feature_color: '',
         feature_added_power: '',
         feature_added_weight: ''
-      }
+      },
+      isAdminBool: false,
     }
   },
   methods: {
@@ -117,6 +119,9 @@ export default {
         alert(errorMessage);
       }
     }
+  },
+  async created() {
+      this.isAdminBool = (await updateIsAdminBool());
   }
 }
 </script>

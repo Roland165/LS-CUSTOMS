@@ -1,5 +1,5 @@
 <template>
-  <div class="delete-car">
+  <div class="delete-car" v-if="isAdminBool">
     <div class="container mt-5">
       <h1 class="text-center mb-4">Delete Cars</h1>
       <router-link class="btn btn-link" to="/admin">Back to Dashboard</router-link>
@@ -51,6 +51,7 @@
 <script>
 import axios from 'axios';
 import path from 'path';
+import { updateIsAdminBool } from '../authfunctions';
 
 export default {
   name: 'DeleteModule',
@@ -58,7 +59,8 @@ export default {
     return {
       cars: [],
       carToDelete: null,
-      selectedBrand: 'all'
+      selectedBrand: 'all',
+      isAdminBool: false,
     }
   },
   computed: {
@@ -127,7 +129,8 @@ export default {
       }
     }
   },
-  created() {
+  async created() {
+    this.isAdminBool = (await updateIsAdminBool());
     this.fetchCars();
   }
 }

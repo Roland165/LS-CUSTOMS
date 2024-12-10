@@ -3,7 +3,7 @@
     <div class="container mt-5">
       <h1 class="text-center mb-4">Admin Dashboard</h1>
 
-      <div class="is-admin" v-if="this.isAdminBool">
+      <div class="is-admin" v-if="isAdminBool">
         <div class="admin-actions">
           <div class="action-card" @click="goToAddCar">
             <h3>Add New Car</h3>
@@ -76,7 +76,7 @@
 
 <script>
 import axios from 'axios';
-import {isAdmin} from "../authfunctions.js";
+import {updateIsAdminBool} from "../authfunctions.js";
 
 export default {
   name: 'AdminModule',
@@ -85,7 +85,7 @@ export default {
       totalCars: 0,
       totalBrands: 0,
       totalFeatures: 0,
-      isAdminBool: false
+      isAdminBool: false,
     }
   },
   methods: {
@@ -125,14 +125,9 @@ export default {
         console.error('Error fetching statistics:', error);
       }
     },
-    async updateIsAdminBool(){
-      let isAdminVar = (await isAdmin());
-      console.log("isAdmin: "+isAdminVar.data);
-      this.isAdminBool = isAdminVar.data;
-    }
   },
-  created() {
-    this.updateIsAdminBool();
+  async created() {
+    this.isAdminBool = (await updateIsAdminBool());
     this.fetchStatistics();
   }
 }
