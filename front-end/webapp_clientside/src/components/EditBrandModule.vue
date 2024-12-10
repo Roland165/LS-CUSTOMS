@@ -109,39 +109,38 @@ export default {
     async fetchBrandDetails(brandId) {
       try {
         const response = await axios.get(`http://localhost:9000/brandsapi/show/${brandId}`);
-        console.log('Fetched brand details:', response.data);
+
+        console.log('Raw response data:', response.data);
 
         this.brandToEdit = {
-          brand_id: response.data.brand_id,
+          brand_id: response.data.brand_id || null,
           brand_name: response.data.brand_name || '',
-          brand_creation_date: response.data.brand_creation_date ?
-            new Date(response.data.brand_creation_date).toISOString().split('T')[0] :
-            new Date().toISOString().split('T')[0],
+          brand_creation_date: response.data.brand_creation_date
+            ? new Date(response.data.brand_creation_date).toISOString().split('T')[0]
+            : new Date().toISOString().split('T')[0],
           brand_creator: response.data.brand_creator || '',
           brand_creation_place: response.data.brand_creation_place || '',
           brand_revenue: response.data.brand_revenue || 0
         };
+        console.log('Processed brandToEdit:', this.brandToEdit);
       } catch (error) {
         console.error('Error fetching brand details:', error);
-        alert('Failed to fetch brand details');
       }
     },
     async updateBrand() {
       try {
         const brandData = {
-          brand_name: this.brandToEdit.brand_name || '',
-          brand_creation_date: this.brandToEdit.brand_creation_date || new Date().toISOString().split('T')[0],
-          brand_creator: this.brandToEdit.brand_creator || '',
-          brand_creation_place: this.brandToEdit.brand_creation_place || '',
-          brand_revenue: this.brandToEdit.brand_revenue || 0
+          brand_name: this.brandToEdit.brand_name.trim(),
+          brand_creation_date: this.brandToEdit.brand_creation_date,
+          brand_creator: this.brandToEdit.brand_creator.trim(),
+          brand_creation_place: this.brandToEdit.brand_creation_place.trim(),
+          brand_revenue: this.brandToEdit.brand_revenue
         };
 
-        if (!brandData.brand_name.trim()) {
+        if (!brandData.brand_name) {
           alert('Brand name is required');
           return;
         }
-
-        console.log('Sending update data:', brandData);
 
         const response = await axios.post(
           `http://localhost:9000/brandsapi/update/${this.brandToEdit.brand_id}`,
@@ -158,14 +157,7 @@ export default {
           this.$router.push('/edit-brand');
         }
       } catch (error) {
-        console.error('Update Error:', {
-          message: error.message,
-          response: error.response ? {
-            data: error.response.data,
-            status: error.response.status
-          } : 'No response'
-        });
-
+        console.error('Update Error:', error);
         alert('Failed to update brand: ' +
           (error.response && error.response.data ?
             error.response.data.message :
@@ -186,7 +178,14 @@ export default {
       if (newId) {
         await this.fetchBrandDetails(newId);
       } else {
-        this.brandToEdit = null;
+        this.brandToEdit = {
+          brand_id: null,
+          brand_name: '',
+          brand_creation_date: new Date().toISOString().split('T')[0],
+          brand_creator: '',
+          brand_creation_place: '',
+          brand_revenue: 0
+        };
       }
     }
   }
