@@ -132,7 +132,10 @@ export default {
   methods: {
     async handleLogin() {
       try {
-        let response = await sendRequest('post', 'login',{ username: String(this.loginForm.username), userpass: String(this.loginForm.password) });
+        let response = await sendRequest('post', 'login',{
+          username: String(this.loginForm.username),
+          userpass: String(this.loginForm.password)
+        });
 
         const users = JSON.parse(sessionStorage.getItem('users') || '[]');
 
@@ -165,22 +168,18 @@ export default {
       }
     },
 
-    handleRegister() {
+    async handleRegister() {
       if (this.registerForm.password !== this.registerForm.confirmPassword) {
         this.error = 'Passwords do not match';
         return;
       }
       const users = JSON.parse(sessionStorage.getItem('users') || '[]');
 
-      if (users.some(user => user.username === this.registerForm.username)) {
-        this.error = 'Username already exists';
-        return;
-      }
-
-      if (users.some(user => user.email === this.registerForm.email)) {
-        this.error = 'Email already exists';
-        return;
-      }
+      let response = await sendRequest('post', 'register',{
+        username: String(this.registerForm.username),
+        password: String(this.registerForm.password),
+        email: String(this.registerForm.email)
+      });
 
       const newUser = {
         username: this.registerForm.username,
