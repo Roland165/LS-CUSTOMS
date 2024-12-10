@@ -8,6 +8,15 @@ router.get('/show/:brandId', async (request, response) => {
     try {
         const brandId = request.params.brandId;
         const brand = await brandRepo.getOneBrand(String(brandId));
+
+        // Check brand existence
+        if (!brand) {
+            return response.status(404).json({
+                success: false,
+                message: 'Brand not found'
+            });
+        }
+
         response.json(brand);
     } catch (error) {
         console.error('Error:', error);
