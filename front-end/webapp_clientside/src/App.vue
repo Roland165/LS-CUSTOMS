@@ -46,6 +46,9 @@
             >
               Admin Dashboard
             </div>
+            <div class="dropdown-item" @click="goToUserInfoPage">
+              Account Details
+            </div>
             <div class="dropdown-item" @click="logout">
               Logout
             </div>
@@ -122,6 +125,10 @@ export default {
         this.$router.push('/auth');
         this.dropdownOpen = false;
     },
+    goToUserInfoPage(){
+      this.$router.push('/user-info');
+      this.dropdownOpen = false;
+    }
   },
   created() {
     this.checkLoginStatus();

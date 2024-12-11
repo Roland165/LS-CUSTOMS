@@ -8,6 +8,7 @@
     <input type="button" @click="sendRequest('get', 'user')" value="ACCESS /user" />
     <input type="button" @click="sendRequest('get', 'admin')" value="ACCESS /admin" />
     <input type="button" @click="sendRequest('get', 'protected')" value="ACCESS /protected" />
+    <input type="button" @click="sendRequest('get', 'info')" value="GET Info" />
     <input type="button" @click="sendRequest('get', 'logout')" value="LOGOUT" />
   </div>
 </template>
