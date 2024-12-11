@@ -117,21 +117,6 @@ export default {
       error: null
     }
   },
-  created() {
-    /*
-    if (!sessionStorage.getItem('users')) {
-      const initialUsers = [
-        {
-          username: 'admin',
-          email: 'admin@admin.com',
-          password: 'admin',
-          role: 'admin'
-        }
-      ];
-      sessionStorage.setItem('users', JSON.stringify(initialUsers));
-    }
-      */
-  },
   methods: {
     async handleLogin() {
       try {
@@ -140,13 +125,7 @@ export default {
           userpass: String(this.loginForm.password)
         });
 
-        if (response.loginResult) {
-          //sessionStorage.removeItem('currentUser');
-          //sessionStorage.setItem('currentUser', JSON.stringify(user));
-          //if (this.$root.$children[0].checkLoginStatus) {
-          //  this.$root.$children[0].checkLoginStatus();
-          //}
-          
+        if (response.loginResult) {          
           sessionStorage.setItem("isLoggedInBool", true)
           sessionStorage.setItem("username",this.loginForm.username);
 
@@ -176,25 +155,12 @@ export default {
         this.error = 'Passwords do not match';
         return;
       }
-      //const users = JSON.parse(sessionStorage.getItem('users') || '[]');
 
       let response = await sendRequest('post', 'register',{
         username: String(this.registerForm.username),
         password: String(this.registerForm.password),
         email: String(this.registerForm.email)
       });
-
-      /*
-      const newUser = {
-        username: this.registerForm.username,
-        email: this.registerForm.email,
-        password: this.registerForm.password,
-        role: 'user'  // Default role
-      };
-      */
-
-      //users.push(newUser);
-      //sessionStorage.setItem('users', JSON.stringify(users));
 
       this.registerForm = {
         username: '',
