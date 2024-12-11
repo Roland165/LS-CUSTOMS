@@ -38,11 +38,7 @@
 
   <div v-else-if="action === 'list'">
     <h1 class="text-center mb-4">Order History</h1>
-    <p class="text-center mb-4">
-      ACTION = {{ action }}<br />
-      ID = {{ id }}<br />
-      <router-link to="/orders/list/all" class="btn btn-link">Back to the list</router-link>
-    </p>
+    <router-link to="/orders/list/all" class="btn btn-link">Back to the list</router-link>
     <table class="table table-striped table-bordered table-hover" v-if="orders.length > 0">
       <thead>
       <tr>

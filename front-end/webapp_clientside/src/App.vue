@@ -13,14 +13,14 @@
         </div>
         <div
           class="account-dropdown"
-          @mouseenter="dropdownOpen = isLoggedIn"
+          @mouseenter="dropdownOpen = Boolean(isLoggedIn)"
           @mouseleave="dropdownOpen = false"
         >
           <router-link
             :to="isLoggedIn ? '#' : '/auth'"
             class="account-link"
           >
-            <button class="cssbuttons-io-button account-button">
+            <button class="cssbuttons-io-button account-button" @click="goToAuthPage">
               {{ accountButtonText }}
               <div class="icon">
                 <svg
@@ -38,9 +38,9 @@
               </div>
             </button>
           </router-link>
-          <div v-if="dropdownOpen && isLoggedIn" class="dropdown-menu">
+          <div v-if="(dropdownOpen && isLoggedIn)" class="dropdown-menu">
             <div
-              v-if="currentUser && currentUser.role === 'admin'"
+              v-if="role === 'ADMIN'"
               class="dropdown-item"
               @click="goToAdmin"
             >
@@ -58,21 +58,29 @@
 </template>
 
 <script>
+import { logoutUser } from './authfunctions';
+
+
 export default {
   name: 'App',
   data() {
     return {
       dropdownOpen: false,
+      username: null,
+      role: null,
       isLoggedIn: false,
-      currentUser: null
     }
   },
   computed: {
     accountButtonText() {
-      return this.isLoggedIn && this.currentUser ? this.currentUser.username : 'Account';
+      if(this.username != "null"){
+        return this.username
+      }else{
+        return "Account"
+      }
     },
     isAdmin() {
-      return this.currentUser && this.currentUser.role === 'admin';
+      return this.role === 'ADMIN';
     }
   },
   methods: {
@@ -82,30 +90,38 @@ export default {
         this.dropdownOpen = false;
       }
     },
-    logout() {
-      console.log('Current user before logout:', this.currentUser);
-      sessionStorage.removeItem('currentUser');
-      this.isLoggedIn = false;
-      this.currentUser = null;
-      console.log('Logging out, redirecting to auth');
-      this.$router.push('/auth');
-      this.dropdownOpen = false;
+    async logout() {
+      if(await logoutUser()){
+        
+        sessionStorage.setItem("isLoggedInBool", false);
+        this.isLoggedIn = false;
+        sessionStorage.setItem("username",null);
+        sessionStorage.setItem("role",null);
+        
+        //this.currentUser = null;
+        this.$router.push('/auth');
+        this.dropdownOpen = false;
+      }else{
+        alert("Error during logout");
+      }
     },
     checkLoginStatus() {
-      const userStr = sessionStorage.getItem('currentUser');
-      if (userStr) {
-        try {
-          this.currentUser = JSON.parse(userStr);
-          this.isLoggedIn = true;
-        } catch (error) {
-          this.currentUser = null;
-          this.isLoggedIn = false;
-        }
-      } else {
-        this.currentUser = null;
-        this.isLoggedIn = false;
-      }
+    if(sessionStorage.getItem("isLoggedInBool") == null){
+      sessionStorage.setItem("isLoggedInBool", false);
+      this.accountText = "Account";
+      console.log("RESET SESSIONSTORAGE isLoggedIn TO false");
     }
+    this.isLoggedIn = sessionStorage.getItem("isLoggedInBool");
+    this.username = sessionStorage.getItem("username");
+    this.role = sessionStorage.getItem("role");
+    
+    console.log("sessionStorage isLoggedInBool: "+sessionStorage.getItem("isLoggedInBool"));
+    console.log("local isLoggedInBool: "+this.isLoggedIn);
+    },
+    goToAuthPage() {
+        this.$router.push('/auth');
+        this.dropdownOpen = false;
+    },
   },
   created() {
     this.checkLoginStatus();
@@ -113,8 +129,8 @@ export default {
   },
   beforeDestroy() {
     window.removeEventListener('storage', this.checkLoginStatus);
-  }
-}
+  },
+};
 </script>
 
 <style>

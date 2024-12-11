@@ -68,3 +68,13 @@ CREATE TABLE IF NOT EXISTS `conn_CS_F` (
   CONSTRAINT `fk_conn_CS_F_conn_C_S` FOREIGN KEY (`C_S_id`) REFERENCES `conn_C_S` (`C_S_id`),
   CONSTRAINT `fk_conn_CS_F_feature` FOREIGN KEY (`feat_id`) REFERENCES `feature` (`feature_id`)
 );
+
+CREATE TABLE IF NOT EXISTS `users` (
+  `user_id` INT NOT NULL AUTO_INCREMENT,
+  `user_name` VARCHAR(255) NOT NULL UNIQUE,
+  `user_email` VARCHAR(255) NOT NULL UNIQUE,
+  `user_pass` VARCHAR(255) NOT NULL,
+  `user_role` VARCHAR(255) NOT NULL,
+  `user_created` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`user_id`)
+);

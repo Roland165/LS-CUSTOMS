@@ -96,6 +96,9 @@
 </template>
 
 <script>
+import { sendRequest } from '../authfunctions';
+
+
 export default {
   name: 'AuthModule',
   data() {
@@ -114,39 +117,29 @@ export default {
       error: null
     }
   },
-  created() {
-    if (!sessionStorage.getItem('users')) {
-      const initialUsers = [
-        {
-          username: 'admin',
-          email: 'admin@admin.com',
-          password: 'admin',
-          role: 'admin'
-        }
-      ];
-      sessionStorage.setItem('users', JSON.stringify(initialUsers));
-    }
-  },
   methods: {
     async handleLogin() {
       try {
-        const users = JSON.parse(sessionStorage.getItem('users') || '[]');
+        let response = await sendRequest('post', 'login',{
+          username: String(this.loginForm.username),
+          userpass: String(this.loginForm.password)
+        });
 
-        const user = users.find(
-          u => u.username === this.loginForm.username &&
-            u.password === this.loginForm.password
-        );
+        if (response.loginResult) {          
+          sessionStorage.setItem("isLoggedInBool", true)
+          sessionStorage.setItem("username",this.loginForm.username);
 
-        if (user) {
-          sessionStorage.removeItem('currentUser');
-          sessionStorage.setItem('currentUser', JSON.stringify(user));
-          if (this.$root.$children[0].checkLoginStatus) {
-            this.$root.$children[0].checkLoginStatus();
-          }
-          if (user.role === 'admin') {
+          let userRole = await sendRequest('get', 'protected');
+          console.log("get protected response: "+userRole);
+          
+          sessionStorage.setItem("role",userRole);
+
+          if (userRole === 'ADMIN') {
             this.$router.push('/admin');
+            await location.reload()
           } else {
             this.$router.push('/');
+            await location.reload()
           }
         } else {
           this.error = 'Invalid username or password';
@@ -157,32 +150,17 @@ export default {
       }
     },
 
-    handleRegister() {
+    async handleRegister() {
       if (this.registerForm.password !== this.registerForm.confirmPassword) {
         this.error = 'Passwords do not match';
         return;
       }
-      const users = JSON.parse(sessionStorage.getItem('users') || '[]');
 
-      if (users.some(user => user.username === this.registerForm.username)) {
-        this.error = 'Username already exists';
-        return;
-      }
-
-      if (users.some(user => user.email === this.registerForm.email)) {
-        this.error = 'Email already exists';
-        return;
-      }
-
-      const newUser = {
-        username: this.registerForm.username,
-        email: this.registerForm.email,
-        password: this.registerForm.password,
-        role: 'user'  // Default role
-      };
-
-      users.push(newUser);
-      sessionStorage.setItem('users', JSON.stringify(users));
+      let response = await sendRequest('post', 'register',{
+        username: String(this.registerForm.username),
+        password: String(this.registerForm.password),
+        email: String(this.registerForm.email)
+      });
 
       this.registerForm = {
         username: '',

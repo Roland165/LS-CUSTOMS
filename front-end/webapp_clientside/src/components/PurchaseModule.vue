@@ -1,11 +1,14 @@
 <template>
   <div class="purchase">
     <div class="container mt-5">
+
+      <!-- MAIN PAGE  -->
       <h1 class="text-center">Choose Your Model</h1>
       <router-link class="btn btn-link" to="/purchase/list/all">Back to the list</router-link><br />
       <div v-if="action === 'list'">
         <div class="filters-section">
           <div class="filter-controls">
+            <!-- FILTER BRAND  -->
             <div class="filter-group">
               <label for="brand-filter">Filter by Brand:</label>
               <select id="brand-filter" v-model="selectedBrand" class="form-control">
@@ -15,7 +18,7 @@
                 </option>
               </select>
             </div>
-
+            <!-- FILTER SORT  -->
             <div class="filter-group">
               <label for="sort-option">Sort by:</label>
               <select id="sort-option" v-model="sortOption" class="form-control">
@@ -27,6 +30,7 @@
           </div>
         </div>
 
+        <!-- CARS DISPLAY  -->
         <div class="car-grid">
           <div v-for="c in filteredAndSortedCars" :key="'Cars'+c.car_id" class="car-card" @click="goToCustomize(c.car_id)">
             <div class="car-image">
@@ -43,6 +47,8 @@
         </div>
       </div>
 
+
+      <!-- CUSTOMIZE PART  -->
       <div v-if="action === 'customize'" class="customization-section">
         <div class="customization-header">
           <h2>{{ oneCar.car_name }}</h2>
@@ -52,111 +58,147 @@
           </div>
         </div>
 
+        <!-- STORE AVAILABLE  -->
+        <div class="store-availability-section">
+          <h3>Available at:</h3>
+          <div v-if="availableStores.length > 0" class="store-list">
+            <div v-for="store in availableStores" :key="store.store_id" class="store-card">
+              <h4>{{ store.store_name }}</h4>
+              <div class="store-details">
+                <p><i class="fas fa-map-marker-alt"></i> {{ store.store_city }}</p>
+                <p><i class="fas fa-location-dot"></i> {{ store.store_address }}</p>
+                <p><i class="fas fa-user-tie"></i> Director: {{ store.store_director }}</p>
+              </div>
+            </div>
+          </div>
+          <div v-else class="no-stores-message">
+            <p>No stores available with this configuration</p>
+          </div>
+        </div>
+
         <div class="customization-content">
           <div class="feature-sections">
-            <!--
-            <div class="feature-section">
-              <h3>Engine</h3>
+
+            <!-- SEATS  -->
+            <div class="feature-section" v-if="seatFeatures.length > 0">
+              <h3>Seats</h3>
               <div class="feature-options">
-                <div
-                  v-for="engine in motorFeatures"
-                  :key="engine.feature_id"
-                  class="feature-card"
-                  :class="{ 'selected': selectedFeatures.motor === engine }"
-                  @click="selectedFeatures.motor = engine"
-                >
-                  <img :src="getEngineImage(engine.feature_name)" :alt="engine.feature_name">
-                  <div class="feature-info">
-                    <h4>{{ engine.feature_name }}</h4>
-                    <p>Power: {{ engine.feature_added_power }}hp</p>
-                    <p class="price">{{ engine.feature_price }}€</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="feature-section">
-              <h3>Brakes</h3>
-              <div class="feature-options">
-                <div
-                  v-for="brake in brakeFeatures"
-                  :key="brake.feature_id"
-                  class="feature-card"
-                  :class="{ 'selected': selectedFeatures.brakes === brake }"
-                  @click="selectedFeatures.brakes = brake"
-                >
-                  <img :src="getBrakeImage(brake.feature_name)" :alt="brake.feature_name">
-                  <div class="feature-info">
-                    <h4>{{ brake.feature_name }}</h4>
-                    <p>Weight: {{ brake.feature_added_weight }}kg</p>
-                    <p class="price">{{ brake.feature_price }}€</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="feature-section">
-              <h3>Color</h3>
-              <div class="color-options">
-                <div v-for="color in colorFeatures" :key="color.feature_id" class="color-card"
-                     :class="{ 'selected': selectedFeatures.color === color }" @click="selectedFeatures.color = color">
-                  <div class="color-sample" :style="{ backgroundColor: color.feature_color }"></div>
-                  <div class="feature-info">
-                    <h4>{{ color.feature_name }}</h4>
-                    <p class="price">{{ color.feature_price }}€</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          -->
-
-
-            <div class="feature-section" v-show="this.featuresSpoiler.length != 0">
-              <h3>Spoilers</h3>
-              <div class="feature-options">
-                <div
-                  v-for="feature in featuresSpoiler"
-                  :key="'Spoiler'+feature.feature_id"
-                  class="feature-card"
-                  :class="{ 'selected': selectedFeaturesTab.includes(feature)}"
-                  @click="toggleFeatureSelect(feature)"
-                >
-                  <!--<img :src="getEngineImage(engine.feature_name)" :alt="feature.feature_name">-->
+                <div v-for="feature in seatFeatures" :key="'Seat'+feature.feature_id" class="feature-card"
+                     :class="{ 'selected': selectedFeaturesByType.seats === feature }" @click="selectFeatureByType('seats', feature)">
                   <div class="feature-info">
                     <h4>{{ feature.feature_name }}</h4>
-                    <p>Added power: {{ feature.feature_added_power }}hp</p>
-                    <p class="price">{{ feature.feature_price }}€</p>
-                    <p>Color: {{ feature.feature_color }}</p>
-                    <p>Added weight: {{ feature.feature_added_weight }}Kg</p>
+                    <p v-if="feature.feature_added_power">Added power: {{ feature.feature_added_power }} hp</p>
+                    <p class="price">{{ parseFloat(feature.feature_price) }} €</p>
+                    <p v-if="feature.feature_color">Color: {{ feature.feature_color }}</p>
+                    <p v-if="feature.feature_added_weight">Added weight: {{ parseFloat(feature.feature_added_weight) }} Kg</p>
                   </div>
                 </div>
               </div>
             </div>
 
-
-            <div class="feature-section">
-              <h3>Other</h3>
+            <!-- SPOILERS  -->
+            <div class="feature-section" v-if="spoilerFeatures.length > 0">
+              <h3>Spoilers</h3>
               <div class="feature-options">
-                <div
-                  v-for="feature in features"
-                  :key="'Other'+feature.feature_id"
-                  class="feature-card"
-                  :class="{ 'selected': selectedFeaturesTab.includes(feature)}"
-                  @click="toggleFeatureSelect(feature)"
-                >
-                  <!--<img :src="getEngineImage(engine.feature_name)" Fg:alt="feature.feature_name">-->
+                <div v-for="feature in spoilerFeatures" :key="'Spoiler'+feature.feature_id" class="feature-card"
+                     :class="{ 'selected': selectedFeaturesByType.spoilers === feature }" @click="selectFeatureByType('spoilers', feature)">
+                  <div class="feature-info">
+                    <h4>{{ feature.feature_name }}</h4>
+                    <p v-if="feature.feature_added_power">Added power: {{ feature.feature_added_power }} hp</p>
+                    <p class="price">{{ parseFloat(feature.feature_price) }} €</p>
+                    <p v-if="feature.feature_color">Color: {{ feature.feature_color }}</p>
+                    <p v-if="feature.feature_added_weight">Added weight: {{ parseFloat(feature.feature_added_weight) }} Kg</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- TIRES  -->
+            <div class="feature-section" v-if="tireFeatures.length > 0">
+              <h3>Tires</h3>
+              <div class="feature-options">
+                <div v-for="feature in tireFeatures" :key="'Tire'+feature.feature_id" class="feature-card"
+                  :class="{ 'selected': selectedFeaturesByType.tires === feature }" @click="selectFeatureByType('tires', feature)">
+                  <div class="feature-info">
+                    <h4>{{ feature.feature_name }}</h4>
+                    <p v-if="feature.feature_added_power">Added power: {{ feature.feature_added_power }} hp</p>
+                    <p class="price">{{ parseFloat(feature.feature_price) }} €</p>
+                    <p v-if="feature.feature_color">Color: {{ feature.feature_color }}</p>
+                    <p v-if="feature.feature_added_weight">Added weight: {{ parseFloat(feature.feature_added_weight) }} Kg</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- STEERING WHEEL -->
+            <div class="feature-section" v-if="steeringWheelFeatures.length > 0">
+              <h3>Steering Wheel</h3>
+              <div class="feature-options">
+                <div v-for="feature in steeringWheelFeatures" :key="'SteeringWheel'+feature.feature_id" class="feature-card"
+                  :class="{ 'selected': selectedFeaturesByType.steeringWheel === feature }" @click="selectFeatureByType('steeringWheel', feature)">
                   <div class="feature-info">
                     <h4>{{ feature.feature_name }}</h4>
                     <p v-if="feature.feature_added_power != 0">Added power: {{ feature.feature_added_power }} hp</p>
                     <p class="price">{{ parseFloat(feature.feature_price) }} €</p>
-                    <p v-if="feature.feature_color != null">Color: {{ feature.feature_color }}</p>
+                    <p v-if="feature.feature_color">Color: {{ feature.feature_color }}</p>
                     <p v-if="feature.feature_added_weight != 0">Added weight: {{ parseFloat(feature.feature_added_weight) }} Kg</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ECU REPROGRAMMING -->
+            <div class="feature-section" v-if="ecuProgrammingFeatures.length > 0">
+              <h3>ECU Programming</h3>
+              <div class="feature-options">
+                <div v-for="feature in ecuProgrammingFeatures" :key="'ECU Programming'+feature.feature_id" class="feature-card"
+                     :class="{ 'selected': selectedFeaturesByType.ecuProgramming === feature }" @click="selectFeatureByType('ecuProgramming', feature)">
+                  <div class="feature-info">
+                    <h4>{{ feature.feature_name }}</h4>
+                    <p v-if="feature.feature_added_power != 0">Added power: {{ feature.feature_added_power }} hp</p>
+                    <p class="price">{{ parseFloat(feature.feature_price) }} €</p>
+                    <p v-if="feature.feature_color">Color: {{ feature.feature_color }}</p>
+                    <p v-if="feature.feature_added_weight != 0">Added weight: {{ parseFloat(feature.feature_added_weight) }} Kg</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SUSPENSION -->
+            <div class="feature-section" v-if="suspensionFeatures.length > 0">
+              <h3>Suspension</h3>
+              <div class="feature-options">
+                <div v-for="feature in suspensionFeatures" :key="'Suspension'+feature.feature_id" class="feature-card"
+                     :class="{ 'selected': selectedFeaturesByType.suspension === feature }" @click="selectFeatureByType('suspension', feature)">
+                  <div class="feature-info">
+                    <h4>{{ feature.feature_name }}</h4>
+                    <p v-if="feature.feature_added_power != 0">Added power: {{ feature.feature_added_power }} hp</p>
+                    <p class="price">{{ parseFloat(feature.feature_price) }} €</p>
+                    <p v-if="feature.feature_color">Color: {{ feature.feature_color }}</p>
+                    <p v-if="feature.feature_added_weight != 0">Added weight: {{ parseFloat(feature.feature_added_weight) }} Kg</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- OTHERS  -->
+            <div class="feature-section" v-if="otherFeatures.length > 0">
+              <h3>Other Features</h3>
+              <div class="feature-options">
+                <div v-for="feature in otherFeatures" :key="'Other'+feature.feature_id" class="feature-card"
+                  :class="{ 'selected': selectedFeaturesTab.includes(feature)}" @click="toggleFeatureSelect(feature)">
+                  <div class="feature-info">
+                    <h4>{{ feature.feature_name }}</h4>
+                    <p v-if="feature.feature_added_power">Added power: {{ feature.feature_added_power }} hp</p>
+                    <p class="price">{{ parseFloat(feature.feature_price) }} €</p>
+                    <p v-if="feature.feature_color">Color: {{ feature.feature_color }}</p>
+                    <p v-if="feature.feature_added_weight">Added weight: {{ parseFloat(feature.feature_added_weight) }} Kg</p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
+          <!-- ADD TO CART  -->
           <div class="action-buttons">
             <button class="btn btn-warning" @click="addToCart()">Add to Cart</button>
           </div>
@@ -164,6 +206,7 @@
       </div>
     </div>
 
+    <!-- CART CONFIRMATION  -->
     <div v-if="showCartConfirmation" class="modal">
       <div class="modal-content">
         <h2>Added to Cart</h2>
@@ -179,7 +222,6 @@
 
 <script>
 import axios from 'axios';
-import { onBeforeMount } from 'vue';
 export default {
   name: 'PurchaseModule',
   props: ['action', 'id'],
@@ -193,25 +235,25 @@ export default {
         brand_name: '',
       },
       features: [],
-      featuresSpoiler: [],
-      categorizedFeatures: [],
-      uncategorizedFeatures: [],
-      colorFeatures: [],
-      motorFeatures: [],
-      brakeFeatures: [],
-      selectedFeatures: {
-        color: null,
-        motor: null,
-        brakes: null
+      selectedFeaturesByType: {
+        seats: null,
+        spoilers: null,
+        tires: null,
+        steeringWheel: null,
+        ecuProgramming : null,
+        suspension: null,
       },
       selectedFeaturesTab: [],
       lastCustomId: 0,
       showCartConfirmation: false,
       selectedBrand: 'all',
       sortOption: 'none',
+      availableStores: [],
     };
   },
   methods: {
+
+    //LOAD CAR IMG FROM /src/medias/car_img/
     getCarImage(car) {
       try {
         const formattedBrand = car.brand_name.split(' ')
@@ -226,36 +268,15 @@ export default {
         return require('../medias/default_img.jpg');
       }
     },
-    getEngineImage(engineName) {
-      switch(engineName) {
-        case 'V6 Engine':
-          return require('../medias/feature_img/v6_engine_img.jpg');
-        case 'V8 Engine':
-          return require('../medias/feature_img/v8_engine_img.jpg');
-        case 'Electric Motor':
-          return require('../medias/feature_img/electric_engine_img.jpg');
-        default:
-          return '';
-      }
+
+    //GO TO CUSTOMIZE SECTION
+    async goToCustomize(carId) {
+      await this.getFeaturesForCar(carId);
+      await this.$router.push(`/purchase/customize/${carId}`);
+      await this.checkStoreAvailability();
     },
-    getBrakeImage(brakeName) {
-      switch(brakeName) {
-        case 'Standard Brakes':
-          return require('../medias/feature_img/standard_brakes_img.jpg');
-        case 'Performance Brakes':
-          return require('../medias/feature_img/performance_brakes_img.jpg');
-        case 'Carbon Ceramic Brakes':
-          return require('../medias/feature_img/carbon_brakes_img.jpg');
-        default:
-          return '';
-      }
-    },
-    goToCustomize(carId) {
-      this.getFeaturesForCar(carId);
-      //this.getSpoilersFeature();
-      this.getUncategorizedFeatures();
-      this.$router.push(`/purchase/customize/${carId}`);
-    },
+
+    //GET CARS DATA FROM CARSAPI
     async getAllData() {
       try {
         const response = await axios.get('http://localhost:9000/carsapi/list');
@@ -266,23 +287,6 @@ export default {
           brand: car.brand_name,
           brand_name: car.brand_name
         }));
-        this.features
-        this.colorFeatures = [
-          { feature_id: 1, feature_name: 'Red Paint', feature_color: 'red', feature_price: 500 },
-          { feature_id: 2, feature_name: 'Blue Paint', feature_color: 'blue', feature_price: 600 },
-          { feature_id: 3, feature_name: 'Matte Black', feature_color: 'black', feature_price: 800 }
-        ];
-        this.motorFeatures = [
-          { feature_id: 4, feature_name: 'V6 Engine', feature_added_power: 50, feature_price: 5000 },
-          { feature_id: 5, feature_name: 'V8 Engine', feature_added_power: 80, feature_price: 8000 },
-          { feature_id: 6, feature_name: 'Electric Motor', feature_added_power: 100, feature_price: 10000 }
-        ];
-        this.brakeFeatures = [
-          { feature_id: 7, feature_name: 'Standard Brakes', feature_added_weight: 15, feature_price: 1000 },
-          { feature_id: 8, feature_name: 'Performance Brakes', feature_added_weight: 10, feature_price: 2000 },
-          { feature_id: 9, feature_name: 'Carbon Ceramic Brakes', feature_added_weight: 5, feature_price: 4000 }
-        ];
-
         this.refreshOneCar();
         this.loadLastCustomId();
       } catch (ex) {
@@ -290,6 +294,8 @@ export default {
         alert('Failed to load cars. Please try again later.');
       }
     },
+
+    //GET FEATURES FROM CARSAPI FOR ONE CAR
     async getFeaturesForCar(carId) {
       try {
         const response = await axios.get(`http://localhost:9000/carsapi/show/${carId}/features`);
@@ -305,115 +311,208 @@ export default {
       } catch (ex) {
         console.error('Error fetching data:', ex);
         alert('Failed to load features. Please try again later.');
-      };
-
+      }
     },
+
+    //UPDATE THE CAR BY THE ID
     refreshOneCar() {
       if (this.$props.id === "all" || this.$props.id === "0") return;
       try {
-        // Find the car by ID
         this.oneCar = this.cars.find(car => car.car_id == this.$props.id);
       } catch (ex) {
         console.error(ex);
       }
     },
+
+    //GIVES THE LAST CUSTOM ID
     loadLastCustomId() {
       this.lastCustomId = JSON.parse(sessionStorage.getItem('lastCustomId')) || 0;
     },
+
+    // SELECT A TYPICAL FEATURE ASKED
+    selectFeatureByType(type, feature) {
+      if (this.selectedFeaturesByType[type] === feature) {
+        this.selectedFeaturesByType[type] = null;
+      } else {
+        this.selectedFeaturesByType[type] = feature;
+      }
+      this.checkStoreAvailability();
+    },
+
+    //ADDITION OF BASEPRICE & FEATURES PRICES
     calculateTotalPrice() {
       let basePrice = parseFloat(this.oneCar.car_base_price);
       let featurePrice = 0;
-      if (this.selectedFeatures.color) featurePrice += this.selectedFeatures.color.feature_price;
-      if (this.selectedFeatures.motor) featurePrice += this.selectedFeatures.motor.feature_price;
-      if (this.selectedFeatures.brakes) featurePrice += this.selectedFeatures.brakes.feature_price;
-      for(let feature of this.selectedFeaturesTab){
-        featurePrice = featurePrice + parseFloat(feature.feature_price);
-      }
+
+      // Add prices from type-specific features
+      Object.values(this.selectedFeaturesByType).forEach(feature => {
+        if (feature) {
+          featurePrice += parseFloat(feature.feature_price);
+        }
+      });
+
+      // Add prices from multi-select features
+      this.selectedFeaturesTab.forEach(feature => {
+        featurePrice += parseFloat(feature.feature_price);
+      });
+
       return basePrice + featurePrice;
     },
+
+    //ADD THE CUSTOM IN SESSIONSTORAGE WITH THE CORRECT ID
     addToCart() {
       const purchasedCar = JSON.parse(JSON.stringify(this.oneCar));
       purchasedCar.total_price = this.calculateTotalPrice();
-      purchasedCar.features = [];
-      if (this.selectedFeatures.color) {
-        purchasedCar.features.push(this.selectedFeatures.color);
-      }
-      if (this.selectedFeatures.motor) {
-        purchasedCar.features.push(this.selectedFeatures.motor);
-      }
-      if (this.selectedFeatures.brakes) {
-        purchasedCar.features.push(this.selectedFeatures.brakes);
-      }
+
+      // Combine features from different selection methods
+      purchasedCar.features = [
+        ...Object.values(this.selectedFeaturesByType).filter(f => f !== null),
+        ...this.selectedFeaturesTab
+      ];
+
       purchasedCar.custom_id = this.getNextCustomId();
       let purchasedCars = JSON.parse(sessionStorage.getItem('purchasedCars')) || [];
       purchasedCars.push(purchasedCar);
       sessionStorage.setItem('purchasedCars', JSON.stringify(purchasedCars));
       this.showCartConfirmation = true;
     },
+
+    //GIVE NEW CUSTOM ID & ADD IT TO THE COUNTER
     getNextCustomId() {
       this.lastCustomId += 1;
       sessionStorage.setItem('lastCustomId', JSON.stringify(this.lastCustomId));
       return this.lastCustomId;
     },
+
+    //REDIRECT TO /purchase/list/all
     continueShopping() {
       this.showCartConfirmation = false;
       this.$router.push('/purchase/list/all');
     },
-    toggleFeatureSelect(feature){
-    if(this.selectedFeaturesTab.includes(feature)){
-      let temp = [];
-      for(let i = 0; i < this.selectedFeaturesTab.length; i++){
-        if(this.selectedFeaturesTab[i].feature_id != feature.feature_id){
-          temp.push(this.selectedFeaturesTab[i]);
-        }
-      }
-      this.selectedFeaturesTab = temp;
-      //removes feature from selectedFeaturesTab
-      console.log("Removed: "+feature.feature_name);
-    } else {
-      this.selectedFeaturesTab.push(feature);
-      //adds feature to selectedFeaturesTab
-      console.log("Added: "+feature.feature_name);
-    }
-  },
-  getSpoilersFeature(){
-    let spoilers = [];
-    this.featuresSpoiler = [];
-    for(let feature of this.features){
-      if(feature.feature_name.includes("spoiler")){
-        spoilers.push(feature)
-        this.featuresSpoiler.push(feature)
-        this.categorizedFeatures.push(feature);
-        console.log("Spoiler Feature: "+feature);
-      }
-    }
-    //this.featuresSpoiler.push(this.featuresSpoiler.pop());
-    //this.categorizedFeatures.push(this.categorizedFeatures.pop());
-    // test to try and force update v-for
 
-  },
-  getUncategorizedFeatures(){
-    let temp = [];
-    this.uncategorizedFeatures = [];
-    for(let feature of this.features){
-      if(!(this.categorizedFeatures.includes(feature))){
-        this.uncategorizedFeatures.push(feature);
-        temp.push(feature);
+    //MANAGE FEATURE SELECTION
+    toggleFeatureSelect(feature) {
+      if (this.selectedFeaturesTab.includes(feature)) {   //ALREADY SELECTED
+        this.selectedFeaturesTab = this.selectedFeaturesTab.filter(
+          f => f.feature_id !== feature.feature_id
+        );                                                //DESELECT IT
+      } else {                                            //NOT SELECTED
+        this.selectedFeaturesTab.push(feature);           //SELECT IT
+      }
+      this.checkStoreAvailability();
+    },
+
+    //SEARCH IN WHICH STORE IF THE CUSTOM IS AVAILABLE
+    async checkStoreAvailability() {
+      try {
+        const selectedFeatures = [
+          ...Object.values(this.selectedFeaturesByType).filter(f => f !== null),
+          ...this.selectedFeaturesTab
+        ];
+        const featureIds = selectedFeatures.map(f => f.feature_id);
+
+        const response = await axios.get(
+          `http://localhost:9000/storeapi/available/${this.oneCar.car_id}`,
+          { params: { features: featureIds.join(',') } }
+        );
+        this.availableStores = response.data;
+        console.log('Available stores:', this.availableStores);
+      } catch (error) {
+        console.error('Error checking store availability:', error);
+        this.availableStores = [];
       }
     }
-    //this.uncategorizedFeatures.push(this.uncategorizedFeatures.pop());
-    // test to try and force update v-for
   },
-  },
-  watch: {
-    id(newVal, oldVal) {
-      this.refreshOneCar();
+
+  //UPDATE THE STORE AVAILABILITY BY MAKING IT DIRECTLY VISIBLE FOR THE USER
+  mounted() {
+    this.getAllData();
+    if (this.action === 'customize') {
+      this.checkStoreAvailability();
     }
   },
-  created() {
-    this.getAllData();
+
+  //HANDLE THE ID CHANGES & FEATURE SELECTION CHANGES
+  watch: {
+    id: {
+      handler(newVal, oldVal) {
+        this.refreshOneCar();
+      },
+      immediate: true
+    },
+    selectedFeaturesByType: {
+      handler() {
+        this.checkStoreAvailability();
+      },
+      deep: true
+    },
+    selectedFeaturesTab: {
+      handler() {
+        this.checkStoreAvailability();
+      },
+      deep: true
+    }
   },
   computed: {
+
+    //SEARCH THE SEATS FEATURES
+    seatFeatures() {
+      return this.features.filter(f =>
+        f.feature_name.toLowerCase().includes('seat')
+      );
+    },
+
+    //SEARCH THE SPOILERS FEATURES
+    spoilerFeatures() {
+      return this.features.filter(f =>
+        f.feature_name.toLowerCase().includes('spoiler')
+      );
+    },
+
+    //SEARCH THE TIRES FEATURES
+    tireFeatures() {
+      return this.features.filter(f =>
+        f.feature_name.toLowerCase().includes('tire')
+      );
+    },
+
+    //SEARCH THE STEERING WHEELS FEATURES
+    steeringWheelFeatures() {
+      return this.features.filter(f =>
+        f.feature_name.toLowerCase().includes('steering') ||
+        f.feature_name.toLowerCase().includes('wheel')
+      );
+    },
+
+    //SEARCH ECU PROGRAMMING FEATURES
+    ecuProgrammingFeatures() {
+      return this.features.filter(f =>
+        f.feature_name.toLowerCase().includes('ecu') ||
+        f.feature_name.toLowerCase().includes('programming')
+      );
+    },
+
+    //SEARCH THE SUSPENSIONS FEATURES
+    suspensionFeatures() {
+      return this.features.filter(f =>
+        f.feature_name.toLowerCase().includes('suspension') ||
+        f.feature_name.toLowerCase().includes('coilovers')
+      );
+    },
+
+    //SEARCH THE OTHERS FEATURES NOT IN THE PREVIOUS ONES
+    otherFeatures() {
+      return this.features.filter(f =>
+        !this.seatFeatures.includes(f) &&
+        !this.spoilerFeatures.includes(f) &&
+        !this.tireFeatures.includes(f) &&
+        !this.steeringWheelFeatures.includes(f) &&
+        !this.ecuProgrammingFeatures.includes(f)&&
+        !this.suspensionFeatures.includes(f)
+      );
+    },
+
+    //HANDLE THE BRAND FILTER & SORTING PRICE
     filteredAndSortedCars() {
       let result = [...this.cars];
 
@@ -429,6 +528,8 @@ export default {
 
       return result;
     },
+
+    //GIVE EVERY BRANDS AVAILABLE
     availableBrands() {
       return [...new Set(this.cars.map(car => car.brand))];
     }
@@ -474,9 +575,11 @@ export default {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
 }
+
 .car-card:hover {
   transform: scale(1.05);
 }
+
 .car-image {
   width: 100%;
   height: 300px;
@@ -519,9 +622,7 @@ export default {
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
 }
-.color-card:hover{
-  transform: scale(1.05);
-}
+
 .feature-card:hover {
   transform: scale(1.05);
 }
@@ -543,34 +644,6 @@ export default {
   width: 100%;
   height: 150px;
   object-fit: cover;
-}
-
-.color-options {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-}
-
-.color-card {
-  display: flex;
-  align-items: center;
-  padding: 1rem;
-  border: 1px solid #e5e5e5;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.color-card.selected {
-  border: 2px solid #D5001C;
-}
-
-.color-sample {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 1rem;
-  border: 1px solid #e5e5e5;
 }
 
 .modal {
@@ -631,6 +704,97 @@ export default {
   min-width: 150px;
 }
 
+.store-availability-section {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 15px;
+  margin: 20px 0;
+}
+
+.store-availability-section h3 {
+  color: #333;
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #0077b6;
+  padding-bottom: 5px;
+  display: inline-block;
+}
+
+.store-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 15px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.store-card {
+  background: white;
+  border-radius: 6px;
+  padding: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.store-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.store-card h4 {
+  color: #0077b6;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.store-details {
+  font-size: 0.9rem;
+}
+
+.store-details p {
+  margin: 4px 0;
+  color: #666;
+  display: flex;
+  align-items: center;
+}
+
+.store-details i {
+  margin-right: 8px;
+  color: #0077b6;
+  width: 16px;
+}
+
+.no-stores-message {
+  background-color: #fff3f3;
+  color: #d63031;
+  padding: 12px;
+  border-radius: 6px;
+  text-align: center;
+  margin: 10px 0;
+  border: 1px solid #ffcdd2;
+}
+
+.store-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.store-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.store-list::-webkit-scrollbar-thumb {
+  background: #0077b6;
+  border-radius: 4px;
+}
+
+.store-list::-webkit-scrollbar-thumb:hover {
+  background: #005a8e;
+}
+
+
+
 @media (max-width: 768px) {
   .car-grid {
     grid-template-columns: 1fr;
@@ -641,14 +805,14 @@ export default {
     text-align: center;
   }
 
-  .feature-options,
-  .color-options {
+  .feature-options {
     grid-template-columns: 1fr;
   }
 
   .modal-content {
     width: 90%;
   }
+
   .filter-controls {
     flex-direction: column;
     gap: 1rem;
@@ -657,6 +821,21 @@ export default {
   .filter-group {
     width: 100%;
     justify-content: space-between;
+  }
+
+  .store-list {
+    grid-template-columns: 1fr;
+    max-height: 400px;
+  }
+
+  .store-card {
+    padding: 10px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .store-list {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 </style>

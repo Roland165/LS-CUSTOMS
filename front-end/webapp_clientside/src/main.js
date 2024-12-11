@@ -5,8 +5,11 @@ import App from './App'
 import router from './router'
 import axios from 'axios'
 
-Vue.config.$htpp = axios;
+axios.defaults.withCredentials = true; // PASSPORT
+
+Vue.config.$http = axios;
 Vue.config.productionTip = false
+
 
 /* eslint-disable no-new */
 new Vue({
@@ -15,5 +18,4 @@ new Vue({
   components: { App },
   template: '<App/>'
 })
-
 

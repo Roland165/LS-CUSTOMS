@@ -4,6 +4,9 @@ const carRepo = require('../utils/cars.repository');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+// brand and feature Repo used for fetch statistics
+const brandRepo = require('../utils/brands.repository');
+const featureRepo = require('../utils/features.repository');
 
 const uploadDir = path.join(__dirname, '../../webapp_clientside/src/medias/car_img');
 
@@ -28,7 +31,9 @@ router.get('/show/:carId', carShowAction);
 router.get('/show/:carId/features', featureListAction);
 router.get('/del/:carId', carDelAction);
 router.post('/add-car', upload.single('image'), addCarAction);
-router.post('/update/:carId', carUpdateAction);
+router.post('/update/:carId', upload.single('image'), addCarAction);
+router.get('/getstats', getDBStatsAction);
+
 
 async function carListAction(request, response) {
     try {
@@ -93,21 +98,7 @@ async function carDelAction(request, response) {
 async function carUpdateAction(request, response) {
     try {
         const carId = request.params.carId;
-        const isFancy = request.body.car_isFancy ? 1 : 0;
-        const numRows = await carRepo.editOneCar(carId,
-            request.body.car_brand,
-            request.body.car_name,
-            request.body.car_baseprice,
-            isFancy,
-            request.body.car_realPrice);
-        response.json({ rowsUpdated: numRows });
-    } catch (error) {
-        response.status(500).json({ message: error.message });
-    }
-}
 
-async function addCarAction(request, response) {
-    try {
         const carData = {
             brand_id: request.body.brand_id,
             car_name: request.body.car_name,
@@ -117,21 +108,88 @@ async function addCarAction(request, response) {
             car_base_weight: request.body.car_base_weight,
             car_base_price: request.body.car_base_price
         };
+        const numRows = await carRepo.editOneCar(carId, carData);
+        console.log('Rows updated:', numRows); // Debug log
 
-        const carId = await carRepo.addOneCar(carData);
-
-        response.json({
-            success: true,
-            carId: carId,
-            message: 'Car added successfully'
-        });
+        if (numRows > 0) {
+            response.json({
+                success: true,
+                rowsUpdated: numRows,
+                message: 'Car updated successfully'
+            });
+        } else {
+            response.status(404).json({
+                success: false,
+                message: 'Car not found or no changes made'
+            });
+        }
     } catch (error) {
-        response.status(500).json({
-            success: false,
-            message: error.message || 'Failed to add car'
-        });
+        console.error('Error in carUpdateAction:', error);
     }
 }
 
+async function addCarAction(request, response) {
+    console.log('-- UPDATE CAR REQUEST --');
+    console.log('Params:', request.params);
+    console.log('Body:', request.body);
+
+    try {
+        const carId = request.params.carId;
+        const carData = {
+            brand_id: parseInt(request.body.brand_id),
+            car_name: String(request.body.car_name),
+            car_seat_num: parseInt(request.body.car_seat_num),
+            car_creation_date: request.body.car_creation_date,
+            car_base_power: parseInt(request.body.car_base_power),
+            car_base_weight: parseFloat(request.body.car_base_weight),
+            car_base_price: parseFloat(request.body.car_base_price)
+        };
+
+        const requiredFields = [
+            'brand_id', 'car_name', 'car_seat_num',
+            'car_creation_date', 'car_base_power',
+            'car_base_weight', 'car_base_price'
+        ];
+
+        for (const field of requiredFields) {
+            if (carData[field] === undefined || carData[field] === null ||
+                (typeof carData[field] === 'number' && isNaN(carData[field]))) {
+                return response.status(400).json({
+                    success: false,
+                    message: `Missing or invalid ${field}`,
+                    receivedValue: request.body[field]
+                });
+            }
+        }
+
+        console.log('Processed car data:', carData);
+        const result = await carRepo.editOneCar(carId, carData);
+
+        response.json({
+            success: true,
+            message: 'Car updated successfully',
+            updatedRows: result
+        });
+
+    } catch (error) {
+        console.error('Update error:', error);
+    }
+}
+
+
+async function getDBStatsAction(request, response) {
+    try {
+        let arrayNum = { carsNum: 0, brandsNum: 0, featuresNum: 0 };
+        const cars = await carRepo.getAllCars();
+        arrayNum.carsNum = cars.length;
+        const brands = await brandRepo.getAllBrands();
+        arrayNum.brandsNum = brands.length;
+        const features = await featureRepo.getAllFeatures();
+        arrayNum.featuresNum = features.length;
+        response.json(arrayNum);
+    } catch (error) {
+        response.status(500).json({ message: error.message });
+    }
+}
 
 module.exports = router;
