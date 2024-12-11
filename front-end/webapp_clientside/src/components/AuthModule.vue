@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import { sendRequest } from '../authfunctions';
+import { sendRequest,myEscape } from '../authfunctions';
 
 
 export default {
@@ -119,7 +119,13 @@ export default {
   },
   methods: {
     async handleLogin() {
+      let username = this.loginForm.username
+      let password = this.loginForm.password
       try {
+        if((username != myEscape(username) || (password != myEscape(password) ))){
+          this.error = 'username or password contains unauthorized character';
+          return;
+        }
         let response = await sendRequest('post', 'login',{
           username: String(this.loginForm.username),
           userpass: String(this.loginForm.password)
@@ -151,6 +157,15 @@ export default {
     },
 
     async handleRegister() {
+      let username = this.registerForm.username
+      let password = this.registerForm.password
+      let passwordConfirm = this.registerForm.confirmPassword
+      let email = this.registerForm.email
+
+      if((username != myEscape(username)) || (password != myEscape(password)) || (email != myEscape(email)) || (passwordConfirm != myEscape(passwordConfirm)) ){
+        this.error = 'username or password contains unauthorized character';
+        return;
+      }
       if (this.registerForm.password !== this.registerForm.confirmPassword) {
         this.error = 'Passwords do not match';
         return;

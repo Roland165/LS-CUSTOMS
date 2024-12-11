@@ -14,6 +14,7 @@ router.post("/login", loginPostAction);
 router.get("/logout", logoutAction);
 router.post("/register", registerAction);
 
+
 // use same endpoints for both roles
 async function userdataAction(request, response) {
   let userJson = JSON.stringify(request.user);
