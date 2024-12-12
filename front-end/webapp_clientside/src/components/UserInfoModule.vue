@@ -24,45 +24,9 @@
         </tbody>
       </table>
       <div class="text-center mt-4">
-        <router-link to="/orders/list/all" class="btn btn-primary">Back to List</router-link>
+        <router-link to="/home" class="btn btn-primary">Back to Home</router-link>
       </div>
     </div>
-
-  <!--
-    <div v-else-if="action === 'list'">
-      <h1 class="text-center mb-4">Order History</h1>
-      <router-link to="/orders/list/all" class="btn btn-link">Back to the list</router-link>
-      <table class="table table-striped table-bordered table-hover" v-if="orders.length > 0">
-        <thead>
-        <tr>
-          <th>Order ID</th>
-          <th>Date</th>
-          <th>Car(s) Purchased</th>
-          <th>Total Price</th>
-          <th>Details</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="order in orders" :key="order.order_id">
-          <td>{{ order.order_id }}</td>
-          <td>{{ formatDate(order.order_date) }}</td>
-          <td>
-            <ul class="list-unstyled mb-0">
-              <li v-for="car in order.cars" :key="car.custom_id">
-                {{ car.car_name }} - {{ car.total_price }}€
-              </li>
-            </ul>
-          </td>
-          <td>{{ order.total_price }}€</td>
-          <td>
-            <router-link :to="'/orders/details/' + order.order_id" class="btn btn-info">DETAILS</router-link>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-      <p v-else class="text-center">No previous orders found.</p>
-    </div>
-  -->
   </div>
 </div>
 </template>
@@ -87,7 +51,7 @@ export default {
     async getAndUpdateUserInfo(){
       try {
         const response = await axios.get('http://localhost:9000/auth/info');
-        
+
         console.log(response);
 
         if(response.data != ""){
@@ -102,7 +66,7 @@ export default {
         alert('Failed to load user data. Please try again later.');
       }
     }
-    
+
   },
   created() {
     this.getAndUpdateUserInfo();
