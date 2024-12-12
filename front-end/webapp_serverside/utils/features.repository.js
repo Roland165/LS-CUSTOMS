@@ -62,4 +62,31 @@ module.exports = {
             throw err;
         }
     },
+
+    async editOneFeature(featureId, feature) {
+        try {
+            console.log('Updating feature:', feature);
+            let sql = `
+            UPDATE feature 
+            SET feature_name = ?,
+                feature_price = ?,
+                feature_color = ?,
+                feature_added_power = ?,
+                feature_added_weight = ?
+            WHERE feature_id = ?
+        `;
+            const [result] = await pool.execute(sql, [
+                feature.feature_name,
+                feature.feature_price,
+                feature.feature_color,
+                feature.feature_added_power,
+                feature.feature_added_weight,
+                featureId
+            ]);
+            return result.affectedRows;
+        } catch (err) {
+            console.error("Error in editOneFeature:", err);
+            throw err;
+        }
+    }
 };
