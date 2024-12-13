@@ -45,3 +45,8 @@ export async function logoutUser() {
   return response.data.logoutResult;
 }
 
+export function myEscape(str) {
+  // replaces &<>'" by a blank character -> to avoid SQL injections
+  return str.replace(/[&<>'"]/g, '');
+}
+

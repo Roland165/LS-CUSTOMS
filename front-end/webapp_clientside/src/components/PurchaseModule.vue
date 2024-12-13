@@ -4,7 +4,7 @@
 
       <!-- MAIN PAGE  -->
       <h1 class="text-center">Choose Your Model</h1>
-      <router-link class="btn btn-link" to="/purchase/list/all">Back to the list</router-link><br />
+
       <div v-if="action === 'list'">
         <div class="filters-section">
           <div class="filter-controls">
@@ -50,6 +50,7 @@
 
       <!-- CUSTOMIZE PART  -->
       <div v-if="action === 'customize'" class="customization-section">
+        <router-link class="btn btn-link" to="/purchase/list/all">Back to the list</router-link><br />
         <div class="customization-header">
           <h2>{{ oneCar.car_name }}</h2>
           <div class="price-info">

@@ -50,6 +50,11 @@
             <p>Modify existing brand details</p>
             <router-link to="/edit-brand" class="btn btn-success">Edit Brand</router-link>
           </div>
+          <div class="action-card" @click="goToEditFeature">
+            <h3>Edit Feature</h3>
+            <p>Modify existing feature details</p>
+            <router-link to="/edit-feature" class="btn btn-success">Edit Feature</router-link>
+          </div>
         </div>
       </div>
 
@@ -112,6 +117,9 @@ export default {
     },
     goToEditBrand(){
       this.$router.push('/edit-brand');
+    },
+    goToEditFeature(){
+      this.$router.push('/edit-feature');
     },
     async fetchStatistics() {
       try {

@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div class="hello" v-if="false">
     <h1>Authentication demo</h1>
     <p>{{ msg }}</p>
     <input type="button" @click="sendRequest('post', 'login', { username: 'joeuser', userpass: 'joeXXX' })" value="LOGIN BAD" />
@@ -8,6 +8,7 @@
     <input type="button" @click="sendRequest('get', 'user')" value="ACCESS /user" />
     <input type="button" @click="sendRequest('get', 'admin')" value="ACCESS /admin" />
     <input type="button" @click="sendRequest('get', 'protected')" value="ACCESS /protected" />
+    <input type="button" @click="sendRequest('get', 'info')" value="GET Info" />
     <input type="button" @click="sendRequest('get', 'logout')" value="LOGOUT" />
   </div>
 </template>

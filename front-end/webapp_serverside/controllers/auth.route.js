@@ -13,6 +13,8 @@ router.get("/protected", protectedGetAction); // execute authorization in action
 router.post("/login", loginPostAction);
 router.get("/logout", logoutAction);
 router.post("/register", registerAction);
+router.get("/info", userdataAction);
+
 
 // use same endpoints for both roles
 async function userdataAction(request, response) {
@@ -34,9 +36,7 @@ async function protectedGetAction(request, response) {
 }
 
 async function loginPostAction(request, response) {
-  // passport.authenticate('local', { successRedirect: '/' }));
   let areValid = await userRepo.areValidCredentials(request.body.username, request.body.userpass);
-  console.log("loginpostaction max test");
 
   if (areValid) {
     user = await userRepo.getOneUser(request.body.username);

@@ -1,5 +1,5 @@
 <template>
-  <div class="delete-brand-module" v-if="isAdminBool || true"> <!---OR True so that server does not crash because of too many requests-->
+  <div class="delete-brand-module" v-if="isAdminBool">
     <div class="container mt-5">
       <h1 class="text-center mb-4">Delete Brands</h1>
       <router-link class="btn btn-link" to="/admin">Back to Dashboard</router-link>
