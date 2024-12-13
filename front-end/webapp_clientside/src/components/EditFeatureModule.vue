@@ -1,5 +1,5 @@
 <template>
-  <div class="edit-feature" v-if="isAdminBool || 1">
+  <div class="edit-feature" v-if="isAdminBool">
     <div class="container mt-5">
       <h1 class="text-center mb-4">Edit features</h1>
 

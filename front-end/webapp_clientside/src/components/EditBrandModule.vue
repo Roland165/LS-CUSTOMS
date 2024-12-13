@@ -1,5 +1,5 @@
 <template>
-  <div class="edit-brand" v-if="isAdminBool || 1">
+  <div class="edit-brand" v-if="isAdminBool">
     <div class="container mt-5">
       <h1 class="text-center mb-4">Edit Brands</h1>
 
