@@ -131,7 +131,7 @@ export default {
           feature_name: this.featureToEdit.feature_name.trim(),
           feature_price: this.featureToEdit.feature_price,
           feature_color: this.featureToEdit.feature_color.trim(),
-          feature_added_power: this.featureToEdit.feature_added_power.trim(),
+          feature_added_power: this.featureToEdit.feature_added_power,
           feature_added_weight: this.featureToEdit.feature_added_weight
         };
 
