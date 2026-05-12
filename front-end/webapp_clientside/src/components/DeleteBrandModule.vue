@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="delete-brand-module" v-if="isAdminBool">
     <div class="container mt-5">
       <h1 class="text-center mb-4">Delete Brands</h1>
@@ -15,7 +15,7 @@
         >
           <div class="brand-info">
             <h3>{{ brand.brand_name }}</h3>
-            <p>Revenue: {{ formatRevenue(brand.brand_revenue) }} Million €</p>
+            <p>Revenue: {{ formatRevenue(brand.brand_revenue) }} Million â‚¬</p>
             <p>Creation Date: {{ formatDate(brand.brand_creation_date) }}</p>
             <p>Creator: {{ brand.brand_creator }}</p>
             <p>Creation Place: {{ brand.brand_creation_place }}</p>
@@ -65,13 +65,13 @@ export default {
     async fetchBrands() {
       try {
         // Fetch brands
-        const brandsResponse = await axios.get('http://localhost:9000/brandsapi/list');
+        const brandsResponse = await axios.get('/brandsapi/list');
 
         // Fetch cars for each brand to check associations
         const brandsWithCarCount = await Promise.all(
           brandsResponse.data.map(async (brand) => {
             try {
-              const carsResponse = await axios.get(`http://localhost:9000/brandsapi/show/${brand.brand_id}/cars`);
+              const carsResponse = await axios.get(`/brandsapi/show/${brand.brand_id}/cars`);
               const associatedCars = carsResponse.data
 
               return {
@@ -99,7 +99,7 @@ export default {
 
       if (confirmDelete) {
         try {
-          const response = await axios.get(`http://localhost:9000/brandsapi/del/${brand.brand_id}`);
+          const response = await axios.get(`/brandsapi/del/${brand.brand_id}`);
 
           if (response.data.success) {
             alert('Brand deleted successfully');

@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "buildCommand": "cd front-end/webapp_clientside && npm install && npm run build",
+  "outputDirectory": "front-end/webapp_clientside/dist",
+  "rewrites": [
+    { "source": "/carsapi/:path*",     "destination": "/api/index" },
+    { "source": "/brandsapi/:path*",   "destination": "/api/index" },
+    { "source": "/featuresapi/:path*", "destination": "/api/index" },
+    { "source": "/storeapi/:path*",    "destination": "/api/index" },
+    { "source": "/auth/:path*",        "destination": "/api/index" },
+    { "source": "/medias/:path*",      "destination": "/api/index" },
+    { "source": "/(.*)",               "destination": "/index.html" }
+  ]
+}

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="purchase">
     <div class="container mt-5">
 
@@ -38,7 +38,7 @@
             </div>
             <div class="car-info">
               <h3>{{ c.brand }} {{ c.car_name }}</h3>
-              <p>Starting from {{ parseFloat(c.car_base_price) }}€</p>
+              <p>Starting from {{ parseFloat(c.car_base_price) }}â‚¬</p>
               <router-link class="btn btn-primary" :to="'/purchase/customize/' + c.car_id">
                 Configure
               </router-link>
@@ -54,8 +54,8 @@
         <div class="customization-header">
           <h2>{{ oneCar.car_name }}</h2>
           <div class="price-info">
-            <p class="base-price">Base Price: {{ parseFloat(oneCar.car_base_price) }}€</p>
-            <p class="total-price">Total Price: {{ calculateTotalPrice() }}€</p>
+            <p class="base-price">Base Price: {{ parseFloat(oneCar.car_base_price) }}â‚¬</p>
+            <p class="total-price">Total Price: {{ calculateTotalPrice() }}â‚¬</p>
           </div>
         </div>
 
@@ -89,7 +89,7 @@
                   <div class="feature-info">
                     <h4>{{ feature.feature_name }}</h4>
                     <p v-if="feature.feature_added_power">Added power: {{ feature.feature_added_power }} hp</p>
-                    <p class="price">{{ parseFloat(feature.feature_price) }} €</p>
+                    <p class="price">{{ parseFloat(feature.feature_price) }} â‚¬</p>
                     <p v-if="feature.feature_color">Color: {{ feature.feature_color }}</p>
                     <p v-if="feature.feature_added_weight">Added weight: {{ parseFloat(feature.feature_added_weight) }} Kg</p>
                   </div>
@@ -106,7 +106,7 @@
                   <div class="feature-info">
                     <h4>{{ feature.feature_name }}</h4>
                     <p v-if="feature.feature_added_power">Added power: {{ feature.feature_added_power }} hp</p>
-                    <p class="price">{{ parseFloat(feature.feature_price) }} €</p>
+                    <p class="price">{{ parseFloat(feature.feature_price) }} â‚¬</p>
                     <p v-if="feature.feature_color">Color: {{ feature.feature_color }}</p>
                     <p v-if="feature.feature_added_weight">Added weight: {{ parseFloat(feature.feature_added_weight) }} Kg</p>
                   </div>
@@ -123,7 +123,7 @@
                   <div class="feature-info">
                     <h4>{{ feature.feature_name }}</h4>
                     <p v-if="feature.feature_added_power">Added power: {{ feature.feature_added_power }} hp</p>
-                    <p class="price">{{ parseFloat(feature.feature_price) }} €</p>
+                    <p class="price">{{ parseFloat(feature.feature_price) }} â‚¬</p>
                     <p v-if="feature.feature_color">Color: {{ feature.feature_color }}</p>
                     <p v-if="feature.feature_added_weight">Added weight: {{ parseFloat(feature.feature_added_weight) }} Kg</p>
                   </div>
@@ -139,7 +139,7 @@
                   <div class="feature-info">
                     <h4>{{ feature.feature_name }}</h4>
                     <p v-if="feature.feature_added_power != 0">Added power: {{ feature.feature_added_power }} hp</p>
-                    <p class="price">{{ parseFloat(feature.feature_price) }} €</p>
+                    <p class="price">{{ parseFloat(feature.feature_price) }} â‚¬</p>
                     <p v-if="feature.feature_color">Color: {{ feature.feature_color }}</p>
                     <p v-if="feature.feature_added_weight != 0">Added weight: {{ parseFloat(feature.feature_added_weight) }} Kg</p>
                   </div>
@@ -156,7 +156,7 @@
                   <div class="feature-info">
                     <h4>{{ feature.feature_name }}</h4>
                     <p v-if="feature.feature_added_power != 0">Added power: {{ feature.feature_added_power }} hp</p>
-                    <p class="price">{{ parseFloat(feature.feature_price) }} €</p>
+                    <p class="price">{{ parseFloat(feature.feature_price) }} â‚¬</p>
                     <p v-if="feature.feature_color">Color: {{ feature.feature_color }}</p>
                     <p v-if="feature.feature_added_weight != 0">Added weight: {{ parseFloat(feature.feature_added_weight) }} Kg</p>
                   </div>
@@ -173,7 +173,7 @@
                   <div class="feature-info">
                     <h4>{{ feature.feature_name }}</h4>
                     <p v-if="feature.feature_added_power != 0">Added power: {{ feature.feature_added_power }} hp</p>
-                    <p class="price">{{ parseFloat(feature.feature_price) }} €</p>
+                    <p class="price">{{ parseFloat(feature.feature_price) }} â‚¬</p>
                     <p v-if="feature.feature_color">Color: {{ feature.feature_color }}</p>
                     <p v-if="feature.feature_added_weight != 0">Added weight: {{ parseFloat(feature.feature_added_weight) }} Kg</p>
                   </div>
@@ -190,7 +190,7 @@
                   <div class="feature-info">
                     <h4>{{ feature.feature_name }}</h4>
                     <p v-if="feature.feature_added_power">Added power: {{ feature.feature_added_power }} hp</p>
-                    <p class="price">{{ parseFloat(feature.feature_price) }} €</p>
+                    <p class="price">{{ parseFloat(feature.feature_price) }} â‚¬</p>
                     <p v-if="feature.feature_color">Color: {{ feature.feature_color }}</p>
                     <p v-if="feature.feature_added_weight">Added weight: {{ parseFloat(feature.feature_added_weight) }} Kg</p>
                   </div>
@@ -280,7 +280,7 @@ export default {
     //GET CARS DATA FROM CARSAPI
     async getAllData() {
       try {
-        const response = await axios.get('http://localhost:9000/carsapi/list');
+        const response = await axios.get('/carsapi/list');
         this.cars = response.data.map(car => ({
           car_id: car.car_id,
           car_name: car.car_name,
@@ -299,7 +299,7 @@ export default {
     //GET FEATURES FROM CARSAPI FOR ONE CAR
     async getFeaturesForCar(carId) {
       try {
-        const response = await axios.get(`http://localhost:9000/carsapi/show/${carId}/features`);
+        const response = await axios.get(`/carsapi/show/${carId}/features`);
         this.features = response.data.map(feature => ({
           feature_id: feature.feature_id,
           feature_name: feature.feature_name,
@@ -413,7 +413,7 @@ export default {
         const featureIds = selectedFeatures.map(f => f.feature_id);
 
         const response = await axios.get(
-          `http://localhost:9000/storeapi/available/${this.oneCar.car_id}`,
+          `/storeapi/available/${this.oneCar.car_id}`,
           { params: { features: featureIds.join(',') } }
         );
         this.availableStores = response.data;

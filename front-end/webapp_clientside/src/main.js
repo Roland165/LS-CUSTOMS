@@ -6,6 +6,7 @@ import router from './router'
 import axios from 'axios'
 
 axios.defaults.withCredentials = true; // PASSPORT
+axios.defaults.baseURL = process.env.VUE_APP_API_BASE;
 
 Vue.config.$http = axios;
 Vue.config.productionTip = false

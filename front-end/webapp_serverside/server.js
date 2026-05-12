@@ -10,7 +10,7 @@ const app = express();
 // Enable CORS first
 const cors = require('cors');
 //app.use(cors()); // changed to comment for PASSPORT
-app.use(cors({ origin: "http://localhost:8081", credentials: true, methods: ['GET', 'POST'] })); // PASSPORT
+app.use(cors({ origin: process.env.CORS_ORIGIN || "http://localhost:8081", credentials: true, methods: ['GET', 'POST'] })); // PASSPORT
 
 
 // Process form input
@@ -22,10 +22,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Allow server-side session storage
 const session = require("express-session");
 app.use(session({
-    secret: "SecretRandomStringDskghadslkghdlkghdghaksdghdksh",
+    secret: process.env.SESSION_SECRET || "SecretRandomStringDskghadslkghdlkghdghaksdghdksh",
     saveUninitialized: true,
-    //cookie: { maxAge: 1000 * 60 * 60 * 24 }, // 1 day in msec // changed to comment for PASSPORT
-    cookie: { maxAge: 1000 * 60 * 60 * 24, httpOnly: false, secure: false }, // PASSPORT
+    cookie: { maxAge: 1000 * 60 * 60 * 24, httpOnly: false, secure: process.env.NODE_ENV === 'production' }, // PASSPORT
     resave: false
 }));
 
@@ -94,8 +93,12 @@ app.use((req, res) => {
 });
 
 
-// Start server
-const port = process.env.WEB_PORT || 9000;
-app.listen(port, '0.0.0.0', () => {
-    console.log(`Server is running on port ${port}`);
-});
+// Start server (only when run directly, not when imported as serverless function)
+if (require.main === module) {
+    const port = process.env.WEB_PORT || 9000;
+    app.listen(port, '0.0.0.0', () => {
+        console.log(`Server is running on port ${port}`);
+    });
+}
+
+module.exports = app;

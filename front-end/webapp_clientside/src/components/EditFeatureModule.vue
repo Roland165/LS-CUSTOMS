@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="edit-feature" v-if="isAdminBool">
     <div class="container mt-5">
       <h1 class="text-center mb-4">Edit features</h1>
@@ -10,7 +10,7 @@
           <div v-for="feature in features" :key="feature.feature_id" class="feature-card">
             <div class="feature-info">
               <h3>{{ feature.feature_name }}</h3>
-              <p>Price: {{ feature.feature_price }} €</p>
+              <p>Price: {{ feature.feature_price }} â‚¬</p>
               <p>Color: {{ (feature.feature_color ? feature.feature_color : "None") }}</p>
               <router-link
                 :to="`/edit-feature/${feature.feature_id}`"
@@ -36,7 +36,7 @@
             <div class="form-group">
               <label>Price</label>
               <input type="number" step="0.01" v-model="featureToEdit.feature_price" class="form-control" required>
-              (€)
+              (â‚¬)
             </div>
 
             <div class="form-group">
@@ -98,7 +98,7 @@ export default {
   methods: {
     async fetchfeatures() {
       try {
-        const response = await axios.get('http://localhost:9000/featuresapi/list');
+        const response = await axios.get('/featuresapi/list');
         this.features = response.data;
       } catch (error) {
         console.error('Error fetching features:', error);
@@ -107,7 +107,7 @@ export default {
     },
     async fetchfeatureDetails(featureId) {
       try {
-        const response = await axios.get(`http://localhost:9000/featuresapi/show/${featureId}`);
+        const response = await axios.get(`/featuresapi/show/${featureId}`);
 
         console.log('Raw response data:', response.data);
 
@@ -141,7 +141,7 @@ export default {
         }
 
         const response = await axios.post(
-          `http://localhost:9000/featuresapi/update/${this.featureToEdit.feature_id}`,
+          `/featuresapi/update/${this.featureToEdit.feature_id}`,
           featureData,
           {
             headers: {
