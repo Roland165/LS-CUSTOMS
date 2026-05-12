@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="add-brand-module" v-if="isAdminBool">
     <div class="container mt-5">
       <h1 class="text-center mb-4">Add New Brand</h1>
@@ -89,7 +89,7 @@ export default {
     async addBrand() {
       try {
         console.log('Sending brand data:', this.brandData);
-        const response = await axios.post('http://localhost:9000/brandsapi/add', this.brandData);
+        const response = await axios.post('/brandsapi/add', this.brandData);
 
         if (response.data.success) {
           alert('Brand added successfully!');

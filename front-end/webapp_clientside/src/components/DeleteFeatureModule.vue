@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="delete-feature-module" v-if="isAdminBool">
     <div class="container mt-5">
       <h1 class="text-center mb-4">Delete Features</h1>
@@ -15,7 +15,7 @@
         >
           <div class="feature-info">
             <h3>{{ feature.feature_name }}</h3>
-            <p>Price: {{ parseFloat(feature.feature_price) }} €</p>
+            <p>Price: {{ parseFloat(feature.feature_price) }} â‚¬</p>
             <p>Color: {{ String(feature.feature_color) }}</p>
             <p>Added power: {{ feature.feature_added_power }} hp</p>
             <p>Added weight: {{ parseFloat(feature.feature_added_weight) }} Kg</p>
@@ -51,7 +51,7 @@ export default {
     async fetchFeatures() {
       try {
         // Fetch feature
-        const featuresResponse = await axios.get('http://localhost:9000/featuresapi/list');
+        const featuresResponse = await axios.get('/featuresapi/list');
         this.features = featuresResponse.data
       } catch (error) {
         console.error('Error fetching feature:', error);
@@ -63,7 +63,7 @@ export default {
 
       if (confirmDelete) {
         try {
-          const response = await axios.get(`http://localhost:9000/featuresapi/del/${parseInt(feature.feature_id)}`);
+          const response = await axios.get(`/featuresapi/del/${parseInt(feature.feature_id)}`);
 
           if (response.data.success) {
             alert('Feature deleted successfully');  

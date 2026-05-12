@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="admin-module">
     <div class="container mt-5">
       <h1 class="text-center mb-4">Admin Dashboard</h1>
@@ -124,7 +124,7 @@ export default {
     async fetchStatistics() {
       try {
         // Fetch statistics (combined 3 requests into 1 to not crash the server)
-        let arrayNum = await axios.get('http://localhost:9000/carsapi/getstats');
+        let arrayNum = await axios.get('/carsapi/getstats');
 
         this.totalCars = arrayNum.data.carsNum;
         this.totalBrands = arrayNum.data.brandsNum;

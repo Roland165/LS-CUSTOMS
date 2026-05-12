@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 <div class="order-history">
   <div class="container mt-5">
     <div>
@@ -50,7 +50,7 @@ export default {
   methods: {
     async getAndUpdateUserInfo(){
       try {
-        const response = await axios.get('http://localhost:9000/auth/info');
+        const response = await axios.get('/auth/info');
 
         console.log(response);
 

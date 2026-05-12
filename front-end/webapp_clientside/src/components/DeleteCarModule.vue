@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="delete-car" v-if="isAdminBool">
     <div class="container mt-5">
       <h1 class="text-center mb-4">Delete Cars</h1>
@@ -24,7 +24,7 @@
           </div>
           <div class="car-info">
             <h3>{{ car.brand_name }} {{ car.car_name }}</h3>
-            <p>Base Price: {{ car.car_base_price }}€</p>
+            <p>Base Price: {{ car.car_base_price }}â‚¬</p>
             <button
               class="btn btn-danger"
               @click="confirmDeleteCar(car)"
@@ -93,7 +93,7 @@ export default {
     },
     async fetchCars() {
       try {
-        const response = await axios.get('http://localhost:9000/carsapi/list');
+        const response = await axios.get('/carsapi/list');
         this.cars = response.data;
       } catch (error) {
         console.error('Error fetching cars:', error);
@@ -107,7 +107,7 @@ export default {
       if (!this.carToDelete) return;
 
       try {
-        const deleteResponse = await axios.get(`http://localhost:9000/carsapi/del/${this.carToDelete.car_id}`);
+        const deleteResponse = await axios.get(`/carsapi/del/${this.carToDelete.car_id}`);
 
         if (deleteResponse.data.rowsDeleted > 0) {
           // Remove the image file

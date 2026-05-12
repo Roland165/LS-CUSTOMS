@@ -1,11 +1,11 @@
-import axios from 'axios'
+﻿import axios from 'axios'
 
 
 // global function max test
 export async function isAdmin() {
   try {
     let response = null;
-    response = await axios.get("http://localhost:9000/auth/admin");
+    response = await axios.get("/auth/admin");
     if (response.data.user_role === "ADMIN") {
       return { data: true };
     }
@@ -20,10 +20,10 @@ export async function sendRequest(method, endpoint, params) {
   try {
     let response = null;
     if (method === "post") {
-      response = await axios.post("http://localhost:9000/auth/" + endpoint, params);
+      response = await axios.post("/auth/" + endpoint, params);
     }
     else {
-      response = await axios.get("http://localhost:9000/auth/" + endpoint);
+      response = await axios.get("/auth/" + endpoint);
     }
     return response.data;
   } catch (error) {
@@ -41,7 +41,7 @@ export async function updateIsAdminBool() {
 }
 
 export async function logoutUser() {
-  let response = await axios.get("http://localhost:9000/auth/logout");
+  let response = await axios.get("/auth/logout");
   return response.data.logoutResult;
 }
 

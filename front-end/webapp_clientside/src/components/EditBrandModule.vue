@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="edit-brand" v-if="isAdminBool">
     <div class="container mt-5">
       <h1 class="text-center mb-4">Edit Brands</h1>
@@ -99,7 +99,7 @@ export default {
     },
     async fetchBrands() {
       try {
-        const response = await axios.get('http://localhost:9000/brandsapi/list');
+        const response = await axios.get('/brandsapi/list');
         this.brands = response.data;
       } catch (error) {
         console.error('Error fetching brands:', error);
@@ -108,7 +108,7 @@ export default {
     },
     async fetchBrandDetails(brandId) {
       try {
-        const response = await axios.get(`http://localhost:9000/brandsapi/show/${brandId}`);
+        const response = await axios.get(`/brandsapi/show/${brandId}`);
 
         console.log('Raw response data:', response.data);
 
@@ -143,7 +143,7 @@ export default {
         }
 
         const response = await axios.post(
-          `http://localhost:9000/brandsapi/update/${this.brandToEdit.brand_id}`,
+          `/brandsapi/update/${this.brandToEdit.brand_id}`,
           brandData,
           {
             headers: {

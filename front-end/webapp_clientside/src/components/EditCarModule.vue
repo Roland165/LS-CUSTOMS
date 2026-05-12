@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="edit-car" v-if="isAdminBool">
     <div class="container mt-5">
       <h1 class="text-center mb-4">Edit Cars</h1>
@@ -26,7 +26,7 @@
             </div>
             <div class="car-info">
               <h3>{{ car.brand_name }} {{ car.car_name }}</h3>
-              <p>Base Price: {{ car.car_base_price }}€</p>
+              <p>Base Price: {{ car.car_base_price }}â‚¬</p>
               <router-link :to="`/edit-car/${car.car_id}`" class="btn btn-primary"> Edit Car </router-link>
             </div>
           </div>
@@ -40,7 +40,7 @@
           <form @submit.prevent="updateCar">
 
             <div class="form-group">
-              <label>Base Price (€)</label>
+              <label>Base Price (â‚¬)</label>
               <input type="number" v-model="carToEdit.car_base_price" class="form-control" required>
             </div>
 
@@ -165,7 +165,7 @@ export default {
 
     async fetchCars() {
       try {
-        const response = await axios.get('http://localhost:9000/carsapi/list');
+        const response = await axios.get('/carsapi/list');
         this.cars = response.data;
       } catch (error) {
         console.error('Error fetching cars:', error);
@@ -174,7 +174,7 @@ export default {
     },
     async fetchBrands() {
       try {
-        const response = await axios.get('http://localhost:9000/brandsapi/list');
+        const response = await axios.get('/brandsapi/list');
         this.brands = response.data;
       } catch (error) {
         console.error('Error fetching brands:', error);
@@ -184,7 +184,7 @@ export default {
 
     async fetchCarDetails(carId) {
       try {
-        const response = await axios.get(`http://localhost:9000/carsapi/show/${carId}`);
+        const response = await axios.get(`/carsapi/show/${carId}`);
         console.log('Fetched car details:', response.data);
 
         const date = new Date(response.data.car_creation_date);
@@ -238,7 +238,7 @@ export default {
         });
 
         const response = await axios.post(
-          `http://localhost:9000/carsapi/update/${this.carToEdit.car_id}`,
+          `/carsapi/update/${this.carToEdit.car_id}`,
           formData,
           {
             headers: {

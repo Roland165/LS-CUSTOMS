@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="hello" v-if="false">
     <h1>Authentication demo</h1>
     <p>{{ msg }}</p>
@@ -28,10 +28,10 @@ export default {
       try {
         let response = null;
         if (method === "post") {
-          response = await axios.post("http://localhost:9000/auth/"+endpoint, params);
+          response = await axios.post("/auth/"+endpoint, params);
         }
         else{
-          response = await axios.get("http://localhost:9000/auth/"+endpoint);
+          response = await axios.get("/auth/"+endpoint);
           console.log(response);
         }
         this.msg = JSON.stringify(response.data);

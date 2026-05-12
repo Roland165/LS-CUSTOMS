@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="add-feature-module" v-if="isAdminBool">
     <div class="container mt-5">
       <h1 class="text-center mb-4">Add New Feature</h1>
@@ -18,7 +18,7 @@
           </div>
 
           <div class="form-group">
-            <label for="featurePrice">Price (€)</label>
+            <label for="featurePrice">Price (â‚¬)</label>
             <input
               type="number" 
               step="0.01"
@@ -95,7 +95,7 @@ export default {
     async addFeature() {
       try {
         console.log('Sending feature data:', this.featureData);
-        const response = await axios.post('http://localhost:9000/featuresapi/add', this.featureData);
+        const response = await axios.post('/featuresapi/add', this.featureData);
 
         if (response.data.success) {
           alert('Feature added successfully!');
