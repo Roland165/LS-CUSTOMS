@@ -59,8 +59,12 @@ The backend supports two data modes controlled by a single environment variable:
 In JSON mode, browsing cars, features and stores, and the full purchase/customization flow all work. Admin write operations (add/edit/delete) are disabled and return an error message.
 
 ---
+## Option A — Go on Vercel (no database needed)
 
-## Option A — Run locally with a MySQL database
+https://ls-customs.vercel.app
+
+---
+## Option B — Run locally with a MySQL database
 
 ### Requirements
 - [Node.js](https://nodejs.org/) >= 6
@@ -142,48 +146,6 @@ The app opens at `http://localhost:8081`.
 | `user` | `user` | User |
 
 > Note: passwords are hashed with SHA-224 in the database. To add more users run the INSERT in `back-end/lscustoms_insert.sql` or use the registration form.
-
----
-
-## Option B — Deploy on Vercel (no database needed)
-
-The app is configured for Vercel out of the box via [vercel.json](vercel.json). The frontend is built as a static site and the backend runs as a serverless function. Static JSON files replace the database.
-
-### 1. Push to GitHub
-
-Make sure your code is pushed to a GitHub repository.
-
-### 2. Import the project in Vercel
-
-1. Go to [vercel.com](https://vercel.com) and log in
-2. Click **Add New Project** and import your GitHub repository
-3. Vercel will automatically detect the build config from `vercel.json`
-
-### 3. Add the environment variable
-
-In your Vercel project settings, go to **Settings → Environment Variables** and add:
-
-| Key | Value |
-|---|---|
-| `USE_DB` | `false` |
-
-You can also add `SESSION_SECRET` with a random string for production sessions.
-
-### 4. Deploy
-
-Click **Deploy**. Vercel will:
-1. Build the Vue.js frontend (`npm run build` in `front-end/webapp_clientside`)
-2. Serve it as a static site from `front-end/webapp_clientside/dist`
-3. Route all API calls (`/carsapi`, `/brandsapi`, etc.) to the Express serverless function
-
-### Demo accounts on Vercel
-
-In JSON mode, credentials are plain-text and defined in `front-end/webapp_serverside/data/users.json`:
-
-| Username | Password | Role |
-|---|---|---|
-| `admin` | `admin` | Admin (read-only in JSON mode) |
-| `user` | `user` | User |
 
 ---
 
