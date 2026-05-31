@@ -139,8 +139,9 @@ export default {
           sessionStorage.setItem("userId",      u.user_id);
           sessionStorage.setItem("userEmail",   u.user_email);
           sessionStorage.setItem("userCreated", u.user_created || "");
+          sessionStorage.setItem("useDb",       response.useDb ? "true" : "false");
 
-          if (u.user_role === 'ADMIN') {
+          if (u.user_role === 'ADMIN' && response.useDb) {
             this.$router.push('/admin');
             await location.reload()
           } else {

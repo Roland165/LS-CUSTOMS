@@ -61,7 +61,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import { logoutUser } from './authfunctions';
 
 
@@ -105,6 +104,7 @@ export default {
         sessionStorage.removeItem("userId");
         sessionStorage.removeItem("userEmail");
         sessionStorage.removeItem("userCreated");
+        this.useDb = false;
         this.$router.push('/auth');
         this.dropdownOpen = false;
       }else{
@@ -119,6 +119,7 @@ export default {
     this.isLoggedIn = sessionStorage.getItem("isLoggedInBool") === "true";
     this.username = sessionStorage.getItem("username");
     this.role = sessionStorage.getItem("role");
+    this.useDb = sessionStorage.getItem("useDb") === "true";
     
     console.log("sessionStorage isLoggedInBool: "+sessionStorage.getItem("isLoggedInBool"));
     console.log("local isLoggedInBool: "+this.isLoggedIn);
@@ -134,15 +135,9 @@ export default {
       this.dropdownOpen = false;
     }
   },
-  async created() {
+  created() {
     this.checkLoginStatus();
     window.addEventListener('storage', this.checkLoginStatus);
-    try {
-      const res = await axios.get('/auth/config');
-      this.useDb = res.data.useDb;
-    } catch (e) {
-      this.useDb = false;
-    }
   },
   beforeDestroy() {
     window.removeEventListener('storage', this.checkLoginStatus);

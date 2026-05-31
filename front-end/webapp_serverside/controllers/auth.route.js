@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const auth = require("../utils/users.auth");
 const userRepo = require("../utils/users.repository");
+const { USE_DB } = require("../utils/config");
 
 // http://localhost:9000/auth
 // USE AUTHORIZATION HERE (the method does not know if authorization is present)
@@ -14,7 +15,6 @@ router.post("/login", loginPostAction);
 router.get("/logout", logoutAction);
 router.post("/register", registerAction);
 router.get("/info", userdataAction);
-router.get("/config", configAction); // public: exposes read-only server config to the frontend
 
 
 // use same endpoints for both roles
@@ -49,6 +49,7 @@ async function loginPostAction(request, response) {
       }
       let resultObject = {
         "loginResult": areValid,
+        "useDb": USE_DB,
         "user": areValid ? {
           user_id:      user.user_id,
           user_name:    user.user_name,
@@ -103,10 +104,5 @@ async function registerAction(request, response) {
     });
   }
 };
-
-function configAction(request, response) {
-  const { USE_DB } = require('../utils/config');
-  response.json({ useDb: USE_DB });
-}
 
 module.exports = router;
