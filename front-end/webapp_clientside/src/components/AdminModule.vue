@@ -81,7 +81,6 @@
 
 <script>
 import axios from 'axios';
-import {updateIsAdminBool, isLoggedIn} from "../authfunctions.js";
 
 export default {
   name: 'AdminModule',
@@ -134,8 +133,8 @@ export default {
       }
     },
   },
-  async created() {
-    this.isAdminBool = (await updateIsAdminBool());
+  created() {
+    this.isAdminBool = sessionStorage.getItem("role") === "ADMIN";
     this.fetchStatistics();
   }
 }

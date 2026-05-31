@@ -122,8 +122,10 @@ export default {
     console.log("local isLoggedInBool: "+this.isLoggedIn);
     },
     goToAuthPage() {
+      if (!this.isLoggedIn) {
         this.$router.push('/auth');
-        this.dropdownOpen = false;
+      }
+      this.dropdownOpen = false;
     },
     goToUserInfoPage(){
       this.$router.push('/user-info');
