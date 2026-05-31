@@ -63,6 +63,11 @@ In JSON mode, browsing cars, features and stores, and the full purchase/customiz
 
 https://ls-customs.vercel.app
 
+Log-in :
+=> admin admin
+or
+=> user user
+
 ---
 ## Option B — Run locally with a MySQL database
 
