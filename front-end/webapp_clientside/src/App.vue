@@ -76,11 +76,10 @@ export default {
   },
   computed: {
     accountButtonText() {
-      if(this.username != "null"){
-        return this.username
-      }else{
-        return "Account"
+      if (this.username && this.username !== "null") {
+        return this.username;
       }
+      return "Account";
     },
     isAdmin() {
       return this.role === 'ADMIN';
@@ -95,13 +94,12 @@ export default {
     },
     async logout() {
       if(await logoutUser()){
-        
-        sessionStorage.setItem("isLoggedInBool", false);
+        sessionStorage.setItem("isLoggedInBool", "false");
         this.isLoggedIn = false;
-        sessionStorage.setItem("username",null);
-        sessionStorage.setItem("role",null);
-        
-        //this.currentUser = null;
+        sessionStorage.setItem("username", null);
+        this.username = null;
+        sessionStorage.setItem("role", null);
+        this.role = null;
         this.$router.push('/auth');
         this.dropdownOpen = false;
       }else{
@@ -110,11 +108,10 @@ export default {
     },
     checkLoginStatus() {
     if(sessionStorage.getItem("isLoggedInBool") == null){
-      sessionStorage.setItem("isLoggedInBool", false);
-      this.accountText = "Account";
+      sessionStorage.setItem("isLoggedInBool", "false");
       console.log("RESET SESSIONSTORAGE isLoggedIn TO false");
     }
-    this.isLoggedIn = sessionStorage.getItem("isLoggedInBool");
+    this.isLoggedIn = sessionStorage.getItem("isLoggedInBool") === "true";
     this.username = sessionStorage.getItem("username");
     this.role = sessionStorage.getItem("role");
     

@@ -26,7 +26,7 @@ module.exports = {
             // ── original DB code ──────────────────────────────────────────────
             try {
                 let conn = await pool.getConnection();
-                let sql = "SELECT user_id,user_name,user_email,user_role FROM users WHERE user_name = ? ";
+                let sql = "SELECT user_id,user_created,user_name,user_email,user_role FROM users WHERE user_name = ? ";
                 // must leave out the password+hash info from result!
                 const [rows, fields] = await pool.execute(sql, [userName]);
                 if (rows.length == 1) {
@@ -46,6 +46,7 @@ module.exports = {
             const { user_pass, ...userWithoutPass } = user;
             return userWithoutPass;
         }
+        // Note: DB query also returns user_created; keep JSON parity via users.json fields
     },
 
     async areValidCredentials(username, password) {
