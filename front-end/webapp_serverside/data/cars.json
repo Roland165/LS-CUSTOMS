@@ -1,0 +1,15 @@
+[
+  {"car_id": 1,  "brand_id": 1,  "car_name": "911 996 4S",     "car_seat_num": 4, "car_creation_date": "1997-06-17", "car_base_power": 320, "car_base_weight": 1317,   "car_base_price": 41823},
+  {"car_id": 2,  "brand_id": 1,  "car_name": "Carrera GT",     "car_seat_num": 2, "car_creation_date": "2004-01-31", "car_base_power": 603, "car_base_weight": 1380,   "car_base_price": 450000},
+  {"car_id": 3,  "brand_id": 2,  "car_name": "M3 e30",         "car_seat_num": 4, "car_creation_date": "1986-03-28", "car_base_power": 197, "car_base_weight": 1165,   "car_base_price": 35682},
+  {"car_id": 4,  "brand_id": 3,  "car_name": "F12berlinetta",  "car_seat_num": 2, "car_creation_date": "2012-03-08", "car_base_power": 730, "car_base_weight": 1630,   "car_base_price": 319995},
+  {"car_id": 5,  "brand_id": 4,  "car_name": "Sesto Elemento", "car_seat_num": 2, "car_creation_date": "2010-10-02", "car_base_power": 562, "car_base_weight": 999,    "car_base_price": 2735942},
+  {"car_id": 6,  "brand_id": 5,  "car_name": "037 Stradale",   "car_seat_num": 2, "car_creation_date": "1982-04-01", "car_base_power": 202, "car_base_weight": 1170,   "car_base_price": 48734},
+  {"car_id": 7,  "brand_id": 6,  "car_name": "Senna",          "car_seat_num": 2, "car_creation_date": "2017-12-10", "car_base_power": 789, "car_base_weight": 1374,   "car_base_price": 1051950},
+  {"car_id": 8,  "brand_id": 7,  "car_name": "R5 turbo",       "car_seat_num": 2, "car_creation_date": "1980-01-26", "car_base_power": 160, "car_base_weight": 970,    "car_base_price": 53778},
+  {"car_id": 9,  "brand_id": 8,  "car_name": "A110 (2017)",    "car_seat_num": 2, "car_creation_date": "2017-12-15", "car_base_power": 252, "car_base_weight": 1082,   "car_base_price": 49582},
+  {"car_id": 10, "brand_id": 9,  "car_name": "Giulia (952)",   "car_seat_num": 5, "car_creation_date": "2015-06-01", "car_base_power": 247, "car_base_weight": 1645,   "car_base_price": 37249},
+  {"car_id": 11, "brand_id": 10, "car_name": "S6 C4",          "car_seat_num": 5, "car_creation_date": "1995-12-15", "car_base_power": 230, "car_base_weight": 1675,   "car_base_price": 26197},
+  {"car_id": 12, "brand_id": 11, "car_name": "R35 GTR",        "car_seat_num": 4, "car_creation_date": "2010-09-28", "car_base_power": 523, "car_base_weight": 1735,   "car_base_price": 76294},
+  {"car_id": 13, "brand_id": 12, "car_name": "GT86",           "car_seat_num": 4, "car_creation_date": "2011-12-14", "car_base_power": 204, "car_base_weight": 1230,   "car_base_price": 38247}
+]

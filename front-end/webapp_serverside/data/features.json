@@ -1,0 +1,20 @@
+[
+  {"feature_id": 1,  "feature_name": "Sport tires",                    "feature_color": null,     "feature_added_power": 0,  "feature_added_weight": 0,    "feature_price": 459},
+  {"feature_id": 2,  "feature_name": "Sport coilovers",                "feature_color": null,     "feature_added_power": 0,  "feature_added_weight": -3,   "feature_price": 649},
+  {"feature_id": 3,  "feature_name": "Black racing steering wheel",    "feature_color": "Black",  "feature_added_power": 0,  "feature_added_weight": -2,   "feature_price": 329},
+  {"feature_id": 4,  "feature_name": "AC Delete",                      "feature_color": null,     "feature_added_power": 1,  "feature_added_weight": -28,  "feature_price": 199},
+  {"feature_id": 5,  "feature_name": "Stock ECU Reprogramming",        "feature_color": null,     "feature_added_power": 45, "feature_added_weight": 0,    "feature_price": 439},
+  {"feature_id": 6,  "feature_name": "Aftermarket ECU Reprogramming",  "feature_color": null,     "feature_added_power": 80, "feature_added_weight": 0,    "feature_price": 1499},
+  {"feature_id": 7,  "feature_name": "Black sport seats",              "feature_color": "Black",  "feature_added_power": 0,  "feature_added_weight": -3,   "feature_price": 349},
+  {"feature_id": 8,  "feature_name": "Gray sport seats",               "feature_color": "Gray",   "feature_added_power": 0,  "feature_added_weight": -3,   "feature_price": 349},
+  {"feature_id": 9,  "feature_name": "Black racing seats",             "feature_color": "Black",  "feature_added_power": 0,  "feature_added_weight": -6,   "feature_price": 729},
+  {"feature_id": 10, "feature_name": "Gray racing seats",              "feature_color": "Gray",   "feature_added_power": 0,  "feature_added_weight": -6,   "feature_price": 729},
+  {"feature_id": 11, "feature_name": "High flowrate injectors",        "feature_color": null,     "feature_added_power": 17, "feature_added_weight": 0,    "feature_price": 519},
+  {"feature_id": 12, "feature_name": "Black spoiler",                  "feature_color": "Black",  "feature_added_power": 0,  "feature_added_weight": 2,    "feature_price": 229},
+  {"feature_id": 13, "feature_name": "White spoiler",                  "feature_color": "White",  "feature_added_power": 0,  "feature_added_weight": 2,    "feature_price": 229},
+  {"feature_id": 14, "feature_name": "Green spoiler",                  "feature_color": "Green",  "feature_added_power": 0,  "feature_added_weight": 2,    "feature_price": 229},
+  {"feature_id": 15, "feature_name": "Red spoiler",                    "feature_color": "Red",    "feature_added_power": 0,  "feature_added_weight": 2,    "feature_price": 229},
+  {"feature_id": 16, "feature_name": "Blue spoiler",                   "feature_color": "Blue",   "feature_added_power": 0,  "feature_added_weight": 2,    "feature_price": 229},
+  {"feature_id": 17, "feature_name": "Carbon spoiler",                 "feature_color": "Carbon", "feature_added_power": 0,  "feature_added_weight": 0.5,  "feature_price": 399},
+  {"feature_id": 18, "feature_name": "Aftermarket intake",             "feature_color": null,     "feature_added_power": 6,  "feature_added_weight": -1.4, "feature_price": 70}
+]

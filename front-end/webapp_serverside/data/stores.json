@@ -1,0 +1,12 @@
+[
+  {"store_id": 1,  "store_name": "LS Pest",       "store_director": "Eszter Szabó",      "store_city": "Budapest",      "store_country": "Hungary", "store_address": "31a, Ráday utca"},
+  {"store_id": 2,  "store_name": "LS Buda",       "store_director": "Gábor Kovács",      "store_city": "Budapest",      "store_country": "Hungary", "store_address": "12, Fő utca"},
+  {"store_id": 3,  "store_name": "LS Paris",      "store_director": "Claire Moreau",     "store_city": "Paris",         "store_country": "France",  "store_address": "37, Avenue des Champs-Élysées"},
+  {"store_id": 4,  "store_name": "LS Origins",    "store_director": "Julien Fontanes",   "store_city": "Bois-Le-Roi",   "store_country": "France",  "store_address": "15, Avenue de la Forêt"},
+  {"store_id": 5,  "store_name": "LS Colomiers",  "store_director": "Gilbert Bortolotti","store_city": "Colomiers",     "store_country": "France",  "store_address": "25, Allée des Orientales"},
+  {"store_id": 6,  "store_name": "LS Tokyo",      "store_director": "Hiroshi Tanaka",    "store_city": "Tokyo",         "store_country": "Japan",   "store_address": "39, Ginza District"},
+  {"store_id": 7,  "store_name": "LS Washington", "store_director": "Ethan Graham",      "store_city": "Washington D.C.","store_country": "USA",    "store_address": "1230 Wisconsin Avenue NW"},
+  {"store_id": 8,  "store_name": "LS London",     "store_director": "Jack Anderson",     "store_city": "London",        "store_country": "UK",      "store_address": "400 Oxford Street"},
+  {"store_id": 9,  "store_name": "LS Casablanca", "store_director": "Omar El Mansouri",  "store_city": "Casablanca",    "store_country": "Morocco", "store_address": "132 Boulevard de la Corniche"},
+  {"store_id": 10, "store_name": "LS Mumbai",     "store_director": "Aisha Sharma",      "store_city": "Mumbai",        "store_country": "India",   "store_address": "43 Colaba Causeway"}
+]

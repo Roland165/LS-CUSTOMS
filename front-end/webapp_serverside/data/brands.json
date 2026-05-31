@@ -1,0 +1,14 @@
+[
+  {"brand_id": 1,  "brand_name": "Porsche",    "brand_revenue": 33.1,  "brand_creation_date": "1931-04-25", "brand_creator": "Ferdinand Porsche",               "brand_creation_place": "Germany"},
+  {"brand_id": 2,  "brand_name": "BMW",         "brand_revenue": 143,   "brand_creation_date": "1916-03-07", "brand_creator": "Gustav Otto & Karl Friedrich Rapp","brand_creation_place": "Germany"},
+  {"brand_id": 3,  "brand_name": "Ferrari",     "brand_revenue": 6,     "brand_creation_date": "1923-05-25", "brand_creator": "Enzo Ferrari",                    "brand_creation_place": "Italy"},
+  {"brand_id": 4,  "brand_name": "Lamborghini", "brand_revenue": 1.95,  "brand_creation_date": "1963-05-07", "brand_creator": "Ferruccio Lamborghini",            "brand_creation_place": "Italy"},
+  {"brand_id": 5,  "brand_name": "Lancia",      "brand_revenue": 0.73,  "brand_creation_date": "1906-11-29", "brand_creator": "Vincenzo Lancia",                 "brand_creation_place": "Italy"},
+  {"brand_id": 6,  "brand_name": "McLaren",     "brand_revenue": 0.34,  "brand_creation_date": "1985-12-02", "brand_creator": "Bruce McLaren",                   "brand_creation_place": "United Kingdom"},
+  {"brand_id": 7,  "brand_name": "Renault",     "brand_revenue": 46.4,  "brand_creation_date": "1899-02-25", "brand_creator": "Louis Renault",                   "brand_creation_place": "France"},
+  {"brand_id": 8,  "brand_name": "Alpine",      "brand_revenue": 0.19,  "brand_creation_date": "1955-06-01", "brand_creator": "Jean Rédélé",                     "brand_creation_place": "France"},
+  {"brand_id": 9,  "brand_name": "Alfa Romeo",  "brand_revenue": 189.5, "brand_creation_date": "1910-06-24", "brand_creator": "Nicola Romeo",                    "brand_creation_place": "Italy"},
+  {"brand_id": 10, "brand_name": "Audi",        "brand_revenue": 59.2,  "brand_creation_date": "1909-04-16", "brand_creator": "August Horch",                    "brand_creation_place": "Germany"},
+  {"brand_id": 11, "brand_name": "Nissan",      "brand_revenue": 72.9,  "brand_creation_date": "1933-12-26", "brand_creator": "Yoshisuke Aikawa",                "brand_creation_place": "Japan"},
+  {"brand_id": 12, "brand_name": "Toyota",      "brand_revenue": 190.4, "brand_creation_date": "1937-08-28", "brand_creator": "Kiichiro Toyoda",                 "brand_creation_place": "Japan"}
+]
