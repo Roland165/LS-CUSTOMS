@@ -14,6 +14,7 @@ router.post("/login", loginPostAction);
 router.get("/logout", logoutAction);
 router.post("/register", registerAction);
 router.get("/info", userdataAction);
+router.get("/config", configAction); // public: exposes read-only server config to the frontend
 
 
 // use same endpoints for both roles
@@ -102,5 +103,10 @@ async function registerAction(request, response) {
     });
   }
 };
+
+function configAction(request, response) {
+  const { USE_DB } = require('../utils/config');
+  response.json({ useDb: USE_DB });
+}
 
 module.exports = router;

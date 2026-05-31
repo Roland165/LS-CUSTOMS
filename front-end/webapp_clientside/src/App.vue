@@ -17,7 +17,7 @@
           @mouseleave="dropdownOpen = false"
         >
           <router-link
-            :to="isLoggedIn ? '#' : '/auth'"
+            :to="isLoggedIn ? '/user-info' : '/auth'"
             class="account-link"
           >
             <button class="cssbuttons-io-button account-button" @click="goToAuthPage">
@@ -40,7 +40,7 @@
           </router-link>
           <div v-if="(dropdownOpen && isLoggedIn)" class="dropdown-menu">
             <div
-              v-if="role === 'ADMIN'"
+              v-if="role === 'ADMIN' && useDb"
               class="dropdown-item"
               @click="goToAdmin"
             >
@@ -61,6 +61,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import { logoutUser } from './authfunctions';
 
 
@@ -72,6 +73,7 @@ export default {
       username: null,
       role: null,
       isLoggedIn: false,
+      useDb: false,
     }
   },
   computed: {
@@ -132,9 +134,15 @@ export default {
       this.dropdownOpen = false;
     }
   },
-  created() {
+  async created() {
     this.checkLoginStatus();
     window.addEventListener('storage', this.checkLoginStatus);
+    try {
+      const res = await axios.get('/auth/config');
+      this.useDb = res.data.useDb;
+    } catch (e) {
+      this.useDb = false;
+    }
   },
   beforeDestroy() {
     window.removeEventListener('storage', this.checkLoginStatus);
