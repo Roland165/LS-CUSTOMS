@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="edit-car" v-if="isAdminBool">
     <div class="container mt-5">
       <h1 class="text-center mb-4">Edit Cars</h1>
@@ -26,7 +26,7 @@
             </div>
             <div class="car-info">
               <h3>{{ car.brand_name }} {{ car.car_name }}</h3>
-              <p>Base Price: {{ car.car_base_price }}â‚¬</p>
+              <p>Base Price: {{ car.car_base_price }}€</p>
               <router-link :to="`/edit-car/${car.car_id}`" class="btn btn-primary"> Edit Car </router-link>
             </div>
           </div>
@@ -40,7 +40,7 @@
           <form @submit.prevent="updateCar">
 
             <div class="form-group">
-              <label>Base Price (â‚¬)</label>
+              <label>Base Price (€)</label>
               <input type="number" v-model="carToEdit.car_base_price" class="form-control" required>
             </div>
 

@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="delete-car" v-if="isAdminBool">
     <div class="container mt-5">
       <h1 class="text-center mb-4">Delete Cars</h1>
@@ -24,7 +24,7 @@
           </div>
           <div class="car-info">
             <h3>{{ car.brand_name }} {{ car.car_name }}</h3>
-            <p>Base Price: {{ car.car_base_price }}â‚¬</p>
+            <p>Base Price: {{ car.car_base_price }}€</p>
             <button
               class="btn btn-danger"
               @click="confirmDeleteCar(car)"

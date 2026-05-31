@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="add-car" v-if="isAdminBool">
     <div class="container mt-5">
       <div class="header-section mb-5">
@@ -47,7 +47,7 @@
               </div>
 
               <div class="form-group">
-                <label for="price">Price (â‚¬)</label>
+                <label for="price">Price (€)</label>
                 <input type="number" id="price" v-model="newCar.car_base_price" class="form-control"
                        required min="0">
               </div>

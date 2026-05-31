@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="add-feature-module" v-if="isAdminBool">
     <div class="container mt-5">
       <h1 class="text-center mb-4">Add New Feature</h1>
@@ -18,7 +18,7 @@
           </div>
 
           <div class="form-group">
-            <label for="featurePrice">Price (â‚¬)</label>
+            <label for="featurePrice">Price (€)</label>
             <input
               type="number" 
               step="0.01"
