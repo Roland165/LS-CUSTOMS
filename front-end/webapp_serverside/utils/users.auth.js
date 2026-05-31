@@ -1,5 +1,6 @@
 const passport = require("passport");
-const usersRepo = require(__dirname + "\\users.repository.js"); // use same folder as the current file
+// const usersRepo = require(__dirname + "\\users.repository.js"); // original (Windows-only path, breaks on Linux/Vercel)
+const usersRepo = require('./users.repository'); // cross-platform relative path
 
 // const localStrategy = require('passport-local');
 // passport.use(new LocalStrategy(xxx));

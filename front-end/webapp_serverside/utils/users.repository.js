@@ -3,7 +3,8 @@ const { USE_DB } = require('./config');
 // ── DB MODE ───────────────────────────────────────────────────────────────────
 // Active when USE_DB=true (default).
 // Requires MySQL + back-end/lscustoms_create.sql / lscustoms_insert.sql
-const pool = USE_DB ? require(__dirname + "\\db.include.js") : null;
+// const pool = USE_DB ? require(__dirname + "\\db.include.js") : null; // original (Windows-only path, breaks on Linux/Vercel)
+const pool = USE_DB ? require('./db.include') : null;
 
 // ── JSON MODE ─────────────────────────────────────────────────────────────────
 // Active when USE_DB=false. Passwords in data/users.json are plain-text demo
