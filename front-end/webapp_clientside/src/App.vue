@@ -100,6 +100,9 @@ export default {
         this.username = null;
         sessionStorage.setItem("role", null);
         this.role = null;
+        sessionStorage.removeItem("userId");
+        sessionStorage.removeItem("userEmail");
+        sessionStorage.removeItem("userCreated");
         this.$router.push('/auth');
         this.dropdownOpen = false;
       }else{

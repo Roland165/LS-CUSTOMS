@@ -131,16 +131,16 @@ export default {
           userpass: String(this.loginForm.password)
         });
 
-        if (response.loginResult) {          
-          sessionStorage.setItem("isLoggedInBool", true)
-          sessionStorage.setItem("username",this.loginForm.username);
+        if (response.loginResult) {
+          const u = response.user;
+          sessionStorage.setItem("isLoggedInBool", "true");
+          sessionStorage.setItem("username",    u.user_name);
+          sessionStorage.setItem("role",        u.user_role);
+          sessionStorage.setItem("userId",      u.user_id);
+          sessionStorage.setItem("userEmail",   u.user_email);
+          sessionStorage.setItem("userCreated", u.user_created || "");
 
-          let userRole = await sendRequest('get', 'protected');
-          console.log("get protected response: "+userRole);
-          
-          sessionStorage.setItem("role",userRole);
-
-          if (userRole === 'ADMIN') {
+          if (u.user_role === 'ADMIN') {
             this.$router.push('/admin');
             await location.reload()
           } else {

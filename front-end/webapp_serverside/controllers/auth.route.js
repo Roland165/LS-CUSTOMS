@@ -39,19 +39,28 @@ async function loginPostAction(request, response) {
   let areValid = await userRepo.areValidCredentials(request.body.username, request.body.userpass);
 
   if (areValid) {
-    user = await userRepo.getOneUser(request.body.username);
+    const user = await userRepo.getOneUser(request.body.username);
     request.login(user, function (err) {
       if (err) {
         console.log("LOGINERROR");
         console.log(err);
         areValid = false;
-        // return next(err);
       }
-      let resultObject = { "loginResult": areValid, "timestamp": new Date().toLocaleString() };
+      let resultObject = {
+        "loginResult": areValid,
+        "user": areValid ? {
+          user_id:      user.user_id,
+          user_name:    user.user_name,
+          user_email:   user.user_email,
+          user_role:    user.user_role,
+          user_created: user.user_created || null
+        } : null,
+        "timestamp": new Date().toLocaleString()
+      };
       response.send(JSON.stringify(resultObject));
     });
   } else {
-    let resultObject = { "loginResult": areValid, "timestamp": new Date().toLocaleString() };
+    let resultObject = { "loginResult": areValid, "user": null, "timestamp": new Date().toLocaleString() };
     response.send(JSON.stringify(resultObject));
   }
 }
